@@ -16,13 +16,13 @@ public class Book {
 	private long ISBN;
 	private String title;
 	private String author;
-	//private List<String> keywords;
+	private List<String> keywords;
 	
 	public Book(long iSBN, String title, String author){//, List<String> keywords) {
 		this.ISBN = iSBN;
 		this.title = title;
 		this.author = author;
-		//this.keywords = keywords;
+		this.keywords = keywords;
 	}
 
 	public Book() {
@@ -60,13 +60,13 @@ public class Book {
 		this.author = author;
 	}
 
-	//public List<String> getKeywords() {
-	//	return keywords;
-	//}
+	public List<String> getKeywords() {
+		return keywords;
+	}
 
-//	public void setKeywords(List<String> keywords) {
-//		this.keywords = keywords;
-//	}
+	public void setKeywords(List<String> keywords) {
+		this.keywords = keywords;
+	}
 	
 	
 }
