@@ -64,6 +64,22 @@ public class Book {
 	public void setKeywords(List<String> keywords) {
 		this.keywords = keywords;
 	}
+
+	public List<Copy> getCopyList() {
+		return copyList;
+	}
+
+	public void setCopyList(List<Copy> copyList) {
+		this.copyList = copyList;
+	}
+
+	public List<Reservation> getReservationList() {
+		return reservationList;
+	}
+
+	public void setReservationList(List<Reservation> reservationList) {
+		this.reservationList = reservationList;
+	}
 	
 	
 }
