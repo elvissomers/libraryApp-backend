@@ -12,6 +12,10 @@ public class User {
 		this.eMailAdress = eMailAdress;
 		this.admin = admin;
 	}
+	
+	public User() {
+		
+	}
 
 	public long getID() {
 		return ID;

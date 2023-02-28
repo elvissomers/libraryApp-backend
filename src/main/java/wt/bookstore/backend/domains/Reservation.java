@@ -5,6 +5,11 @@ public class Reservation {
 	private Book book;
 	private User user;
 	private String date;
+	
+	public Reservation() {
+		
+	}
+	
 	public long getID() {
 		return ID;
 	}

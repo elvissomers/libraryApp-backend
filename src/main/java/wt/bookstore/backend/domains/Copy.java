@@ -6,6 +6,10 @@ public class Copy {
 	private User heldBy;
 	private Book book;
 	
+	public Copy() {
+		
+	}
+	
 	public Copy(boolean available, User heldBy, Book book) {
 		this.available = available;
 		this.heldBy = heldBy;
