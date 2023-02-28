@@ -15,7 +15,7 @@ public class bookController {
     @Autowired
     private IBookRepository repository;
 
-    @RequestMapping(value = "book2", method = RequestMethod.GET)
+    @RequestMapping(value = "book", method = RequestMethod.GET)
     public List<Book> findAll() {
         return repository.findAll();
     }

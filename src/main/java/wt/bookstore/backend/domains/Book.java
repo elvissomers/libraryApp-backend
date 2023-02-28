@@ -17,13 +17,10 @@ public class Book {
 	private String title;
 	private String author;
 	private List<String> keywords;
+	private List<Copy> copyList;
+	private List<Reservation> reservationList;
+
 	
-	public Book(long iSBN, String title, String author){//, List<String> keywords) {
-		this.ISBN = iSBN;
-		this.title = title;
-		this.author = author;
-		this.keywords = keywords;
-	}
 
 	public Book() {
 	}
