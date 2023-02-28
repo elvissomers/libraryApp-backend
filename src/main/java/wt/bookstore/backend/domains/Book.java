@@ -17,8 +17,8 @@ public class Book {
 	private String title;
 	private String author;
 	private List<String> keywords;
-	private List<Copy> copyList;
-	private List<Reservation> reservationList;
+	//private List<Copy> copyList;
+	//private List<Reservation> reservationList;
 
 	
 
@@ -65,21 +65,21 @@ public class Book {
 		this.keywords = keywords;
 	}
 
-	public List<Copy> getCopyList() {
-		return copyList;
-	}
+//	public List<Copy> getCopyList() {
+//		return copyList;
+//	}
+//
+//	public void setCopyList(List<Copy> copyList) {
+//		this.copyList = copyList;
+//	}
 
-	public void setCopyList(List<Copy> copyList) {
-		this.copyList = copyList;
-	}
-
-	public List<Reservation> getReservationList() {
-		return reservationList;
-	}
-
-	public void setReservationList(List<Reservation> reservationList) {
-		this.reservationList = reservationList;
-	}
+//	public List<Reservation> getReservationList() {
+//		return reservationList;
+//	}
+//
+//	public void setReservationList(List<Reservation> reservationList) {
+//		this.reservationList = reservationList;
+//	}
 	
 	
 }
