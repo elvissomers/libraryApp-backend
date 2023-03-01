@@ -63,7 +63,7 @@ public class bookController {
     
     @RequestMapping(value = "book/{id}/copies", method = RequestMethod.GET)
     public List<Copy> findCopies(@PathVariable long id){
-    	/*
+    	/**
     	 * Used to find all copies of a specific book
     	 */
     	return copyRepository.findByBookId(id);
@@ -71,7 +71,7 @@ public class bookController {
     
     @RequestMapping(value = "book/{id}/reservations", method = RequestMethod.GET)
     public List<Reservation> findReservations(@PathVariable long id){
-    	/*
+    	/**
     	 * Used to find all reservations of a specific book
     	 */
     	return reservationRepository.findByBookId(id);
@@ -79,11 +79,12 @@ public class bookController {
     
     @RequestMapping(value = "book/{id}/bookkeywords", method = RequestMethod.GET)
     public List<BookKeyword> findBookKeywords(@PathVariable long id){
-    	/*
+    	/**
     	 * Used to find all reservations of a specific book
-    	 */
-    	//Note: this does not give the actual keyword , just the Id of the keyword in the keyword table 
+    	 * @Note: this does not give the actual keyword , just the Id of the keyword in the keyword table 
     	//	(which is contained in BookKeyword)
+    	 */
+    	//
     	return bookKeywordRepository.findByBookId(id);
     }
 

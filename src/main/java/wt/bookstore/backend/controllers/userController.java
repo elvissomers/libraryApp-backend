@@ -57,7 +57,7 @@ public class userController {
     
     @RequestMapping(value = "user/{id}/loans", method = RequestMethod.GET)
     public List<Loan> findLoans(@PathVariable long id){
-    	/*
+    	/**
     	 * Used to find all loans of a user
     	 */
     	return loanRepository.findByUserId(id);
@@ -65,7 +65,7 @@ public class userController {
     
     @RequestMapping(value = "user/{id}/reservations", method = RequestMethod.GET)
     public List<Reservation> findReservations(@PathVariable long id){
-    	/*
+    	/**
     	 * Used to find all reservations of a user
     	 */
     	return reservationRepository.findByUserId(id);
