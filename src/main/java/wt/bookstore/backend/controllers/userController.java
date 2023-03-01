@@ -3,6 +3,7 @@ package wt.bookstore.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
@@ -34,6 +35,11 @@ public class userController {
     @RequestMapping(value="user/create", method = RequestMethod.POST)
     public void create(@RequestBody User user) {
         userRepository.save(user);
+    }
+    
+    @RequestMapping(value = "user/{id}", method = RequestMethod.GET)
+    public Optional<User> find(@PathVariable long id) {
+        return userRepository.findById(id);
     }
 
     @RequestMapping(value = "user/{id}", method = RequestMethod.PUT)

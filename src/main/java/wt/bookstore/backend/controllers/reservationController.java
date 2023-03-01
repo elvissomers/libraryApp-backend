@@ -2,6 +2,8 @@ package wt.bookstore.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.repository.IReservationRepository;
 
@@ -23,6 +25,11 @@ public class reservationController {
     @RequestMapping(value="reservation/create", method = RequestMethod.POST)
     public void create(@RequestBody Reservation reservation) {
         reservationRepository.save(reservation);
+    }
+    
+    @RequestMapping(value = "reservation/{id}", method = RequestMethod.GET)
+    public Optional<Reservation> find(@PathVariable long id) {
+        return reservationRepository.findById(id);
     }
 
     @RequestMapping(value = "reservation/{id}", method = RequestMethod.PUT)

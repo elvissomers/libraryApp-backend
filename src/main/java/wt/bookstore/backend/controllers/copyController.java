@@ -2,6 +2,8 @@ package wt.bookstore.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.repository.ICopyRepository;
 
@@ -23,6 +25,11 @@ public class copyController {
     @RequestMapping(value="copy/create", method = RequestMethod.POST)
     public void create(@RequestBody Copy copy) {
         copyRepository.save(copy);
+    }
+    
+    @RequestMapping(value = "copy/{id}", method = RequestMethod.GET)
+    public Optional<Copy> find(@PathVariable long id) {
+        return copyRepository.findById(id);
     }
 
     @RequestMapping(value = "copy/{id}", method = RequestMethod.PUT)

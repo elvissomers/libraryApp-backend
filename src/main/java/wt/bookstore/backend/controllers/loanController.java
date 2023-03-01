@@ -2,6 +2,8 @@ package wt.bookstore.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.repository.ILoanRepository;
 
@@ -23,6 +25,11 @@ public class loanController {
     @RequestMapping(value="loan/create", method = RequestMethod.POST)
     public void create(@RequestBody Loan loan) {
         loanRepository.save(loan);
+    }
+    
+    @RequestMapping(value = "loan/{id}", method = RequestMethod.GET)
+    public Optional<Loan> find(@PathVariable long id) {
+        return loanRepository.findById(id);
     }
 
     @RequestMapping(value = "loan/{id}", method = RequestMethod.PUT)

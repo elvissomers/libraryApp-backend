@@ -34,6 +34,11 @@ public class bookController {
     public void create(@RequestBody Book book) {
         bookRepository.save(book);
     }
+    
+    @RequestMapping(value = "book/{id}", method = RequestMethod.GET)
+    public Optional<Book> find(@PathVariable long id) {
+        return bookRepository.findById(id);
+    }
 
     @RequestMapping(value = "book/{id}", method = RequestMethod.PUT)
     public void update(@PathVariable long id, @RequestBody Book book) {
