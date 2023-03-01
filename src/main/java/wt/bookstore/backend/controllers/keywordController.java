@@ -3,7 +3,6 @@ package wt.bookstore.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Keyword;
 import wt.bookstore.backend.repository.IKeywordRepository;
 
