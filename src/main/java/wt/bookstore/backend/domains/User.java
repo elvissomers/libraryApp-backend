@@ -49,7 +49,7 @@ public class User {
 		this.eMailAddress = eMailAdress;
 	}
 
-	public boolean getAdmin() {
+	public boolean isAdmin() {
 		return admin;
 	}
 

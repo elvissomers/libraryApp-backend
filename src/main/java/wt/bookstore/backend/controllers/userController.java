@@ -33,7 +33,7 @@ public class userController {
         Optional<User> optional = userRepository.findById(id);
         optional.get().setName(user.getName());
         optional.get().seteMailAddress(user.geteMailAddress());
-        optional.get().setAdmin(user.getAdmin());
+        optional.get().setAdmin(user.isAdmin());
         userRepository.save(optional.get());
     }
 

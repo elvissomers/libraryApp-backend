@@ -27,7 +27,7 @@ public class Copy {
         this.ID = ID;
     }
 
-    public boolean getAvailable() {
+    public boolean isAvailable() {
         return available;
     }
 
