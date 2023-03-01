@@ -19,7 +19,7 @@ def fill_book_table():
     ]
     for book in book_data:
         response = requests.post(url_book, json=book, headers=headers)
-        pprint(response)
+        print(response)
 
 def fill_user_table():
     # Vul de User-tabel met voorbeeldgegevens
