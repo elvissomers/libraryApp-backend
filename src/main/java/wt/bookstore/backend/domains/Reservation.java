@@ -7,50 +7,47 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Reservation {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long ID;
 	private long bookId;
-	private long userId;
+	private long userid;
 	private String date;
-	
+
 	public Reservation() {
-		
-	}
-	
-	public long getID() {
-		return ID;
-	}
-	public void setID(long iD) {
-		ID = iD;
+
 	}
 
+    public long getID() {
+        return ID;
+    }
 
-	public String getDate() {
-		return date;
-	}
-	public void setDate(String date) {
-		this.date = date;
-	}
+    public void setID(long ID) {
+        this.ID = ID;
+    }
 
-	public long getBookId() {
-		return bookId;
-	}
+    public long getBookId() {
+        return bookId;
+    }
 
-	public void setBookId(long bookId) {
-		this.bookId = bookId;
-	}
+    public void setBookId(long bookId) {
+        this.bookId = bookId;
+    }
 
-	public long getUserId() {
-		return userId;
-	}
+    public long getUserid() {
+        return userid;
+    }
 
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-	
-	
-	
-	
+    public void setUserid(long userid) {
+        this.userid = userid;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 }

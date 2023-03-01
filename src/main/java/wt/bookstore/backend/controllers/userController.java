@@ -2,7 +2,6 @@ package wt.bookstore.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
 import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.repository.IUserRepository;
 
@@ -31,8 +30,7 @@ public class userController {
         Optional<User> optional = repository.findById(id);
         optional.get().setName(user.getName());
         optional.get().seteMailAddress(user.geteMailAddress());
-        optional.get().setAdmin(user.isAdmin());
-
+        optional.get().setAdmin(user.getAdmin());
         repository.save(optional.get());
     }
 
@@ -41,5 +39,5 @@ public class userController {
         repository.deleteById(id);
     }
 
-    
+
 }

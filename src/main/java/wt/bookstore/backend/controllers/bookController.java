@@ -32,6 +32,8 @@ public class bookController {
         optional.get().setISBN(book.getISBN());
         //optional.get().setKeywords(book.getKeywords());
         optional.get().setAuthor(book.getAuthor());
+        //optional.get().setCopyList(book.getCopyList());
+        //optional.get().setReservationList(book.getReservationList());
 
 
         repository.save(optional.get());
