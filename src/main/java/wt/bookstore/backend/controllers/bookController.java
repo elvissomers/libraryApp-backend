@@ -48,6 +48,9 @@ public class bookController {
     
     @RequestMapping(value = "book/{id}/copies", method = RequestMethod.GET)
     public List<Copy> findCopies(@PathVariable long id){
+    	/*
+    	 * User to find all copies of a specific book
+    	 */
     	return copyRepository.findByBookId(id);
     }
 
