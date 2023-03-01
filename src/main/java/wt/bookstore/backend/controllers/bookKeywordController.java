@@ -17,12 +17,12 @@ public class bookKeywordController {
     @Autowired
     private IBookKeywordRepository bookKeywordRepository;
 
-    @RequestMapping(value = "bookKeyword", method = RequestMethod.GET)
+    @RequestMapping(value = "bookkeyword", method = RequestMethod.GET)
     public List<BookKeyword> findAll() {
         return bookKeywordRepository.findAll();
     }
 
-    @RequestMapping(value="bookKeyword/create", method = RequestMethod.POST)
+    @RequestMapping(value="bookkeyword/create", method = RequestMethod.POST)
     public void create(@RequestBody BookKeyword bookKeyword) {
     	bookKeywordRepository.save(bookKeyword);
     }
@@ -32,7 +32,7 @@ public class bookKeywordController {
         return bookKeywordRepository.findById(id);
     }
 
-    @RequestMapping(value = "bookKeyword/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "bookkeyword/{id}", method = RequestMethod.PUT)
     public void update(@PathVariable long id, @RequestBody BookKeyword bookKeyword) {
         Optional<BookKeyword> optional = bookKeywordRepository.findById(id);
         optional.get().setBookId(bookKeyword.getBookId());
@@ -40,7 +40,7 @@ public class bookKeywordController {
         bookKeywordRepository.save(optional.get());
     }
 
-    @RequestMapping(value = "bookKeyword/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "bookkeyword/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable long id) {
     	bookKeywordRepository.deleteById(id);
     }
