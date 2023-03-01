@@ -13,29 +13,29 @@ import java.util.Optional;
 public class keywordController {
 
     @Autowired
-    private IKeywordRepository repository;
+    private IKeywordRepository keywordRepository;
 
     @RequestMapping(value = "keyword", method = RequestMethod.GET)
     public List<Keyword> findAll() {
-        return repository.findAll();
+        return keywordRepository.findAll();
     }
 
     @RequestMapping(value="keyword/create", method = RequestMethod.POST)
     public void create(@RequestBody Keyword keyword) {
-        repository.save(keyword);
+        keywordRepository.save(keyword);
     }
 
     @RequestMapping(value = "keyword/{id}", method = RequestMethod.PUT)
     public void update(@PathVariable long id, @RequestBody Keyword keyword) {
-        Optional<Keyword> optional = repository.findById(id);
+        Optional<Keyword> optional = keywordRepository.findById(id);
         optional.get().setKeyword(keyword.getKeyword());
         optional.get().setKeywordGroup(keyword.getKeywordGroup());
-        repository.save(optional.get());
+        keywordRepository.save(optional.get());
     }
 
     @RequestMapping(value = "keyword/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable long id) {
-        repository.deleteById(id);
+        keywordRepository.deleteById(id);
     }
 
 

@@ -13,29 +13,29 @@ import java.util.Optional;
 public class bookKeywordController {
 
     @Autowired
-    private IBookKeywordRepository repository;
+    private IBookKeywordRepository bookKeywordRepository;
 
     @RequestMapping(value = "bookKeyword", method = RequestMethod.GET)
     public List<BookKeyword> findAll() {
-        return repository.findAll();
+        return bookKeywordRepository.findAll();
     }
 
     @RequestMapping(value="bookKeyword/create", method = RequestMethod.POST)
     public void create(@RequestBody BookKeyword bookKeyword) {
-        repository.save(bookKeyword);
+    	bookKeywordRepository.save(bookKeyword);
     }
 
     @RequestMapping(value = "bookKeyword/{id}", method = RequestMethod.PUT)
     public void update(@PathVariable long id, @RequestBody BookKeyword bookKeyword) {
-        Optional<BookKeyword> optional = repository.findById(id);
+        Optional<BookKeyword> optional = bookKeywordRepository.findById(id);
         optional.get().setBookId(bookKeyword.getBookId());
         optional.get().setKeywordId(bookKeyword.getKeywordId());
-        repository.save(optional.get());
+        bookKeywordRepository.save(optional.get());
     }
 
     @RequestMapping(value = "bookKeyword/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable long id) {
-        repository.deleteById(id);
+    	bookKeywordRepository.deleteById(id);
     }
 
 
