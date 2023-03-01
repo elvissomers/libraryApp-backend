@@ -12,17 +12,17 @@ public class Copy {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long ID;
 	private boolean available;
-	private User heldBy;
-	private Book book;
+	private long userId;
+	private long bookId;
 	
 	public Copy() {
 		
 	}
 	
-	public Copy(boolean available, User heldBy, Book book) {
+	public Copy(boolean available, long userId, long bookId) {
 		this.available = available;
-		this.heldBy = heldBy;
-		this.book = book;
+		this.userId = userId;
+		this.bookId = bookId;
 	}
 
 	public long getID() {
@@ -41,21 +41,23 @@ public class Copy {
 		this.available = available;
 	}
 
-	public User getHeldBy() {
-		return heldBy;
+	public long getUserId() {
+		return userId;
 	}
 
-	public void setHeldBy(User heldBy) {
-		this.heldBy = heldBy;
+	public void setUserId(long userId) {
+		this.userId = userId;
 	}
 
-	public Book getBook() {
-		return book;
+	public long getBookId() {
+		return bookId;
 	}
 
-	public void setBook(Book book) {
-		this.book = book;
+	public void setBookId(long bookId) {
+		this.bookId = bookId;
 	}
+
+
 	
 	
 }
