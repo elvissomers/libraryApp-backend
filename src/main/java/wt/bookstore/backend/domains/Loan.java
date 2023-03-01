@@ -13,6 +13,7 @@ public class Loan {
 	private long iD;
 	private long copyId;
 	private long reservationId;
+	private long userId;
 	private String startDate;
 	private String endDate;
 	
@@ -59,6 +60,15 @@ public class Loan {
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
+
+	public long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(long userId) {
+		this.userId = userId;
+	}
+	
 	
 	
 }

@@ -29,7 +29,7 @@ public class reservationController {
     public void update(@PathVariable long id, @RequestBody Reservation reservation) {
         Optional<Reservation> optional = reservationRepository.findById(id);
         optional.get().setBookId(reservation.getBookId());
-        optional.get().setUserid(reservation.getUserid());
+        optional.get().setUserId(reservation.getUserId());
         optional.get().setDate(reservation.getDate());
         reservationRepository.save(optional.get());
     }

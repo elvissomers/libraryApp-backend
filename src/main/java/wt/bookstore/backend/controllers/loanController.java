@@ -32,6 +32,7 @@ public class loanController {
         optional.get().setEndDate(loan.getEndDate());
         optional.get().setReservationId(loan.getReservationId());
         optional.get().setStartDate(loan.getStartDate());
+        optional.get().setUserId(loan.getUserId());
         loanRepository.save(optional.get());
     }
 

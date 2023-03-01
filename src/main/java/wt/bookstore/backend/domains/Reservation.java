@@ -12,7 +12,7 @@ public class Reservation {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long ID;
 	private long bookId;
-	private long userid;
+	private long userId;
 	private String date;
 
 	public Reservation() {
@@ -35,12 +35,12 @@ public class Reservation {
         this.bookId = bookId;
     }
 
-    public long getUserid() {
-        return userid;
+    public long getUserId() {
+        return userId;
     }
 
-    public void setUserid(long userid) {
-        this.userid = userid;
+    public void setUserId(long userId) {
+        this.userId = userId;
     }
 
     public String getDate() {
