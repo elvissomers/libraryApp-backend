@@ -11,7 +11,7 @@ public class Reservation {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long ID;
-	private long bookid;
+	private long bookId;
 	private long userid;
 	private String date;
 
@@ -27,12 +27,12 @@ public class Reservation {
         this.ID = ID;
     }
 
-    public long getBookid() {
-        return bookid;
+    public long getBookId() {
+        return bookId;
     }
 
-    public void setBookid(long bookid) {
-        this.bookid = bookid;
+    public void setBookId(long bookId) {
+        this.bookId = bookId;
     }
 
     public long getUserid() {

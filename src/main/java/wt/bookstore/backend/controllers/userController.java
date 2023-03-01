@@ -29,7 +29,7 @@ public class userController {
     public void update(@PathVariable long id, @RequestBody User user) {
         Optional<User> optional = repository.findById(id);
         optional.get().setName(user.getName());
-        optional.get().seteMailAdress(user.geteMailAdress());
+        optional.get().seteMailAddress(user.geteMailAddress());
         optional.get().setAdmin(user.getAdmin());
         repository.save(optional.get());
     }

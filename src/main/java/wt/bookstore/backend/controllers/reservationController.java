@@ -28,7 +28,7 @@ public class reservationController {
     @RequestMapping(value = "reservation/{id}", method = RequestMethod.PUT)
     public void update(@PathVariable long id, @RequestBody Reservation reservation) {
         Optional<Reservation> optional = repository.findById(id);
-        optional.get().setBookid(reservation.getBookid());
+        optional.get().setBookId(reservation.getBookId());
         optional.get().setUserid(reservation.getUserid());
         optional.get().setDate(reservation.getDate());
         repository.save(optional.get());
