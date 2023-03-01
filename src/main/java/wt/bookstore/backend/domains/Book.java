@@ -5,8 +5,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 
-import java.util.List;
-
 @Entity
 public class Book {
 
@@ -16,11 +14,12 @@ public class Book {
 	private long ISBN;
 	private String title;
 	private String author;
-	private List<String> keywords;
-	private List<Copy> copyList;
-	private List<Reservation> reservationList;
 
-	
+	public Book(long ISBN, String title, String author) {
+		this.ISBN = ISBN;
+		this.title = title;
+		this.author = author;
+	}
 
 	public Book() {
 	}
@@ -56,30 +55,5 @@ public class Book {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-
-	public List<String> getKeywords() {
-		return keywords;
-	}
-
-	public void setKeywords(List<String> keywords) {
-		this.keywords = keywords;
-	}
-
-	public List<Copy> getCopyList() {
-		return copyList;
-	}
-
-	public void setCopyList(List<Copy> copyList) {
-		this.copyList = copyList;
-	}
-
-	public List<Reservation> getReservationList() {
-		return reservationList;
-	}
-
-	public void setReservationList(List<Reservation> reservationList) {
-		this.reservationList = reservationList;
-	}
-	
 	
 }

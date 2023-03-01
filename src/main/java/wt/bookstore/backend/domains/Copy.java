@@ -7,55 +7,47 @@ import jakarta.persistence.Id;
 
 @Entity
 public class Copy {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long ID;
 	private boolean available;
-	private User heldBy;
-	private Book book;
-	
+	private long heldByUserId;
+	private long bookId;
+
 	public Copy() {
-		
-	}
-	
-	public Copy(boolean available, User heldBy, Book book) {
-		this.available = available;
-		this.heldBy = heldBy;
-		this.book = book;
+
 	}
 
-	public long getID() {
-		return ID;
-	}
+    public long getID() {
+        return ID;
+    }
 
-	public void setID(long iD) {
-		ID = iD;
-	}
+    public void setID(long ID) {
+        this.ID = ID;
+    }
 
-	public boolean isAvailable() {
-		return available;
-	}
+    public boolean getAvailable() {
+        return available;
+    }
 
-	public void setAvailable(boolean available) {
-		this.available = available;
-	}
+    public void setAvailable(boolean available) {
+        this.available = available;
+    }
 
-	public User getHeldBy() {
-		return heldBy;
-	}
+    public long getHeldByUserId() {
+        return heldByUserId;
+    }
 
-	public void setHeldBy(User heldBy) {
-		this.heldBy = heldBy;
-	}
+    public void setHeldByUserId(long heldByUserId) {
+        this.heldByUserId = heldByUserId;
+    }
 
-	public Book getBook() {
-		return book;
-	}
+    public long getBookId() {
+        return bookId;
+    }
 
-	public void setBook(Book book) {
-		this.book = book;
-	}
-	
-	
+    public void setBookId(long bookId) {
+        this.bookId = bookId;
+    }
 }

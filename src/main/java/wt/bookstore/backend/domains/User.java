@@ -7,22 +7,22 @@ import jakarta.persistence.Id;
 
 @Entity
 public class User {
-	
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long ID;
 	private String name;
 	private String eMailAdress;
 	private boolean admin;
-	
+
 	public User(String name, String eMailAdress, boolean admin) {
 		this.name = name;
 		this.eMailAdress = eMailAdress;
 		this.admin = admin;
 	}
-	
+
 	public User() {
-		
+
 	}
 
 	public long getID() {
@@ -49,14 +49,14 @@ public class User {
 		this.eMailAdress = eMailAdress;
 	}
 
-	public boolean isAdmin() {
+	public boolean getAdmin() {
 		return admin;
 	}
 
 	public void setAdmin(boolean admin) {
 		this.admin = admin;
 	}
-	
-	
-	
+
+
+
 }
