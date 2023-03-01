@@ -12,12 +12,12 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long ID;
 	private String name;
-	private String eMailAdress;
+	private String eMailAddress;
 	private boolean admin;
 	
-	public User(String name, String eMailAdress, boolean admin) {
+	public User(String name, String eMailAddress, boolean admin) {
 		this.name = name;
-		this.eMailAdress = eMailAdress;
+		this.eMailAddress = eMailAddress;
 		this.admin = admin;
 	}
 	
@@ -41,12 +41,12 @@ public class User {
 		this.name = name;
 	}
 
-	public String geteMailAdress() {
-		return eMailAdress;
+	public String geteMailAddress() {
+		return eMailAddress;
 	}
 
-	public void seteMailAdress(String eMailAdress) {
-		this.eMailAdress = eMailAdress;
+	public void seteMailAddress(String eMailAddress) {
+		this.eMailAddress = eMailAddress;
 	}
 
 	public boolean isAdmin() {
