@@ -13,30 +13,30 @@ import java.util.Optional;
 public class reservationController {
 
     @Autowired
-    private IReservationRepository repository;
+    private IReservationRepository reservationRepository;
 
     @RequestMapping(value = "reservation", method = RequestMethod.GET)
     public List<Reservation> findAll() {
-        return repository.findAll();
+        return reservationRepository.findAll();
     }
 
     @RequestMapping(value="reservation/create", method = RequestMethod.POST)
     public void create(@RequestBody Reservation reservation) {
-        repository.save(reservation);
+        reservationRepository.save(reservation);
     }
 
     @RequestMapping(value = "reservation/{id}", method = RequestMethod.PUT)
     public void update(@PathVariable long id, @RequestBody Reservation reservation) {
-        Optional<Reservation> optional = repository.findById(id);
+        Optional<Reservation> optional = reservationRepository.findById(id);
         optional.get().setBookId(reservation.getBookId());
         optional.get().setUserid(reservation.getUserid());
         optional.get().setDate(reservation.getDate());
-        repository.save(optional.get());
+        reservationRepository.save(optional.get());
     }
 
     @RequestMapping(value = "reservation/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable long id) {
-        repository.deleteById(id);
+        reservationRepository.deleteById(id);
     }
 
 

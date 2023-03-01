@@ -13,30 +13,30 @@ import java.util.Optional;
 public class copyController {
 
     @Autowired
-    private ICopyRepository repository;
+    private ICopyRepository copyRepository;
 
     @RequestMapping(value = "copy", method = RequestMethod.GET)
     public List<Copy> findAll() {
-        return repository.findAll();
+        return copyRepository.findAll();
     }
 
     @RequestMapping(value="copy/create", method = RequestMethod.POST)
     public void create(@RequestBody Copy copy) {
-        repository.save(copy);
+        copyRepository.save(copy);
     }
 
     @RequestMapping(value = "copy/{id}", method = RequestMethod.PUT)
     public void update(@PathVariable long id, @RequestBody Copy copy) {
-        Optional<Copy> optional = repository.findById(id);
+        Optional<Copy> optional = copyRepository.findById(id);
         optional.get().setAvailable(copy.getAvailable());
         optional.get().setHeldByUserId(copy.getHeldByUserId());
         optional.get().setBookId(copy.getBookId());
-        repository.save(optional.get());
+        copyRepository.save(optional.get());
     }
 
     @RequestMapping(value = "copy/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable long id) {
-        repository.deleteById(id);
+        copyRepository.deleteById(id);
     }
 
 
