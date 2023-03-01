@@ -4,8 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Copy;
+import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
+import wt.bookstore.backend.repository.IReservationRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +21,9 @@ public class bookController {
     
     @Autowired
     private ICopyRepository copyRepository;
+    
+    @Autowired
+    private IReservationRepository reservationRepository;
 
     @RequestMapping(value = "book", method = RequestMethod.GET)
     public List<Book> findAll() {
@@ -49,10 +54,19 @@ public class bookController {
     @RequestMapping(value = "book/{id}/copies", method = RequestMethod.GET)
     public List<Copy> findCopies(@PathVariable long id){
     	/*
-    	 * User to find all copies of a specific book
+    	 * Used to find all copies of a specific book
     	 */
     	return copyRepository.findByBookId(id);
     }
+    
+    @RequestMapping(value = "book/{id}/reservations", method = RequestMethod.GET)
+    public List<Reservation> findReservations(@PathVariable long id){
+    	/*
+    	 * Used to find all reservations of a specific book
+    	 */
+    	return reservationRepository.findByBookId(id);
+    }
+    
 
     
 }

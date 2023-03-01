@@ -8,4 +8,5 @@ import wt.bookstore.backend.domains.Reservation;
 
 public interface IReservationRepository extends JpaRepository<Reservation, Long>{
 	List<Reservation> findByUserId(long userId);
+	List<Reservation> findByBookId(long bookId);
 }
