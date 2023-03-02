@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
-public class copyController {
+public class CopyController {
 
     @Autowired
     private ICopyRepository copyRepository;

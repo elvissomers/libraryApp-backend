@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
-public class loanController {
+public class LoanController {
 
     @Autowired
     private ILoanRepository loanRepository;
@@ -38,7 +38,7 @@ public class loanController {
         optional.get().setEndDate(loan.getEndDate());
         optional.get().setReservationId(loan.getReservationId());
         optional.get().setStartDate(loan.getStartDate());
-        optional.get().setUserId(loan.getUserId());
+//        optional.get().setUserId(loan.getUserId());
         loanRepository.save(optional.get());
     }
 

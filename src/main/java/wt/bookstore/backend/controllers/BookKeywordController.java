@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
-public class bookKeywordController {
+public class BookKeywordController {
 
     @Autowired
     private IBookKeywordRepository bookKeywordRepository;
@@ -34,8 +34,8 @@ public class bookKeywordController {
     @RequestMapping(value = "bookkeyword/{id}", method = RequestMethod.PUT)
     public void update(@PathVariable long id, @RequestBody BookKeyword bookKeyword) {
         Optional<BookKeyword> optional = bookKeywordRepository.findById(id);
-        optional.get().setBookId(bookKeyword.getBookId());
-        optional.get().setKeywordId(bookKeyword.getKeywordId());
+//        optional.get().setBookId(bookKeyword.getBookId());
+//        optional.get().setKeywordId(bookKeyword.getKeywordId());
         bookKeywordRepository.save(optional.get());
     }
 

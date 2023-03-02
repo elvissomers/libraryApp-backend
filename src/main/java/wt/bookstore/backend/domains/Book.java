@@ -1,22 +1,33 @@
 package wt.bookstore.backend.domains;
 
+import java.util.List;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 
 @Entity
 public class Book {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long ID;
-	private long ISBN;
-	private String title;
-	private String author;
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private long id;
 
-	public Book(long ISBN, String title, String author) {
-		this.ISBN = ISBN;
+	private long isbn;
+
+	@Column(nullable = false, length = 100)
+	private String title;
+
+	private String author;
+	
+	@ManyToMany(mappedBy="books")
+	private List<BookKeyword> keywords;
+
+	public Book(long isbn, String title, String author) {
+		this.isbn = isbn;
 		this.title = title;
 		this.author = author;
 	}
@@ -24,20 +35,20 @@ public class Book {
 	public Book() {
 	}
 
-	public long getID() {
-		return ID;
+	public long getId() {
+		return id;
 	}
 
-	public void setID(long iD) {
-		ID = iD;
+	public void setId(long id) {
+		this.id = id;
 	}
 
-	public long getISBN() {
-		return ISBN;
+	public long getIsbn() {
+		return isbn;
 	}
 
-	public void setISBN(long iSBN) {
-		ISBN = iSBN;
+	public void setIsbn(long isbn) {
+		this.isbn = isbn;
 	}
 
 	public String getTitle() {
@@ -56,4 +67,12 @@ public class Book {
 		this.author = author;
 	}
 	
+	public List<BookKeyword> getKeywords() {
+		return keywords;
+	}
+	
+	public void setKeywords(List<BookKeyword> keywords) {
+		this.keywords = keywords;
+	}
+
 }

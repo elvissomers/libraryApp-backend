@@ -15,7 +15,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
-public class userController {
+public class UserController {
 
     @Autowired
     private IUserRepository userRepository;

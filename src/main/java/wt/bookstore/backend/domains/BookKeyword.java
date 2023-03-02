@@ -1,44 +1,49 @@
 package wt.bookstore.backend.domains;
 
+import java.util.List;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToMany;
 
 @Entity
 public class BookKeyword {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private long ID;
-    private long bookId;
-    private long keywordId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+    
+    @Column(nullable = false, length = 100)
+    private String name;
+    
+    @ManyToMany()
+    private List<Book> books;
 
-    public BookKeyword() {
+	public long getId() {
+		return id;
+	}
 
-    }
+	public void setId(long id) {
+		this.id = id;
+	}
 
-    public long getID() {
-        return ID;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setID(long ID) {
-        this.ID = ID;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public long getBookId() {
-        return bookId;
-    }
+	public List<Book> getBooks() {
+		return books;
+	}
 
-    public void setBookId(long bookId) {
-        this.bookId = bookId;
-    }
-
-    public long getKeywordId() {
-        return keywordId;
-    }
-
-    public void setKeywordId(long keywordId) {
-        this.keywordId = keywordId;
-    }
+	public void setBooks(List<Book> books) {
+		this.books = books;
+	}
+    
 }

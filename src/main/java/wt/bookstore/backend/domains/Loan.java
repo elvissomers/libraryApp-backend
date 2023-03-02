@@ -4,18 +4,22 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 
 @Entity
 public class Loan {
 	
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long iD;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
 	private long copyId;
 	private long reservationId;
-	private long userId;
 	private String startDate;
 	private String endDate;
+	
+	@ManyToOne(optional = false)
+	private User user;
 	
 	public Loan() {
 		
@@ -29,13 +33,14 @@ public class Loan {
 	}
 
 
+	public long getId() {
+		return id;
+	}
+	
+	public void setId(long id) {
+		this.id = id;
+	}
 
-	public long getiD() {
-		return iD;
-	}
-	public void setiD(long iD) {
-		this.iD = iD;
-	}
 	public long getCopyId() {
 		return copyId;
 	}
@@ -61,14 +66,12 @@ public class Loan {
 		this.endDate = endDate;
 	}
 
-	public long getUserId() {
-		return userId;
-	}
-
-	public void setUserId(long userId) {
-		this.userId = userId;
+	public User getUser() {
+		return user;
 	}
 	
-	
+	public void setUser(User user) {
+		this.user = user;
+	}
 	
 }

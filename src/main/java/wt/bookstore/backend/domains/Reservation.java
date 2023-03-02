@@ -9,24 +9,22 @@ import jakarta.persistence.Id;
 public class Reservation {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long ID;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
 	private long bookId;
 	private long userId;
 	private String date;
 
-	public Reservation() {
 
+	public long getId() {
+		return id;
 	}
-
-    public long getID() {
-        return ID;
-    }
-
-    public void setID(long ID) {
-        this.ID = ID;
-    }
-
+	
+	public void setId(long id) {
+		this.id = id;
+	}
+	
     public long getBookId() {
         return bookId;
     }
