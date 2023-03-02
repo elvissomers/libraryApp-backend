@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import wt.bookstore.backend.domains.BookKeyword;
 
 public interface IBookKeywordRepository extends JpaRepository<BookKeyword, Long>{
-	List<BookKeyword> findByBookId(long bookId);
+	
 }

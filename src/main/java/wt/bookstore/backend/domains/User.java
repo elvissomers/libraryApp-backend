@@ -1,19 +1,26 @@
 package wt.bookstore.backend.domains;
 
+import java.util.List;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class User {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO)
-	private long ID;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
+
 	private String name;
 	private String eMailAddress;
 	private boolean admin;
+
+	@OneToMany(mappedBy = "user", orphanRemoval = true)
+	private List<Loan> loans;
 
 	public User(String name, String eMailAddress, boolean admin) {
 		this.name = name;
@@ -25,12 +32,12 @@ public class User {
 
 	}
 
-	public long getID() {
-		return ID;
+	public long getId() {
+		return id;
 	}
-
-	public void setID(long iD) {
-		ID = iD;
+	
+	public void setId(long id) {
+		this.id = id;
 	}
 
 	public String getName() {
@@ -57,6 +64,12 @@ public class User {
 		this.admin = admin;
 	}
 
-
+	public List<Loan> getLoans() {
+		return loans;
+	}
+	
+	public void setLoans(List<Loan> loans) {
+		this.loans = loans;
+	}
 
 }

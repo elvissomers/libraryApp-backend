@@ -16,7 +16,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
-public class bookController {
+public class BookController {
 
     @Autowired
     private IBookRepository bookRepository;
@@ -49,9 +49,8 @@ public class bookController {
     public void update(@PathVariable long id, @RequestBody Book book) {
         Optional<Book> optional = bookRepository.findById(id);
         optional.get().setTitle(book.getTitle());
-        optional.get().setISBN(book.getISBN());
+        optional.get().setIsbn(book.getIsbn());
         optional.get().setAuthor(book.getAuthor());
-
 
         bookRepository.save(optional.get());
     }
@@ -79,14 +78,11 @@ public class bookController {
     
     @RequestMapping(value = "book/{id}/bookkeywords", method = RequestMethod.GET)
     public List<BookKeyword> findBookKeywords(@PathVariable long id){
-    	/**
-    	 * Used to find all reservations of a specific book
-    	 * @Note: this does not give the actual keyword , just the Id of the keyword in the keyword table 
-    	//	(which is contained in BookKeyword)
-    	 */
-    	//
-    	return bookKeywordRepository.findByBookId(id);
+    	Optional<Book> bookOptional = bookRepository.findById(id);
+    	if (bookOptional.isEmpty())
+    		return null;
+    	
+    	return bookOptional.get().getKeywords();
     }
-
     
 }
