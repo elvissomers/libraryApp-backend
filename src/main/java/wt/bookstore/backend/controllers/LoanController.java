@@ -32,41 +32,56 @@ public class LoanController {
 	@RequestMapping(value = "loan", method = RequestMethod.GET)
 	public Stream<LoanDto> findAll() {
 		// Loan omzetten naar LoanDto
-		return loanRepository.findAll().stream().map( l -> {
-			return DtoMapper.loanToDto(l);
-		});
+		return loanRepository.findAll().stream().map(DtoMapper::loanToDto);
 	}
 
 	@RequestMapping(value = "loan/create", method = RequestMethod.POST)
 	public void create(@RequestBody SaveLoanDto saveLoanDto) {
 		Loan loan = DtoMapper.dtoToLoan(saveLoanDto);
-		loanRepository.save(loan);
-	}
-
-	@RequestMapping(value = "loan/{id}", method = RequestMethod.GET)
-	public Optional<Loan> find(@PathVariable long id) {
-		return loanRepository.findById(id);
+		if (loan != null)
+			loanRepository.save(loan);
 	}
 
 	@RequestMapping(value = "loan/{id}", method = RequestMethod.PUT)
 	public boolean update(@PathVariable long id, @RequestBody SaveLoanDto saveLoanDto) {
-		Optional<User> userOptional = userRepository.findById(saveLoanDto.getUserId());
-		if (userOptional.isEmpty())
+
+		/*
+		 * Converts a post DTO to a loan object, if the post DTO misses a userId, loanId
+		 * or reservationId it returns null, since it will not be a valid data entry
+		 */
+		Loan loan = DtoMapper.dtoToLoan(saveLoanDto);
+		if (loan == null)
 			return false;
 
+		/*
+		 * Checks whether the id given in the url is a valid loanId
+		 */
 		Optional<Loan> optional = loanRepository.findById(id);
+		if (optional.isEmpty())
+			return false;
 
-		optional.get().setEndDate(saveLoanDto.getEndDate());
-		optional.get().setStartDate(saveLoanDto.getStartDate());
-		optional.get().setUser(userOptional.get());
-		loanRepository.save(optional.get());
-
+		/*
+		 * Overwrites all the existing fields (except the ID) of the loan with the given loadId for the
+		 * values given in the post DTO and saves it back in the database
+		 */
+		Loan existingLoan = optional.get();
+		existingLoan.setCopy(loan.getCopy());
+		existingLoan.setReservation(loan.getReservation());
+		existingLoan.setUser(loan.getUser());
+		existingLoan.setStartDate(loan.getStartDate());
+		existingLoan.setEndDate(loan.getEndDate());
+		loanRepository.save(existingLoan);
 		return true;
 	}
 
 	@RequestMapping(value = "loan/{id}", method = RequestMethod.DELETE)
 	public void delete(@PathVariable long id) {
 		loanRepository.deleteById(id);
+	}
+
+	@RequestMapping(value = "loan/{id}", method = RequestMethod.GET)
+	public Optional<Loan> find(@PathVariable long id) {
+		return loanRepository.findById(id);
 	}
 
 }

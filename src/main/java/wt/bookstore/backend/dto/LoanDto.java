@@ -14,11 +14,9 @@ public class LoanDto {
 	
 	private LocalDate endDate;
 	
-	private long userId;
-	
-	private String name;
-
-
+	private String userName;
+	private String copyName;
+	private long reservationId;
 
 	public LocalDate getStartDate() {
 		return startDate;
@@ -35,23 +33,28 @@ public class LoanDto {
 	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
 	}
-	
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
-	
-	public long getUserId() {
-		return userId;
-	}
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
+
+	public String getUserName() {
+		return userName;
 	}
 
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 
+	public String getCopyName() {
+		return copyName;
+	}
 
+	public void setCopyName(String copyName) {
+		this.copyName = copyName;
+	}
+
+	public long getReservationId() {
+		return reservationId;
+	}
+
+	public void setReservationId(long reservationId) {
+		this.reservationId = reservationId;
+	}
 }
