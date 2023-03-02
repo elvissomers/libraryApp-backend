@@ -1,5 +1,7 @@
 package wt.bookstore.backend.domains;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -15,8 +17,8 @@ public class Loan {
 
 	private long copyId;
 	private long reservationId;
-	private String startDate;
-	private String endDate;
+	private LocalDate startDate;
+	private LocalDate endDate;
 	
 	@ManyToOne(optional = false)
 	private User user;
@@ -25,7 +27,7 @@ public class Loan {
 		
 	}
 	
-	public Loan(long copyId, long reservationId, String startDate, String endDate) {
+	public Loan(long copyId, long reservationId, LocalDate startDate, LocalDate endDate) {
 		this.copyId = copyId;
 		this.reservationId = reservationId;
 		this.startDate = startDate;
@@ -53,16 +55,16 @@ public class Loan {
 	public void setReservationId(long reservationId) {
 		this.reservationId = reservationId;
 	}
-	public String getStartDate() {
+	public LocalDate getStartDate() {
 		return startDate;
 	}
-	public void setStartDate(String startDate) {
+	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
 	}
-	public String getEndDate() {
+	public LocalDate getEndDate() {
 		return endDate;
 	}
-	public void setEndDate(String endDate) {
+	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
 	}
 
