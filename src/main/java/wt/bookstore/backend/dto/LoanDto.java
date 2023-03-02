@@ -1,6 +1,12 @@
 package wt.bookstore.backend.dto;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import wt.bookstore.backend.domains.Loan;
+import wt.bookstore.backend.domains.User;
+import wt.bookstore.backend.repository.IUserRepository;
+
 import java.time.LocalDate;
+import java.util.Optional;
 
 public class LoanDto {
 
@@ -11,6 +17,8 @@ public class LoanDto {
 	private long userId;
 	
 	private String name;
+
+
 
 	public LocalDate getStartDate() {
 		return startDate;
@@ -43,5 +51,7 @@ public class LoanDto {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+
+
 }

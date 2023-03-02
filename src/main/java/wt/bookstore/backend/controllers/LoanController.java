@@ -15,6 +15,7 @@ import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.LoanDto;
 import wt.bookstore.backend.dto.SaveLoanDto;
+import wt.bookstore.backend.mapping.DtoMapper;
 import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IUserRepository;
 
@@ -32,29 +33,14 @@ public class LoanController {
 	public Stream<LoanDto> findAll() {
 		// Loan omzetten naar LoanDto
 		return loanRepository.findAll().stream().map( l -> {
-			LoanDto loanDto = new LoanDto();
-			loanDto.setStartDate(l.getStartDate());
-			loanDto.setEndDate(l.getEndDate());
-			loanDto.setUserId(l.getUser().getId());
-			loanDto.setName(l.getUser().getName());
-
-			return loanDto;
+			return DtoMapper.loanToDto(l);
 		});
 	}
 
 	@RequestMapping(value = "loan/create", method = RequestMethod.POST)
-	public boolean create(@RequestBody SaveLoanDto saveLoanDto) {
-		Optional<User> userOptional = userRepository.findById(saveLoanDto.getUserId());
-		if (userOptional.isEmpty())
-			return false;
-
-		Loan loan = new Loan();
-		loan.setStartDate(saveLoanDto.getStartDate());
-		loan.setEndDate(saveLoanDto.getEndDate());
-		loan.setUser(userOptional.get());
+	public void create(@RequestBody SaveLoanDto saveLoanDto) {
+		Loan loan = DtoMapper.dtoToLoan(saveLoanDto);
 		loanRepository.save(loan);
-
-		return true;
 	}
 
 	@RequestMapping(value = "loan/{id}", method = RequestMethod.GET)
@@ -69,8 +55,6 @@ public class LoanController {
 			return false;
 
 		Optional<Loan> optional = loanRepository.findById(id);
-//        optional.get().setCopyId(loan.getCopyId());
-//        optional.get().setReservationId(loan.getReservationId());
 
 		optional.get().setEndDate(saveLoanDto.getEndDate());
 		optional.get().setStartDate(saveLoanDto.getStartDate());
