@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
-public class BookKeywordController {
+public class KeywordController {
 
     @Autowired
     private IBookKeywordRepository bookKeywordRepository;
