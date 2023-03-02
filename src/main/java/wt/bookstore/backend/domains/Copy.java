@@ -1,9 +1,8 @@
 package wt.bookstore.backend.domains;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+
+import java.util.List;
 
 @Entity
 public class Copy {
@@ -13,16 +12,20 @@ public class Copy {
 	private long id;
 
 	private boolean available;
-	private long heldByUserId;
-	private long bookId;
 
-	public long getId() {
-		return id;
-	}
-	
-	public void setId(long id) {
-		this.id = id;
-	}
+    @ManyToOne(optional = false)
+    private Book book;
+
+    @OneToMany(mappedBy = "copy", orphanRemoval = true)
+    private List<Loan> loans;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public boolean isAvailable() {
         return available;
@@ -32,19 +35,19 @@ public class Copy {
         this.available = available;
     }
 
-    public long getHeldByUserId() {
-        return heldByUserId;
+    public Book getBook() {
+        return book;
     }
 
-    public void setHeldByUserId(long heldByUserId) {
-        this.heldByUserId = heldByUserId;
+    public void setBook(Book book) {
+        this.book = book;
     }
 
-    public long getBookId() {
-        return bookId;
+    public List<Loan> getLoans() {
+        return loans;
     }
 
-    public void setBookId(long bookId) {
-        this.bookId = bookId;
+    public void setLoans(List<Loan> loans) {
+        this.loans = loans;
     }
 }

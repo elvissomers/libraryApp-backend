@@ -22,6 +22,9 @@ public class User {
 	@OneToMany(mappedBy = "user", orphanRemoval = true)
 	private List<Loan> loans;
 
+	@OneToMany(mappedBy = "user", orphanRemoval = true)
+	private List<Reservation> reservations;
+
 	public User(String name, String eMailAddress, boolean admin) {
 		this.name = name;
 		this.eMailAddress = eMailAddress;

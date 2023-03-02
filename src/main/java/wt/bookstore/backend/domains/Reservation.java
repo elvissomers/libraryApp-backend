@@ -1,9 +1,6 @@
 package wt.bookstore.backend.domains;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 @Entity
 public class Reservation {
@@ -12,9 +9,16 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-	private long bookId;
-	private long userId;
 	private String date;
+
+    @ManyToOne(optional = false)
+    private Book book;
+
+    @ManyToOne(optional = false)
+    private User user;
+    @OneToOne(mappedBy = "reservation")
+    private Loan loan;
+
 
 
 	public long getId() {
@@ -24,22 +28,6 @@ public class Reservation {
 	public void setId(long id) {
 		this.id = id;
 	}
-	
-    public long getBookId() {
-        return bookId;
-    }
-
-    public void setBookId(long bookId) {
-        this.bookId = bookId;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
 
     public String getDate() {
         return date;

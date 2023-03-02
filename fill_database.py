@@ -83,7 +83,7 @@ def fill_keyword_table():
 
 def fill_bookKeyword_table():
     # Voeg gegevens toe aan BookKeyword-tabel
-    url_book_keyword = "http://localhost:8080/bookKeyword/create"
+    url_book_keyword = "http://localhost:8080/keyword/create"
     headers = {"Content-Type": "application/json"}
     book_keyword_data = [
         {"bookId": 1, "keywordId": 1},

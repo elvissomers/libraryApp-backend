@@ -2,12 +2,7 @@ package wt.bookstore.backend.domains;
 
 import java.util.List;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 
 @Entity
 public class Book {
@@ -16,15 +11,23 @@ public class Book {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
+	@Column(nullable = false, length = 13)
 	private long isbn;
 
 	@Column(nullable = false, length = 100)
 	private String title;
 
+	@Column(nullable = false, length = 100)
 	private String author;
 	
 	@ManyToMany(mappedBy="books")
-	private List<BookKeyword> keywords;
+	private List<Keyword> keywords;
+
+	@OneToMany(mappedBy = "book", orphanRemoval = true)
+	private List<Copy> copies;
+
+	@OneToMany(mappedBy = "book", orphanRemoval = true)
+	private List<Reservation> reservations;
 
 	public Book(long isbn, String title, String author) {
 		this.isbn = isbn;
@@ -67,11 +70,11 @@ public class Book {
 		this.author = author;
 	}
 	
-	public List<BookKeyword> getKeywords() {
+	public List<Keyword> getKeywords() {
 		return keywords;
 	}
 	
-	public void setKeywords(List<BookKeyword> keywords) {
+	public void setKeywords(List<Keyword> keywords) {
 		this.keywords = keywords;
 	}
 

@@ -1,10 +1,8 @@
 package wt.bookstore.backend.repository;
 
-import java.util.List;
-
 import org.springframework.data.jpa.repository.JpaRepository;
-import wt.bookstore.backend.domains.BookKeyword;
+import wt.bookstore.backend.domains.Keyword;
 
-public interface IBookKeywordRepository extends JpaRepository<BookKeyword, Long>{
+public interface IBookKeywordRepository extends JpaRepository<Keyword, Long>{
 	
 }

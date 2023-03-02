@@ -3,7 +3,7 @@ package wt.bookstore.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import wt.bookstore.backend.domains.BookKeyword;
+import wt.bookstore.backend.domains.Keyword;
 import wt.bookstore.backend.repository.IBookKeywordRepository;
 
 import java.util.List;
@@ -17,23 +17,23 @@ public class BookKeywordController {
     private IBookKeywordRepository bookKeywordRepository;
 
     @RequestMapping(value = "bookkeyword", method = RequestMethod.GET)
-    public List<BookKeyword> findAll() {
+    public List<Keyword> findAll() {
         return bookKeywordRepository.findAll();
     }
 
     @RequestMapping(value="bookkeyword/create", method = RequestMethod.POST)
-    public void create(@RequestBody BookKeyword bookKeyword) {
-    	bookKeywordRepository.save(bookKeyword);
+    public void create(@RequestBody Keyword keyword) {
+    	bookKeywordRepository.save(keyword);
     }
     
     @RequestMapping(value = "bookkeyword/{id}", method = RequestMethod.GET)
-    public Optional<BookKeyword> find(@PathVariable long id) {
+    public Optional<Keyword> find(@PathVariable long id) {
         return bookKeywordRepository.findById(id);
     }
 
     @RequestMapping(value = "bookkeyword/{id}", method = RequestMethod.PUT)
-    public void update(@PathVariable long id, @RequestBody BookKeyword bookKeyword) {
-        Optional<BookKeyword> optional = bookKeywordRepository.findById(id);
+    public void update(@PathVariable long id, @RequestBody Keyword keyword) {
+        Optional<Keyword> optional = bookKeywordRepository.findById(id);
 //        optional.get().setBookId(bookKeyword.getBookId());
 //        optional.get().setKeywordId(bookKeyword.getKeywordId());
         bookKeywordRepository.save(optional.get());

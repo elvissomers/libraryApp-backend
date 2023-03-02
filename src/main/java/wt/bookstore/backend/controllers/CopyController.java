@@ -35,8 +35,8 @@ public class CopyController {
     public void update(@PathVariable long id, @RequestBody Copy copy) {
         Optional<Copy> optional = copyRepository.findById(id);
         optional.get().setAvailable(copy.isAvailable());
-        optional.get().setHeldByUserId(copy.getHeldByUserId());
-        optional.get().setBookId(copy.getBookId());
+//        optional.get().setHeldByUserId(copy.getHeldByUserId());
+//        optional.get().setBookId(copy.getBookId());
         copyRepository.save(optional.get());
     }
 
