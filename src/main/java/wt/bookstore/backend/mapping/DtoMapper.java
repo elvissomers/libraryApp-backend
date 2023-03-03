@@ -1,17 +1,11 @@
 package wt.bookstore.backend.mapping;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import wt.bookstore.backend.domains.Copy;
-import wt.bookstore.backend.domains.Loan;
-import wt.bookstore.backend.domains.Reservation;
-import wt.bookstore.backend.domains.User;
+import wt.bookstore.backend.domains.*;
 import wt.bookstore.backend.dto.LoanDto;
 import wt.bookstore.backend.dto.SaveCopyDto;
 import wt.bookstore.backend.dto.SaveLoanDto;
-import wt.bookstore.backend.repository.ICopyRepository;
-import wt.bookstore.backend.repository.ILoanRepository;
-import wt.bookstore.backend.repository.IReservationRepository;
-import wt.bookstore.backend.repository.IUserRepository;
+import wt.bookstore.backend.dto.SaveReservationDto;
+import wt.bookstore.backend.repository.*;
 
 import java.util.Optional;
 
@@ -52,6 +46,32 @@ public class DtoMapper {
         loan.setReservation(reservationOptional.get());
 
         return loan;
+    }
+
+    public static Reservation dtoToReservation(SaveReservationDto saveReservationDto, IUserRepository userRepository, IBookRepository bookRepository, ILoanRepository loanRepository){
+        /*
+         * Used to create a Reservation object from a saveReservationDto object
+         */
+        Optional<User> userOptional = userRepository.findById(saveReservationDto.getUserId());
+        Optional<Loan> loanOptional = loanRepository.findById(saveReservationDto.getLoanId());
+        Optional<Book> bookOptional = bookRepository.findById(saveReservationDto.getBookId());
+
+        /*
+         * Check whether all necessary fields are present in the post DTO, e.g. You can not make a loan object without
+         * knowing which copy is loaned
+         */
+        if (userOptional.isEmpty() || bookOptional.isEmpty())
+            return null;
+
+        Reservation reservation = new Reservation();
+        reservation.setDate(saveReservationDto.getDate());
+        if (loanOptional.isPresent()) {
+            reservation.setLoan(loanOptional.get());
+        }
+        reservation.setBook(bookOptional.get());
+        reservation.setUser(userOptional.get());
+
+        return reservation;
     }
 
     public static LoanDto loanToDto(Loan loan){
