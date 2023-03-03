@@ -1,5 +1,7 @@
 package wt.bookstore.backend.domains;
 
+import java.time.LocalDate;
+
 import jakarta.persistence.*;
 
 @Entity
@@ -9,7 +11,7 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-	private String date;
+	private LocalDate date;
 
     @ManyToOne(optional = false)
     private Book book;
@@ -29,11 +31,11 @@ public class Reservation {
 		this.id = id;
 	}
 
-    public String getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 }
