@@ -11,12 +11,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.domains.Loan;
+import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.LoanDto;
 import wt.bookstore.backend.dto.SaveLoanDto;
 import wt.bookstore.backend.mapping.DtoMapper;
+import wt.bookstore.backend.repository.ICopyRepository;
 import wt.bookstore.backend.repository.ILoanRepository;
+import wt.bookstore.backend.repository.IReservationRepository;
 import wt.bookstore.backend.repository.IUserRepository;
 
 @RestController
@@ -29,6 +33,12 @@ public class LoanController {
 	@Autowired
 	private IUserRepository userRepository;
 
+	@Autowired
+	private ICopyRepository copyRepository;
+
+	@Autowired
+	private IReservationRepository reservationRepository;
+
 	@RequestMapping(value = "loan", method = RequestMethod.GET)
 	public Stream<LoanDto> findAll() {
 		// Loan omzetten naar LoanDto
@@ -37,7 +47,7 @@ public class LoanController {
 
 	@RequestMapping(value = "loan/create", method = RequestMethod.POST)
 	public void create(@RequestBody SaveLoanDto saveLoanDto) {
-		Loan loan = DtoMapper.dtoToLoan(saveLoanDto);
+		Loan loan = DtoMapper.dtoToLoan(saveLoanDto,userRepository, reservationRepository, copyRepository);
 		if (loan != null)
 			loanRepository.save(loan);
 	}
@@ -45,14 +55,15 @@ public class LoanController {
 	@RequestMapping(value = "loan/{id}", method = RequestMethod.PUT)
 	public boolean update(@PathVariable long id, @RequestBody SaveLoanDto saveLoanDto) {
 
+		Optional<User> userOptional = userRepository.findById(saveLoanDto.getUserId());
+		Optional<Reservation> reservationOptional = reservationRepository.findById(saveLoanDto.getReservationId());
+		Optional<Copy> copyOptional = copyRepository.findById(saveLoanDto.getCopyId());
 		/*
 		 * Converts a post DTO to a loan object, if the post DTO misses a userId, loanId
 		 * or reservationId it returns null, since it will not be a valid data entry
 		 */
-		Loan loan = DtoMapper.dtoToLoan(saveLoanDto);
-		if (loan == null)
+		if (userOptional.isEmpty() || reservationOptional.isEmpty() || copyOptional.isEmpty())
 			return false;
-
 		/*
 		 * Checks whether the id given in the url is a valid loanId
 		 */
@@ -65,11 +76,11 @@ public class LoanController {
 		 * values given in the post DTO and saves it back in the database
 		 */
 		Loan existingLoan = optional.get();
-		existingLoan.setCopy(loan.getCopy());
-		existingLoan.setReservation(loan.getReservation());
-		existingLoan.setUser(loan.getUser());
-		existingLoan.setStartDate(loan.getStartDate());
-		existingLoan.setEndDate(loan.getEndDate());
+		existingLoan.setCopy(copyOptional.get());
+		existingLoan.setReservation(reservationOptional.get());
+		existingLoan.setUser(userOptional.get());
+		existingLoan.setStartDate(saveLoanDto.getStartDate());
+		existingLoan.setEndDate(saveLoanDto.getEndDate());
 		loanRepository.save(existingLoan);
 		return true;
 	}
