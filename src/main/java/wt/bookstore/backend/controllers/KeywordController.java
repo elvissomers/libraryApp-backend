@@ -45,9 +45,17 @@ public class KeywordController {
          * given dto to the existing keyword.
          * If not, it will create a new Keyword object.
          */
-    	long bookId = saveKeywordDto.getBookId();
+//        Keyword testKeyword = new Keyword();
+//        testKeyword.setName("test");
+//        keywordRepository.save(testKeyword);
+//        return true;
+
+
+    	long bookId = saveKeywordDto.getBookId(); // geeft een error for some reason omdat dit een String zou zijn?
         Optional<Book> optionalBook = bookRepository.findById(bookId);
         Optional<Keyword> keywordInTable = keywordRepository.findByName(saveKeywordDto.getName());
+
+
         if (keywordInTable.isPresent()) {
             keywordInTable.get().getBooks().add(optionalBook.get());
             return true;
