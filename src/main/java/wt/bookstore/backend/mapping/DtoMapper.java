@@ -8,18 +8,6 @@ import java.util.Optional;
 
 public class DtoMapper {
 
-//    @Autowired
-//    private static IUserRepository userRepository;
-//
-//    @Autowired
-//    private static ILoanRepository loanRepository;
-//
-//    @Autowired
-//    private static IReservationRepository reservationRepository;
-//
-//    @Autowired
-//    private static ICopyRepository copyRepository;
-
     public static Loan dtoToLoan(SaveLoanDto saveLoanDto, IUserRepository userRepository, IReservationRepository reservationRepository, ICopyRepository copyRepository){
         /*
          * Used to create a Loan object from a saveLoanDto object
@@ -69,6 +57,18 @@ public class DtoMapper {
         reservation.setUser(userOptional.get());
 
         return reservation;
+    }
+
+    public static User dtoToUser(SaveUserDto saveUserDto){
+        /*
+         * User to create a User object from a SaveUserDto object
+         */
+        User user = new User();
+        user.setName(saveUserDto.getName());
+        user.seteMailAddress(saveUserDto.geteMailAddress());
+        user.setAdmin(saveUserDto.isAdmin());
+
+        return user;
     }
 
     public static LoanDto loanToDto(Loan loan){
