@@ -45,6 +45,12 @@ public class LoanController {
 		return loanRepository.findAll().stream().map(DtoMapper::loanToDto);
 	}
 
+	@RequestMapping(value = "loan/{id}", method = RequestMethod.GET)
+	public Optional<LoanDto> find(@PathVariable long id) {
+		Optional<Loan> optionalLoan = loanRepository.findById(id);
+		return Optional.of(DtoMapper.loanToDto(optionalLoan.get()));
+	}
+
 	@RequestMapping(value = "loan/create", method = RequestMethod.POST)
 	public boolean create(@RequestBody SaveLoanDto saveLoanDto) {
 		Loan loan = DtoMapper.dtoToLoan(saveLoanDto,userRepository, reservationRepository, copyRepository);
@@ -99,9 +105,6 @@ public class LoanController {
 		loanRepository.deleteById(id);
 	}
 
-	@RequestMapping(value = "loan/{id}", method = RequestMethod.GET)
-	public Optional<Loan> find(@PathVariable long id) {
-		return loanRepository.findById(id);
-	}
+
 
 }
