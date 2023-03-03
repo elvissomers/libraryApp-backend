@@ -101,4 +101,17 @@ public class DtoMapper {
 
         return reservationDto;
     }
+
+    public static UserDto userToDto(User user){
+        /*
+         * Used to create a UserDto object from a User object
+         */
+        UserDto userDto = new UserDto();
+
+        userDto.setAdmin(user.isAdmin());
+        userDto.seteMailAddress(user.geteMailAddress());
+        userDto.setName(user.getName());
+
+        return userDto;
+    }
 }

@@ -7,6 +7,7 @@ import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.SaveUserDto;
+import wt.bookstore.backend.dto.UserDto;
 import wt.bookstore.backend.mapping.DtoMapper;
 import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
@@ -14,6 +15,7 @@ import wt.bookstore.backend.repository.IUserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
@@ -29,13 +31,13 @@ public class UserController {
     private IReservationRepository reservationRepository;
 
     @RequestMapping(value = "user", method = RequestMethod.GET)
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public Stream<UserDto> findAll() {
+        return userRepository.findAll().stream().map(DtoMapper::userToDto);
     }
 
     @RequestMapping(value = "user/{id}", method = RequestMethod.GET)
-    public Optional<User> find(@PathVariable long id) {
-        return userRepository.findById(id);
+    public Optional<UserDto> find(@PathVariable long id) {
+        return Optional.of(DtoMapper.userToDto(userRepository.findById(id).get()));
     }
 
     @RequestMapping(value="user/create", method = RequestMethod.POST)
