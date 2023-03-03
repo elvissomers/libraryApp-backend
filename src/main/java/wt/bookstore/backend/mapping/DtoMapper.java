@@ -4,6 +4,8 @@ import wt.bookstore.backend.domains.*;
 import wt.bookstore.backend.dto.*;
 import wt.bookstore.backend.repository.*;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class DtoMapper {
@@ -61,7 +63,7 @@ public class DtoMapper {
 
     public static User dtoToUser(SaveUserDto saveUserDto){
         /*
-         * User to create a User object from a SaveUserDto object
+         * Used to create a User object from a SaveUserDto object
          */
         User user = new User();
         user.setName(saveUserDto.getName());
@@ -69,6 +71,31 @@ public class DtoMapper {
         user.setAdmin(saveUserDto.isAdmin());
 
         return user;
+    }
+
+    /*
+     * Uitgecomment omdat ik denk deze niet te gaan gebruiken in de controller
+     */
+
+    public static Keyword dtoToKeyword(SaveKeywordDto saveKeywordDto, IBookRepository bookRepository){
+        /*
+         * Used to create a Keyword object from a SaveKeywordDto object
+         */
+        Keyword keyword = new Keyword();
+        keyword.setName(saveKeywordDto.getName());
+
+        // Creates an empty booklist to append the book corresponding to the id in the
+        // saveKeywordDto object, so a keyword object can be created
+        List<Book> bookList = new ArrayList<>();
+        Optional<Book> bookOptional = bookRepository.findById(saveKeywordDto.getBookId());
+        if (bookOptional.isPresent()) {
+            bookList.add(bookRepository.findById(saveKeywordDto.getBookId()).get());
+        } else {
+            return null;
+        }
+        keyword.setBooks(bookList);
+
+        return keyword;
     }
 
     public static LoanDto loanToDto(Loan loan){
