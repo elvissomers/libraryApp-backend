@@ -24,10 +24,6 @@ public class Loan {
 	@JoinColumn(name = "reservation_id", referencedColumnName = "id")
 	private Reservation reservation;
 
-//	@OneToOne(cascade = CascadeType.ALL)
-//	@JoinColumn(name = "address_id", referencedColumnName = "id")
-//	private Address address;
-	
 	public Loan() {
 		
 	}
@@ -67,5 +63,20 @@ public class Loan {
 	public void setUser(User user) {
 		this.user = user;
 	}
-	
+
+	public Copy getCopy() {
+		return copy;
+	}
+
+	public void setCopy(Copy copy) {
+		this.copy = copy;
+	}
+
+	public Reservation getReservation() {
+		return reservation;
+	}
+
+	public void setReservation(Reservation reservation) {
+		this.reservation = reservation;
+	}
 }
