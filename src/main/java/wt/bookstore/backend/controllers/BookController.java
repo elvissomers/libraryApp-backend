@@ -6,7 +6,7 @@ import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Keyword;
 import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.domains.Reservation;
-import wt.bookstore.backend.repository.IBookKeywordRepository;
+import wt.bookstore.backend.repository.IKeywordRepository;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
@@ -28,7 +28,7 @@ public class BookController {
     private IReservationRepository reservationRepository;
     
     @Autowired
-    private IBookKeywordRepository bookKeywordRepository;
+    private IKeywordRepository bookKeywordRepository;
 
     @RequestMapping(value = "book", method = RequestMethod.GET)
     public List<Book> findAll() {

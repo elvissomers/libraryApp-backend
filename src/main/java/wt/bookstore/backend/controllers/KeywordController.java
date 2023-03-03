@@ -4,7 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.Keyword;
-import wt.bookstore.backend.repository.IBookKeywordRepository;
+import wt.bookstore.backend.repository.IKeywordRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,34 +14,34 @@ import java.util.Optional;
 public class KeywordController {
 
     @Autowired
-    private IBookKeywordRepository bookKeywordRepository;
+    private IKeywordRepository keywordRepository;
 
-    @RequestMapping(value = "bookkeyword", method = RequestMethod.GET)
+    @RequestMapping(value = "keyword", method = RequestMethod.GET)
     public List<Keyword> findAll() {
-        return bookKeywordRepository.findAll();
+        return keywordRepository.findAll();
     }
 
-    @RequestMapping(value="bookkeyword/create", method = RequestMethod.POST)
+    @RequestMapping(value="keyword/create", method = RequestMethod.POST)
     public void create(@RequestBody Keyword keyword) {
-    	bookKeywordRepository.save(keyword);
+    	keywordRepository.save(keyword);
     }
     
-    @RequestMapping(value = "bookkeyword/{id}", method = RequestMethod.GET)
+    @RequestMapping(value = "keyword/{id}", method = RequestMethod.GET)
     public Optional<Keyword> find(@PathVariable long id) {
-        return bookKeywordRepository.findById(id);
+        return keywordRepository.findById(id);
     }
 
-    @RequestMapping(value = "bookkeyword/{id}", method = RequestMethod.PUT)
+    @RequestMapping(value = "keyword/{id}", method = RequestMethod.PUT)
     public void update(@PathVariable long id, @RequestBody Keyword keyword) {
-        Optional<Keyword> optional = bookKeywordRepository.findById(id);
-//        optional.get().setBookId(bookKeyword.getBookId());
-//        optional.get().setKeywordId(bookKeyword.getKeywordId());
-        bookKeywordRepository.save(optional.get());
+        Optional<Keyword> optional = keywordRepository.findById(id);
+//        optional.get().setBookId(keyword.getBookId());
+//        optional.get().setKeywordId(keyword.getKeywordId());
+        keywordRepository.save(optional.get());
     }
 
-    @RequestMapping(value = "bookkeyword/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "keyword/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable long id) {
-    	bookKeywordRepository.deleteById(id);
+    	keywordRepository.deleteById(id);
     }
 
 
