@@ -46,10 +46,13 @@ public class LoanController {
 	}
 
 	@RequestMapping(value = "loan/create", method = RequestMethod.POST)
-	public void create(@RequestBody SaveLoanDto saveLoanDto) {
+	public boolean create(@RequestBody SaveLoanDto saveLoanDto) {
 		Loan loan = DtoMapper.dtoToLoan(saveLoanDto,userRepository, reservationRepository, copyRepository);
-		if (loan != null)
+		if (loan != null) {
 			loanRepository.save(loan);
+			return true;
+		}
+		return false;
 	}
 
 	@RequestMapping(value = "loan/{id}", method = RequestMethod.PUT)
@@ -62,8 +65,8 @@ public class LoanController {
 		 * Converts a post DTO to a loan object, if the post DTO misses a userId, loanId
 		 * or reservationId it returns null, since it will not be a valid data entry
 		 */
-		if (userOptional.isEmpty() || reservationOptional.isEmpty() || copyOptional.isEmpty())
-			return false;
+
+
 		/*
 		 * Checks whether the id given in the url is a valid loanId
 		 */
@@ -76,11 +79,17 @@ public class LoanController {
 		 * values given in the post DTO and saves it back in the database
 		 */
 		Loan existingLoan = optional.get();
-		existingLoan.setCopy(copyOptional.get());
-		existingLoan.setReservation(reservationOptional.get());
-		existingLoan.setUser(userOptional.get());
-		existingLoan.setStartDate(saveLoanDto.getStartDate());
-		existingLoan.setEndDate(saveLoanDto.getEndDate());
+
+		userOptional.ifPresent(existingLoan::setUser);
+		copyOptional.ifPresent(existingLoan::setCopy);
+		reservationOptional.ifPresent(existingLoan::setReservation);
+		if (saveLoanDto.getStartDate() != null) {
+			existingLoan.setStartDate(saveLoanDto.getStartDate());
+		}
+		if (saveLoanDto.getEndDate() != null) {
+			existingLoan.setEndDate(saveLoanDto.getEndDate());
+		}
+
 		loanRepository.save(existingLoan);
 		return true;
 	}
