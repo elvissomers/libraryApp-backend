@@ -1,10 +1,7 @@
 package wt.bookstore.backend.mapping;
 
 import wt.bookstore.backend.domains.*;
-import wt.bookstore.backend.dto.LoanDto;
-import wt.bookstore.backend.dto.SaveCopyDto;
-import wt.bookstore.backend.dto.SaveLoanDto;
-import wt.bookstore.backend.dto.SaveReservationDto;
+import wt.bookstore.backend.dto.*;
 import wt.bookstore.backend.repository.*;
 
 import java.util.Optional;
@@ -90,5 +87,18 @@ public class DtoMapper {
         loanDto.setReservationId(loan.getReservation().getId());
         return loanDto;
 
+    }
+
+    public static ReservationDto reservationToDto(Reservation reservation){
+        /*
+         * Used to create a ReservationDto object from a Reservation object
+         */
+        ReservationDto reservationDto = new ReservationDto();
+
+        reservationDto.setBookTitle(reservation.getBook().getTitle());
+        reservationDto.setUserName(reservation.getUser().getName());
+        reservationDto.setDate(reservation.getDate());
+
+        return reservationDto;
     }
 }

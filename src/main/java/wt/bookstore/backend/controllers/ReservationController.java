@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.*;
+import wt.bookstore.backend.dto.ReservationDto;
 import wt.bookstore.backend.dto.SaveReservationDto;
 import wt.bookstore.backend.mapping.DtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
@@ -13,6 +14,7 @@ import wt.bookstore.backend.repository.IUserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
@@ -31,8 +33,14 @@ public class ReservationController {
     private ILoanRepository loanRepository;
 
     @RequestMapping(value = "reservation", method = RequestMethod.GET)
-    public List<Reservation> findAll() {
-        return reservationRepository.findAll();
+    public Stream<ReservationDto> findAll() {
+        return reservationRepository.findAll().stream().map(DtoMapper::reservationToDto);
+    }
+
+    @RequestMapping(value = "reservation/{id}", method = RequestMethod.GET)
+    public Optional<ReservationDto> find(@PathVariable long id) {
+        Optional<Reservation> optionalReservation = reservationRepository.findById(id);
+        return Optional.of(DtoMapper.reservationToDto(optionalReservation.get()));
     }
 
     @RequestMapping(value="reservation/create", method = RequestMethod.POST)
@@ -45,10 +53,7 @@ public class ReservationController {
         return false;
     }
     
-    @RequestMapping(value = "reservation/{id}", method = RequestMethod.GET)
-    public Optional<Reservation> find(@PathVariable long id) {
-        return reservationRepository.findById(id);
-    }
+
 
     @RequestMapping(value = "reservation/{id}", method = RequestMethod.PUT)
     public boolean update(@PathVariable long id, @RequestBody SaveReservationDto saveReservationDto) {
