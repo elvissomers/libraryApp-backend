@@ -47,8 +47,7 @@ public class LoanController {
 
 	@RequestMapping(value = "loan/{id}", method = RequestMethod.GET)
 	public Optional<LoanDto> find(@PathVariable long id) {
-		Optional<Loan> optionalLoan = loanRepository.findById(id);
-		return Optional.of(DtoMapper.loanToDto(optionalLoan.get()));
+		return Optional.of(DtoMapper.loanToDto(loanRepository.findById(id).get()));
 	}
 
 	@RequestMapping(value = "loan/create", method = RequestMethod.POST)
