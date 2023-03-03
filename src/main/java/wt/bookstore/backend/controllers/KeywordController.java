@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.Keyword;
+import wt.bookstore.backend.dto.KeywordDto;
 import wt.bookstore.backend.dto.SaveKeywordDto;
 import wt.bookstore.backend.mapping.DtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
@@ -13,6 +14,7 @@ import wt.bookstore.backend.domains.Book;
 import java.security.Key;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
@@ -25,8 +27,13 @@ public class KeywordController {
     private IBookRepository bookRepository;
 
     @RequestMapping(value = "keyword", method = RequestMethod.GET)
-    public List<Keyword> findAll() {
-        return keywordRepository.findAll();
+    public Stream<KeywordDto> findAll() {
+        return keywordRepository.findAll().stream().map(DtoMapper::keywordToDto);
+    }
+
+    @RequestMapping(value = "keyword/{id}", method = RequestMethod.GET)
+    public Optional<KeywordDto> find(@PathVariable long id) {
+        return Optional.of(DtoMapper.keywordToDto(keywordRepository.findById(id).get()));
     }
 
     @RequestMapping(value="keyword/create", method = RequestMethod.POST)
@@ -55,11 +62,7 @@ public class KeywordController {
         }
 
     }
-    
-    @RequestMapping(value = "keyword/{id}", method = RequestMethod.GET)
-    public Optional<Keyword> find(@PathVariable long id) {
-        return keywordRepository.findById(id);
-    }
+
 
     @RequestMapping(value = "keyword/{id}", method = RequestMethod.PUT)
     public void update(@PathVariable long id, @RequestBody Keyword keyword) {

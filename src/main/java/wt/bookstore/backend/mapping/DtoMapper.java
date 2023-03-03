@@ -141,4 +141,15 @@ public class DtoMapper {
 
         return userDto;
     }
+
+    public static KeywordDto keywordToDto(Keyword keyword){
+        /*
+         * Used to create a KeywordDto object from a Keyword object
+         */
+        KeywordDto keywordDto = new KeywordDto();
+
+        keywordDto.setName(keyword.getName());
+
+        return keywordDto;
+    }
 }
