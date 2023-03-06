@@ -86,14 +86,13 @@ public class DtoMapper {
 
         // Creates an empty booklist to append the book corresponding to the id in the
         // saveKeywordDto object, so a keyword object can be created
-        List<Book> bookList = new ArrayList<>();
         Optional<Book> bookOptional = bookRepository.findById(saveKeywordDto.getBookId());
         if (bookOptional.isPresent()) {
-            bookList.add(bookRepository.findById(saveKeywordDto.getBookId()).get());
+            keyword.addBook(bookOptional.get());
+            bookOptional.get().addKeyword(keyword);
         } else {
             return null;
         }
-        keyword.setBooks(bookList);
 
         return keyword;
     }

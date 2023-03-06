@@ -1,5 +1,6 @@
 package wt.bookstore.backend.domains;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -19,8 +20,8 @@ public class Keyword {
     @Column(nullable = false, length = 100)
     private String name;
     
-    @ManyToMany()
-    private List<Book> books;
+    @ManyToMany(mappedBy = "keywords")
+    private List<Book> books = new ArrayList<>();
 
 	public long getId() {
 		return id;
@@ -44,6 +45,10 @@ public class Keyword {
 
 	public void setBooks(List<Book> books) {
 		this.books = books;
+	}
+
+	public void addBook(Book book){
+		books.add(book);
 	}
     
 }

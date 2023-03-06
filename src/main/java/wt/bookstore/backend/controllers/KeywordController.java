@@ -51,23 +51,25 @@ public class KeywordController {
 //        return true;
 
 
-    	long bookId = saveKeywordDto.getBookId(); // geeft een error for some reason omdat dit een String zou zijn?
+    	long bookId = saveKeywordDto.getBookId();
         Optional<Book> optionalBook = bookRepository.findById(bookId);
         Optional<Keyword> keywordInTable = keywordRepository.findByName(saveKeywordDto.getName());
 
 
-        if (keywordInTable.isPresent()) {
-            keywordInTable.get().getBooks().add(optionalBook.get());
-            return true;
-        } else {
-            Keyword keyword = DtoMapper.dtoToKeyword(saveKeywordDto, bookRepository);
+//        if (keywordInTable.isPresent()) {
+//            // Do we need these both? Or only one?
+//            optionalBook.get().addKeyword(keywordInTable.get());
+//            keywordInTable.get().addBook(optionalBook.get());
+//            return true;
+//        } else {
+        //}
+        Keyword keyword = DtoMapper.dtoToKeyword(saveKeywordDto, bookRepository);
             if (keyword != null) {
                 keywordRepository.save(keyword);
                 return true;
             } else {
                 return false;
             }
-        }
 
     }
 
