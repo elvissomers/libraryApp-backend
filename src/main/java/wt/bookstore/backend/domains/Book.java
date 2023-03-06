@@ -25,7 +25,7 @@ public class Book {
 	private List<Copy> copies = new ArrayList<>();
 
 	@OneToMany(mappedBy = "book", orphanRemoval = true)
-	private List<Reservation> reservations;
+	private List<Reservation> reservations = new ArrayList<>();
 
 	public Book(long isbn, String title, String author) {
 		this.isbn = isbn;

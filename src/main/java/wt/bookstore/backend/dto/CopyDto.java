@@ -5,9 +5,8 @@ import java.util.List;
 public class CopyDto {
     private boolean available;
 
-    private long bookId;
+    private String bookTitle;
 
-    private List<Long> loanIds;
 
     public boolean isAvailable() {
         return available;
@@ -17,19 +16,11 @@ public class CopyDto {
         this.available = available;
     }
 
-    public long getBookId() {
-        return bookId;
+    public String getBookTitle() {
+        return bookTitle;
     }
 
-    public void setBookId(long bookId) {
-        this.bookId = bookId;
-    }
-
-    public List<Long> getLoanIds() {
-        return loanIds;
-    }
-
-    public void setLoanIds(List<Long> loanIds) {
-        this.loanIds = loanIds;
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
     }
 }

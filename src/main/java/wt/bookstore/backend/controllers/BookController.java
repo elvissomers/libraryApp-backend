@@ -5,12 +5,16 @@ import org.springframework.web.bind.annotation.*;
 import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.domains.Reservation;
+import wt.bookstore.backend.dto.BookDto;
+import wt.bookstore.backend.dto.SaveBookDto;
+import wt.bookstore.backend.mapping.DtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
@@ -28,19 +32,22 @@ public class BookController {
 
 
     @RequestMapping(value = "book", method = RequestMethod.GET)
-    public List<Book> findAll() {
-        return bookRepository.findAll();
+    public Stream<BookDto> findAll() {
+        return bookRepository.findAll().stream().map(DtoMapper::bookToDto);
+    }
+
+    @RequestMapping(value = "book/{id}", method = RequestMethod.GET)
+    public Optional<BookDto> find(@PathVariable long id) {
+        return Optional.of(DtoMapper.bookToDto(bookRepository.findById(id).get()));
     }
 
     @RequestMapping(value="book/create", method = RequestMethod.POST)
-    public void create(@RequestBody Book book) {
+    public void create(@RequestBody SaveBookDto saveBookDto) {
+        Book book = DtoMapper.dtoToBook(saveBookDto);
         bookRepository.save(book);
     }
     
-    @RequestMapping(value = "book/{id}", method = RequestMethod.GET)
-    public Optional<Book> find(@PathVariable long id) {
-        return bookRepository.findById(id);
-    }
+
 
     @RequestMapping(value = "book/{id}", method = RequestMethod.PUT)
     public void update(@PathVariable long id, @RequestBody Book book) {

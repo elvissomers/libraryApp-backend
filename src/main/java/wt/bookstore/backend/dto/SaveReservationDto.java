@@ -10,9 +10,6 @@ public class SaveReservationDto {
 
     private long bookId;
 
-//    probably not useful
-    private long loanId;
-
     public LocalDate getDate() {
         return date;
     }
@@ -37,11 +34,5 @@ public class SaveReservationDto {
         this.bookId = bookId;
     }
 
-    public long getLoanId() {
-        return loanId;
-    }
 
-    public void setLoanId(long loanId) {
-        this.loanId = loanId;
-    }
 }

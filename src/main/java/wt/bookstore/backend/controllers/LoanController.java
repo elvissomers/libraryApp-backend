@@ -36,8 +36,6 @@ public class LoanController {
 	@Autowired
 	private ICopyRepository copyRepository;
 
-	@Autowired
-	private IReservationRepository reservationRepository;
 
 	@RequestMapping(value = "loan", method = RequestMethod.GET)
 	public Stream<LoanDto> findAll() {
@@ -52,7 +50,7 @@ public class LoanController {
 
 	@RequestMapping(value = "loan/create", method = RequestMethod.POST)
 	public boolean create(@RequestBody SaveLoanDto saveLoanDto) {
-		Loan loan = DtoMapper.dtoToLoan(saveLoanDto,userRepository, reservationRepository, copyRepository);
+		Loan loan = DtoMapper.dtoToLoan(saveLoanDto,userRepository,  copyRepository);
 		if (loan != null) {
 			loanRepository.save(loan);
 			return true;
@@ -64,7 +62,6 @@ public class LoanController {
 	public boolean update(@PathVariable long id, @RequestBody SaveLoanDto saveLoanDto) {
 
 		Optional<User> userOptional = userRepository.findById(saveLoanDto.getUserId());
-		Optional<Reservation> reservationOptional = reservationRepository.findById(saveLoanDto.getReservationId());
 		Optional<Copy> copyOptional = copyRepository.findById(saveLoanDto.getCopyId());
 		/*
 		 * Converts a post DTO to a loan object, if the post DTO misses a userId, loanId
@@ -87,7 +84,6 @@ public class LoanController {
 
 		userOptional.ifPresent(existingLoan::setUser);
 		copyOptional.ifPresent(existingLoan::setCopy);
-		reservationOptional.ifPresent(existingLoan::setReservation);
 		if (saveLoanDto.getStartDate() != null) {
 			existingLoan.setStartDate(saveLoanDto.getStartDate());
 		}

@@ -10,19 +10,18 @@ import java.util.Optional;
 
 public class DtoMapper {
 
-    public static Loan dtoToLoan(SaveLoanDto saveLoanDto, IUserRepository userRepository, IReservationRepository reservationRepository, ICopyRepository copyRepository) {
+    public static Loan dtoToLoan(SaveLoanDto saveLoanDto, IUserRepository userRepository, ICopyRepository copyRepository) {
         /*
          * Used to create a Loan object from a saveLoanDto object
          */
         Optional<User> userOptional = userRepository.findById(saveLoanDto.getUserId());
-        Optional<Reservation> reservationOptional = reservationRepository.findById(saveLoanDto.getReservationId());
         Optional<Copy> copyOptional = copyRepository.findById(saveLoanDto.getCopyId());
 
         /*
          * Check whether all necessary fields are present in the post DTO, e.g. You can not make a loan object without
          * knowing which copy is loaned
          */
-        if (userOptional.isEmpty() || reservationOptional.isEmpty() || copyOptional.isEmpty())
+        if (userOptional.isEmpty() || copyOptional.isEmpty())
             return null;
 
         Loan loan = new Loan();
@@ -30,17 +29,15 @@ public class DtoMapper {
         loan.setEndDate(saveLoanDto.getEndDate()); //Possibly Null
         loan.setUser(userOptional.get());
         loan.setCopy(copyOptional.get());
-        loan.setReservation(reservationOptional.get());
 
         return loan;
     }
 
-    public static Reservation dtoToReservation(SaveReservationDto saveReservationDto, IUserRepository userRepository, IBookRepository bookRepository, ILoanRepository loanRepository) {
+    public static Reservation dtoToReservation(SaveReservationDto saveReservationDto, IUserRepository userRepository, IBookRepository bookRepository) {
         /*
          * Used to create a Reservation object from a saveReservationDto object
          */
         Optional<User> userOptional = userRepository.findById(saveReservationDto.getUserId());
-        Optional<Loan> loanOptional = loanRepository.findById(saveReservationDto.getLoanId());
         Optional<Book> bookOptional = bookRepository.findById(saveReservationDto.getBookId());
 
         /*
@@ -52,9 +49,6 @@ public class DtoMapper {
 
         Reservation reservation = new Reservation();
         reservation.setDate(saveReservationDto.getDate());
-        if (loanOptional.isPresent()) {
-            reservation.setLoan(loanOptional.get());
-        }
         reservation.setBook(bookOptional.get());
         reservation.setUser(userOptional.get());
 
@@ -73,9 +67,35 @@ public class DtoMapper {
         return user;
     }
 
-    /*
-     * Uitgecomment omdat ik denk deze niet te gaan gebruiken in de controller
-     */
+    public static Copy dtoToCopy(SaveCopyDto saveCopyDto, IBookRepository bookRepository) {
+        /*
+         * Used to create a Copy obejct from a SaveCopyDto object
+         */
+        Copy copy = new Copy();
+        // We always set to true because a newly created copy is always available
+        copy.setAvailable(true);
+        Optional<Book> optionalBook = bookRepository.findById(saveCopyDto.getBookId());
+
+        if (optionalBook.isPresent()) {
+            copy.setBook(optionalBook.get());
+            return copy;
+        } else {
+            return null;
+        }
+    }
+
+    public static Book dtoToBook(SaveBookDto saveBookDto){
+        /*
+         * Used to create a Book object from a Dto
+         */
+        Book book = new Book();
+
+        book.setAuthor(saveBookDto.getAuthor());
+        book.setIsbn(saveBookDto.getIsbn());
+        book.setTitle(saveBookDto.getTitle());
+
+        return book;
+    }
 
 
     public static LoanDto loanToDto(Loan loan) {
@@ -91,7 +111,6 @@ public class DtoMapper {
         loanDto.setEndDate(loan.getEndDate());
         loanDto.setUserName(loan.getUser().getName());
         loanDto.setCopyName(loan.getCopy().getBook().getTitle());
-        loanDto.setReservationId(loan.getReservation().getId());
         return loanDto;
 
     }
@@ -120,6 +139,31 @@ public class DtoMapper {
         userDto.setName(user.getName());
 
         return userDto;
+    }
+
+    public static CopyDto copyToDto(Copy copy){
+        /*
+         * Used to create a dto object from a copy
+         */
+        CopyDto copyDto = new CopyDto();
+
+        copyDto.setAvailable(copy.isAvailable());
+        copyDto.setBookTitle(copy.getBook().getTitle());
+
+        return copyDto;
+    }
+
+    public static BookDto bookToDto(Book book){
+        /*
+         * Used to create a dto object from a book
+         */
+        BookDto bookDto = new BookDto();
+
+        bookDto.setAuthor(book.getAuthor());
+        bookDto.setIsbn(book.getIsbn());
+        bookDto.setTitle(book.getTitle());
+
+        return bookDto;
     }
 }
 

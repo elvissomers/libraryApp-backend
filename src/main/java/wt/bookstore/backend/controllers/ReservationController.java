@@ -45,7 +45,7 @@ public class ReservationController {
 
     @RequestMapping(value="reservation/create", method = RequestMethod.POST)
     public boolean create(@RequestBody SaveReservationDto saveReservationDto) {
-        Reservation reservation = DtoMapper.dtoToReservation(saveReservationDto, userRepository, bookRepository, loanRepository);
+        Reservation reservation = DtoMapper.dtoToReservation(saveReservationDto, userRepository, bookRepository);
         if (reservation != null) {
             reservationRepository.save(reservation);
             return true;
@@ -58,7 +58,6 @@ public class ReservationController {
     @RequestMapping(value = "reservation/{id}", method = RequestMethod.PUT)
     public boolean update(@PathVariable long id, @RequestBody SaveReservationDto saveReservationDto) {
         Optional<User> userOptional = userRepository.findById(saveReservationDto.getUserId());
-        Optional<Loan> loanOptional = loanRepository.findById(saveReservationDto.getLoanId());
         Optional<Book> bookOptional = bookRepository.findById(saveReservationDto.getBookId());
         /*
          * Converts a post DTO to a loan object, if the post DTO misses a userId, loanId
@@ -80,7 +79,6 @@ public class ReservationController {
         Reservation reservation = optionalReservation.get();
 
         userOptional.ifPresent(reservation::setUser);
-        loanOptional.ifPresent(reservation::setLoan);
         bookOptional.ifPresent(reservation::setBook);
         if (saveReservationDto.getDate() != null) {
             reservation.setDate(saveReservationDto.getDate());
