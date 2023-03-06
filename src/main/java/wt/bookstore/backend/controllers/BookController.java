@@ -3,10 +3,8 @@ package wt.bookstore.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import wt.bookstore.backend.domains.Book;
-import wt.bookstore.backend.domains.Keyword;
 import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.domains.Reservation;
-import wt.bookstore.backend.repository.IKeywordRepository;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
@@ -27,8 +25,7 @@ public class BookController {
     @Autowired
     private IReservationRepository reservationRepository;
     
-    @Autowired
-    private IKeywordRepository bookKeywordRepository;
+
 
     @RequestMapping(value = "book", method = RequestMethod.GET)
     public List<Book> findAll() {
@@ -76,13 +73,5 @@ public class BookController {
     	return reservationRepository.findByBookId(id);
     }
     
-    @RequestMapping(value = "book/{id}/bookkeywords", method = RequestMethod.GET)
-    public List<Keyword> findBookKeywords(@PathVariable long id){
-    	Optional<Book> bookOptional = bookRepository.findById(id);
-    	if (bookOptional.isEmpty())
-    		return null;
-    	
-    	return bookOptional.get().getKeywords();
-    }
-    
+
 }

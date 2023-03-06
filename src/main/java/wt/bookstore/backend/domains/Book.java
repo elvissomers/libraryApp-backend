@@ -20,14 +20,6 @@ public class Book {
 
 	@Column(nullable = false, length = 100)
 	private String author;
-	
-	@ManyToMany()
-	@JoinTable(
-			name = "book_keywords",
-			joinColumns = @JoinColumn(name = "book_id"),
-			inverseJoinColumns = @JoinColumn(name = "keyword_id"))
-	private List<Keyword> keywords = new ArrayList<>();
-
 
 	@OneToMany(mappedBy = "book", orphanRemoval = true)
 	private List<Copy> copies = new ArrayList<>();
@@ -76,16 +68,6 @@ public class Book {
 		this.author = author;
 	}
 	
-	public List<Keyword> getKeywords() {
-		return keywords;
-	}
-	
-	public void setKeywords(List<Keyword> keywords) {
-		this.keywords = keywords;
-	}
 
-	public void addKeyword(Keyword keyword){
-		keywords.add(keyword);
-	}
 
 }

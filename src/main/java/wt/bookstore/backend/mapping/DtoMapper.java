@@ -10,7 +10,7 @@ import java.util.Optional;
 
 public class DtoMapper {
 
-    public static Loan dtoToLoan(SaveLoanDto saveLoanDto, IUserRepository userRepository, IReservationRepository reservationRepository, ICopyRepository copyRepository){
+    public static Loan dtoToLoan(SaveLoanDto saveLoanDto, IUserRepository userRepository, IReservationRepository reservationRepository, ICopyRepository copyRepository) {
         /*
          * Used to create a Loan object from a saveLoanDto object
          */
@@ -35,7 +35,7 @@ public class DtoMapper {
         return loan;
     }
 
-    public static Reservation dtoToReservation(SaveReservationDto saveReservationDto, IUserRepository userRepository, IBookRepository bookRepository, ILoanRepository loanRepository){
+    public static Reservation dtoToReservation(SaveReservationDto saveReservationDto, IUserRepository userRepository, IBookRepository bookRepository, ILoanRepository loanRepository) {
         /*
          * Used to create a Reservation object from a saveReservationDto object
          */
@@ -61,7 +61,7 @@ public class DtoMapper {
         return reservation;
     }
 
-    public static User dtoToUser(SaveUserDto saveUserDto){
+    public static User dtoToUser(SaveUserDto saveUserDto) {
         /*
          * Used to create a User object from a SaveUserDto object
          */
@@ -77,27 +77,8 @@ public class DtoMapper {
      * Uitgecomment omdat ik denk deze niet te gaan gebruiken in de controller
      */
 
-    public static Keyword dtoToKeyword(SaveKeywordDto saveKeywordDto, IBookRepository bookRepository){
-        /*
-         * Used to create a Keyword object from a SaveKeywordDto object
-         */
-        Keyword keyword = new Keyword();
-        keyword.setName(saveKeywordDto.getName());
 
-        // Creates an empty booklist to append the book corresponding to the id in the
-        // saveKeywordDto object, so a keyword object can be created
-        Optional<Book> bookOptional = bookRepository.findById(saveKeywordDto.getBookId());
-        if (bookOptional.isPresent()) {
-            keyword.addBook(bookOptional.get());
-            bookOptional.get().addKeyword(keyword);
-        } else {
-            return null;
-        }
-
-        return keyword;
-    }
-
-    public static LoanDto loanToDto(Loan loan){
+    public static LoanDto loanToDto(Loan loan) {
         /*
          * Used to create a LoanDto object from a Loan object
          */
@@ -115,7 +96,7 @@ public class DtoMapper {
 
     }
 
-    public static ReservationDto reservationToDto(Reservation reservation){
+    public static ReservationDto reservationToDto(Reservation reservation) {
         /*
          * Used to create a ReservationDto object from a Reservation object
          */
@@ -128,7 +109,7 @@ public class DtoMapper {
         return reservationDto;
     }
 
-    public static UserDto userToDto(User user){
+    public static UserDto userToDto(User user) {
         /*
          * Used to create a UserDto object from a User object
          */
@@ -140,15 +121,6 @@ public class DtoMapper {
 
         return userDto;
     }
-
-    public static KeywordDto keywordToDto(Keyword keyword){
-        /*
-         * Used to create a KeywordDto object from a Keyword object
-         */
-        KeywordDto keywordDto = new KeywordDto();
-
-        keywordDto.setName(keyword.getName());
-
-        return keywordDto;
-    }
 }
+
+
