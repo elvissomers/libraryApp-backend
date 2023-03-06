@@ -28,8 +28,9 @@ public class Book {
 			inverseJoinColumns = @JoinColumn(name = "keyword_id"))
 	private List<Keyword> keywords = new ArrayList<>();
 
+
 	@OneToMany(mappedBy = "book", orphanRemoval = true)
-	private List<Copy> copies;
+	private List<Copy> copies = new ArrayList<>();
 
 	@OneToMany(mappedBy = "book", orphanRemoval = true)
 	private List<Reservation> reservations;
