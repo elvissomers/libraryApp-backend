@@ -20,9 +20,6 @@ public class Loan {
 	@ManyToOne(optional = false)
 	private Copy copy;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "reservation_id", referencedColumnName = "id")
-	private Reservation reservation;
 
 	public Loan() {
 		
@@ -72,11 +69,4 @@ public class Loan {
 		this.copy = copy;
 	}
 
-	public Reservation getReservation() {
-		return reservation;
-	}
-
-	public void setReservation(Reservation reservation) {
-		this.reservation = reservation;
-	}
 }

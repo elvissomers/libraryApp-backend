@@ -55,8 +55,8 @@ public class User {
 		return eMailAddress;
 	}
 
-	public void seteMailAddress(String eMailAdress) {
-		this.eMailAddress = eMailAdress;
+	public void seteMailAddress(String eMailAddress) {
+		this.eMailAddress = eMailAddress;
 	}
 
 	public boolean isAdmin() {
@@ -73,6 +73,14 @@ public class User {
 	
 	public void setLoans(List<Loan> loans) {
 		this.loans = loans;
+	}
+
+	public List<Reservation> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
 	}
 
 }

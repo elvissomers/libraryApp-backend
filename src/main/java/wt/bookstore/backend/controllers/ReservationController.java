@@ -3,11 +3,18 @@ package wt.bookstore.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import wt.bookstore.backend.domains.Reservation;
+import wt.bookstore.backend.domains.*;
+import wt.bookstore.backend.dto.ReservationDto;
+import wt.bookstore.backend.dto.SaveReservationDto;
+import wt.bookstore.backend.mapping.DtoMapper;
+import wt.bookstore.backend.repository.IBookRepository;
+import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
+import wt.bookstore.backend.repository.IUserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
@@ -16,28 +23,69 @@ public class ReservationController {
     @Autowired
     private IReservationRepository reservationRepository;
 
+    @Autowired
+    private IUserRepository userRepository;
+
+    @Autowired
+    private IBookRepository bookRepository;
+
+    @Autowired
+    private ILoanRepository loanRepository;
+
     @RequestMapping(value = "reservation", method = RequestMethod.GET)
-    public List<Reservation> findAll() {
-        return reservationRepository.findAll();
+    public Stream<ReservationDto> findAll() {
+        return reservationRepository.findAll().stream().map(DtoMapper::reservationToDto);
+    }
+
+    @RequestMapping(value = "reservation/{id}", method = RequestMethod.GET)
+    public Optional<ReservationDto> find(@PathVariable long id) {
+        Optional<Reservation> optionalReservation = reservationRepository.findById(id);
+        return Optional.of(DtoMapper.reservationToDto(optionalReservation.get()));
     }
 
     @RequestMapping(value="reservation/create", method = RequestMethod.POST)
-    public void create(@RequestBody Reservation reservation) {
-        reservationRepository.save(reservation);
+    public boolean create(@RequestBody SaveReservationDto saveReservationDto) {
+        Reservation reservation = DtoMapper.dtoToReservation(saveReservationDto, userRepository, bookRepository);
+        if (reservation != null) {
+            reservationRepository.save(reservation);
+            return true;
+        }
+        return false;
     }
     
-    @RequestMapping(value = "reservation/{id}", method = RequestMethod.GET)
-    public Optional<Reservation> find(@PathVariable long id) {
-        return reservationRepository.findById(id);
-    }
+
 
     @RequestMapping(value = "reservation/{id}", method = RequestMethod.PUT)
-    public void update(@PathVariable long id, @RequestBody Reservation reservation) {
-        Optional<Reservation> optional = reservationRepository.findById(id);
-//        optional.get().setBookId(reservation.getBookId());
-//        optional.get().setUserId(reservation.getUserId());
-        optional.get().setDate(reservation.getDate());
-        reservationRepository.save(optional.get());
+    public boolean update(@PathVariable long id, @RequestBody SaveReservationDto saveReservationDto) {
+        Optional<User> userOptional = userRepository.findById(saveReservationDto.getUserId());
+        Optional<Book> bookOptional = bookRepository.findById(saveReservationDto.getBookId());
+        /*
+         * Converts a post DTO to a loan object, if the post DTO misses a userId, loanId
+         * or reservationId it returns null, since it will not be a valid data entry
+         */
+
+
+        /*
+         * Checks whether the id given in the url is a valid loanId
+         */
+        Optional<Reservation> optionalReservation = reservationRepository.findById(id);
+        if (optionalReservation.isEmpty())
+            return false;
+
+        /*
+         * Overwrites all the existing fields (except the ID) of the loan with the given loadId for the
+         * values given in the post DTO and saves it back in the database
+         */
+        Reservation reservation = optionalReservation.get();
+
+        userOptional.ifPresent(reservation::setUser);
+        bookOptional.ifPresent(reservation::setBook);
+        if (saveReservationDto.getDate() != null) {
+            reservation.setDate(saveReservationDto.getDate());
+        }
+
+        reservationRepository.save(reservation);
+        return true;
     }
 
     @RequestMapping(value = "reservation/{id}", method = RequestMethod.DELETE)

@@ -6,12 +6,16 @@ import org.springframework.web.bind.annotation.*;
 import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
+import wt.bookstore.backend.dto.SaveUserDto;
+import wt.bookstore.backend.dto.UserDto;
+import wt.bookstore.backend.mapping.DtoMapper;
 import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
 import wt.bookstore.backend.repository.IUserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 @RestController
 @CrossOrigin(maxAge = 3600)
@@ -27,26 +31,29 @@ public class UserController {
     private IReservationRepository reservationRepository;
 
     @RequestMapping(value = "user", method = RequestMethod.GET)
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public Stream<UserDto> findAll() {
+        return userRepository.findAll().stream().map(DtoMapper::userToDto);
+    }
+
+    @RequestMapping(value = "user/{id}", method = RequestMethod.GET)
+    public Optional<UserDto> find(@PathVariable long id) {
+        return Optional.of(DtoMapper.userToDto(userRepository.findById(id).get()));
     }
 
     @RequestMapping(value="user/create", method = RequestMethod.POST)
-    public void create(@RequestBody User user) {
+    public void create(@RequestBody SaveUserDto saveUserDto) {
+        User user = DtoMapper.dtoToUser(saveUserDto);
         userRepository.save(user);
     }
     
-    @RequestMapping(value = "user/{id}", method = RequestMethod.GET)
-    public Optional<User> find(@PathVariable long id) {
-        return userRepository.findById(id);
-    }
+
 
     @RequestMapping(value = "user/{id}", method = RequestMethod.PUT)
-    public void update(@PathVariable long id, @RequestBody User user) {
+    public void update(@PathVariable long id, @RequestBody SaveUserDto saveUserDto) {
         Optional<User> optional = userRepository.findById(id);
-        optional.get().setName(user.getName());
-        optional.get().seteMailAddress(user.geteMailAddress());
-        optional.get().setAdmin(user.isAdmin());
+        optional.get().setName(saveUserDto.getName());
+        optional.get().seteMailAddress(saveUserDto.geteMailAddress());
+        optional.get().setAdmin(saveUserDto.isAdmin());
         userRepository.save(optional.get());
     }
 

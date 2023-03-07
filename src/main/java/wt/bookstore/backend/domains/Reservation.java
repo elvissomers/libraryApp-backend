@@ -3,6 +3,9 @@ package wt.bookstore.backend.domains;
 import java.time.LocalDate;
 
 import jakarta.persistence.*;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDate;
 
 @Entity
 public class Reservation {
@@ -18,12 +21,25 @@ public class Reservation {
 
     @ManyToOne(optional = false)
     private User user;
-    @OneToOne(mappedBy = "reservation")
-    private Loan loan;
 
 
+    public Book getBook() {
+        return book;
+    }
 
-	public long getId() {
+    public void setBook(Book book) {
+        this.book = book;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public long getId() {
 		return id;
 	}
 	

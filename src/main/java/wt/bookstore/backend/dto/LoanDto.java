@@ -16,7 +16,6 @@ public class LoanDto {
 	
 	private String userName;
 	private String copyName;
-	private long reservationId;
 
 	public LocalDate getStartDate() {
 		return startDate;
@@ -50,11 +49,5 @@ public class LoanDto {
 		this.copyName = copyName;
 	}
 
-	public long getReservationId() {
-		return reservationId;
-	}
 
-	public void setReservationId(long reservationId) {
-		this.reservationId = reservationId;
-	}
 }

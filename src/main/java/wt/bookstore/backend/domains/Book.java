@@ -1,5 +1,6 @@
 package wt.bookstore.backend.domains;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.*;
@@ -19,15 +20,12 @@ public class Book {
 
 	@Column(nullable = false, length = 100)
 	private String author;
-	
-	@ManyToMany(mappedBy="books")
-	private List<Keyword> keywords;
 
 	@OneToMany(mappedBy = "book", orphanRemoval = true)
-	private List<Copy> copies;
+	private List<Copy> copies = new ArrayList<>();
 
 	@OneToMany(mappedBy = "book", orphanRemoval = true)
-	private List<Reservation> reservations;
+	private List<Reservation> reservations = new ArrayList<>();
 
 	public Book(long isbn, String title, String author) {
 		this.isbn = isbn;
@@ -70,12 +68,6 @@ public class Book {
 		this.author = author;
 	}
 	
-	public List<Keyword> getKeywords() {
-		return keywords;
-	}
-	
-	public void setKeywords(List<Keyword> keywords) {
-		this.keywords = keywords;
-	}
+
 
 }

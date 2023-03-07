@@ -10,8 +10,6 @@ public class SaveLoanDto {
 	
 	private long userId;
 
-	private long reservationId;
-
 	private long copyId;
 
 
@@ -37,14 +35,6 @@ public class SaveLoanDto {
 
 	public void setUserId(long userId) {
 		this.userId = userId;
-	}
-
-	public long getReservationId() {
-		return reservationId;
-	}
-
-	public void setReservationId(long reservationId) {
-		this.reservationId = reservationId;
 	}
 
 	public long getCopyId() {
