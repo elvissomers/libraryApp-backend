@@ -24,6 +24,10 @@ public class CopyController {
     @Autowired
     private IBookRepository bookRepository;
 
+
+    /*
+     * GET endpoints starting from here
+     */
     @RequestMapping(value = "copy", method = RequestMethod.GET)
     public Stream<CopyDto> findAll() {
         return copyRepository.findAll().stream().map(DtoMapper::copyToDto);
@@ -34,6 +38,10 @@ public class CopyController {
         return Optional.of(DtoMapper.copyToDto(copyRepository.findById(id).get()));
     }
 
+
+    /*
+     * POST endpoints starting from here
+     */
     @RequestMapping(value="copy/create", method = RequestMethod.POST)
     public boolean create(@RequestBody SaveCopyDto saveCopyDto) {
         Copy copy = DtoMapper.dtoToCopy(saveCopyDto, bookRepository);
@@ -46,15 +54,25 @@ public class CopyController {
     }
     
 
+    /*
+     * PUT endpoints from here
+     */
+    @RequestMapping(value="copy/{id}/available", method = RequestMethod.PUT)
+    public void updateAvailable(@PathVariable long id, @RequestBody boolean available){
+        Optional<Copy> optionalCopy = copyRepository.findById(id);
+        optionalCopy.get().setAvailable(available);
 
-    @RequestMapping(value = "copy/{id}", method = RequestMethod.PUT)
-    public void update(@PathVariable long id, @RequestBody Copy copy) {
-        Optional<Copy> optional = copyRepository.findById(id);
-        optional.get().setAvailable(copy.isAvailable());
-//        optional.get().setHeldByUserId(copy.getHeldByUserId());
-//        optional.get().setBookId(copy.getBookId());
-        copyRepository.save(optional.get());
+        copyRepository.save(optionalCopy.get());
     }
+
+//    @RequestMapping(value = "copy/{id}", method = RequestMethod.PUT)
+//    public void update(@PathVariable long id, @RequestBody Copy copy) {
+//        Optional<Copy> optional = copyRepository.findById(id);
+//        optional.get().setAvailable(copy.isAvailable());
+////        optional.get().setHeldByUserId(copy.getHeldByUserId());
+////        optional.get().setBookId(copy.getBookId());
+//        copyRepository.save(optional.get());
+//    }
 
     @RequestMapping(value = "copy/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable long id) {

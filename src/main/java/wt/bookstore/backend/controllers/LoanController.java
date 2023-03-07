@@ -1,5 +1,6 @@
 package wt.bookstore.backend.controllers;
 
+import java.time.LocalDate;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -37,6 +38,9 @@ public class LoanController {
 	private ICopyRepository copyRepository;
 
 
+	/*
+	 * GET endpoints from here
+	 */
 	@RequestMapping(value = "loan", method = RequestMethod.GET)
 	public Stream<LoanDto> findAll() {
 		// Loan omzetten naar LoanDto
@@ -48,6 +52,10 @@ public class LoanController {
 		return Optional.of(DtoMapper.loanToDto(loanRepository.findById(id).get()));
 	}
 
+
+	/*
+	 * POST endpoints from here
+	 */
 	@RequestMapping(value = "loan/create", method = RequestMethod.POST)
 	public boolean create(@RequestBody SaveLoanDto saveLoanDto) {
 		Loan loan = DtoMapper.dtoToLoan(saveLoanDto,userRepository,  copyRepository);
@@ -56,6 +64,26 @@ public class LoanController {
 			return true;
 		}
 		return false;
+	}
+
+
+	/*
+	 * PUT endpoints from here
+	 */
+	@RequestMapping(value="loan/{id}/startdate", method = RequestMethod.PUT)
+	public void updateStartDate(@PathVariable long id, @RequestBody LocalDate startDate){
+		Optional<Loan> optionalLoan = loanRepository.findById(id);
+		optionalLoan.get().setStartDate(startDate);
+
+		loanRepository.save(optionalLoan.get());
+	}
+
+	@RequestMapping(value="loan/{id}/enddate", method = RequestMethod.PUT)
+	public void updateEndDate(@PathVariable long id, @RequestBody LocalDate endDate){
+		Optional<Loan> optionalLoan = loanRepository.findById(id);
+		optionalLoan.get().setEndDate(endDate);
+
+		loanRepository.save(optionalLoan.get());
 	}
 
 	@RequestMapping(value = "loan/{id}", method = RequestMethod.PUT)

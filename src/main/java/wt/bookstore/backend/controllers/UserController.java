@@ -30,6 +30,10 @@ public class UserController {
     @Autowired
     private IReservationRepository reservationRepository;
 
+
+    /*
+     * GET endpoints from here
+     */
     @RequestMapping(value = "user", method = RequestMethod.GET)
     public Stream<UserDto> findAll() {
         return userRepository.findAll().stream().map(DtoMapper::userToDto);
@@ -40,10 +44,50 @@ public class UserController {
         return Optional.of(DtoMapper.userToDto(userRepository.findById(id).get()));
     }
 
+
+    /*
+     * POST endpoints from here
+     */
     @RequestMapping(value="user/create", method = RequestMethod.POST)
     public void create(@RequestBody SaveUserDto saveUserDto) {
         User user = DtoMapper.dtoToUser(saveUserDto);
         userRepository.save(user);
+    }
+
+
+    /*
+     * PUT endpoints
+     */
+    @RequestMapping(value = "user/{id}/firstname", method = RequestMethod.PUT)
+    public void updateFirstName(@PathVariable long id, @RequestBody String firstName){
+        Optional<User> optionalUser = userRepository.findById(id);
+        optionalUser.get().setFirstName(firstName);
+
+        userRepository.save(optionalUser.get());
+    }
+
+    @RequestMapping(value = "user/{id}/lastname", method = RequestMethod.PUT)
+    public void updateLastName(@PathVariable long id, @RequestBody String lastName){
+        Optional<User> optionalUser = userRepository.findById(id);
+        optionalUser.get().setLastName(lastName);
+
+        userRepository.save(optionalUser.get());
+    }
+
+    @RequestMapping(value = "user/{id}/emailaddress", method = RequestMethod.PUT)
+    public void updateEmailAddress(@PathVariable long id, @RequestBody String emailAddress){
+        Optional<User> optionalUser = userRepository.findById(id);
+        optionalUser.get().seteMailAddress(emailAddress);
+
+        userRepository.save(optionalUser.get());
+    }
+
+    @RequestMapping(value = "user/{id}/admin", method = RequestMethod.PUT)
+    public void updateAdmin(@PathVariable long id, @RequestBody boolean admin){
+        Optional<User> optionalUser = userRepository.findById(id);
+        optionalUser.get().setAdmin(admin);
+
+        userRepository.save(optionalUser.get());
     }
     
     /*

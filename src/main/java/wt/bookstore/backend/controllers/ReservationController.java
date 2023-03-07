@@ -1,6 +1,7 @@
 package wt.bookstore.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.*;
@@ -12,6 +13,7 @@ import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
 import wt.bookstore.backend.repository.IUserRepository;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -32,6 +34,10 @@ public class ReservationController {
     @Autowired
     private ILoanRepository loanRepository;
 
+
+    /*
+     * GET endpoints from here
+     */
     @RequestMapping(value = "reservation", method = RequestMethod.GET)
     public Stream<ReservationDto> findAll() {
         return reservationRepository.findAll().stream().map(DtoMapper::reservationToDto);
@@ -43,6 +49,10 @@ public class ReservationController {
         return Optional.of(DtoMapper.reservationToDto(optionalReservation.get()));
     }
 
+
+    /*
+     * POST endpoints from here
+     */
     @RequestMapping(value="reservation/create", method = RequestMethod.POST)
     public boolean create(@RequestBody SaveReservationDto saveReservationDto) {
         Reservation reservation = DtoMapper.dtoToReservation(saveReservationDto, userRepository, bookRepository);
@@ -53,6 +63,17 @@ public class ReservationController {
         return false;
     }
     
+
+    /*
+     * PUT endpoints from here
+     */
+    @RequestMapping(value = "reservation/{id}/date", method = RequestMethod.PUT)
+    public void updateDate(@PathVariable long id, @RequestBody LocalDate date){
+        Optional<Reservation> optionalReservation = reservationRepository.findById(id);
+        optionalReservation.get().setDate(date);
+
+        reservationRepository.save(optionalReservation.get());
+    }
 
 
     @RequestMapping(value = "reservation/{id}", method = RequestMethod.PUT)

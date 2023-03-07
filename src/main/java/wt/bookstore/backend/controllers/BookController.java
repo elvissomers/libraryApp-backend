@@ -30,7 +30,9 @@ public class BookController {
     private IReservationRepository reservationRepository;
     
 
-
+    /*
+     * GET endpoints from here
+     */
     @RequestMapping(value = "book", method = RequestMethod.GET)
     public Stream<BookDto> findAll() {
         return bookRepository.findAll().stream().map(DtoMapper::bookToDto);
@@ -41,6 +43,10 @@ public class BookController {
         return Optional.of(DtoMapper.bookToDto(bookRepository.findById(id).get()));
     }
 
+
+    /*
+     * POST endpoints from here
+     */
     @RequestMapping(value="book/create", method = RequestMethod.POST)
     public void create(@RequestBody SaveBookDto saveBookDto) {
         Book book = DtoMapper.dtoToBook(saveBookDto);
@@ -48,17 +54,48 @@ public class BookController {
     }
     
 
+    /*
+     * PUT endpoints from here
+     */
+    @RequestMapping(value="book/{id}/isbn", method = RequestMethod.PUT)
+    public void updateIsbn(@PathVariable long id, @RequestBody long isbn){
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        optionalBook.get().setIsbn(isbn);
 
-    @RequestMapping(value = "book/{id}", method = RequestMethod.PUT)
-    public void update(@PathVariable long id, @RequestBody Book book) {
-        Optional<Book> optional = bookRepository.findById(id);
-        optional.get().setTitle(book.getTitle());
-        optional.get().setIsbn(book.getIsbn());
-        optional.get().setAuthor(book.getAuthor());
-
-        bookRepository.save(optional.get());
+        bookRepository.save(optionalBook.get());
     }
 
+    @RequestMapping(value="book/{id}/title", method = RequestMethod.PUT)
+    public void updateTitle(@PathVariable long id, @RequestBody String title){
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        optionalBook.get().setTitle(title);
+
+        bookRepository.save(optionalBook.get());
+    }
+
+    @RequestMapping(value="book/{id}/author", method = RequestMethod.PUT)
+    public void updateAuthor(@PathVariable long id, @RequestBody String author){
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        optionalBook.get().setAuthor(author);
+
+        bookRepository.save(optionalBook.get());
+    }
+
+
+//    @RequestMapping(value = "book/{id}", method = RequestMethod.PUT)
+//    public void update(@PathVariable long id, @RequestBody Book book) {
+//        Optional<Book> optional = bookRepository.findById(id);
+//        optional.get().setTitle(book.getTitle());
+//        optional.get().setIsbn(book.getIsbn());
+//        optional.get().setAuthor(book.getAuthor());
+//
+//        bookRepository.save(optional.get());
+//    }
+
+
+    /*
+     * DELETE endpoints from here
+     */
     @RequestMapping(value = "book/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable long id) {
         bookRepository.deleteById(id);
