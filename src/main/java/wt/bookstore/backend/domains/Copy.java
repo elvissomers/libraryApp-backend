@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 
 import java.util.List;
 
+/**
+ * The entity used for the copies database
+ */
 @Entity
 public class Copy {
 

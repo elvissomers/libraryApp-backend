@@ -1,5 +1,9 @@
 package wt.bookstore.backend.dto;
 
+/**
+ * Data Transfer Object for the {@link wt.bookstore.backend.domains.User} class that is sent from the frontend to the
+ * backend. The fields in this class should contain the information needed to create a user object.
+ */
 public class SaveUserDto {
 
     private String name;

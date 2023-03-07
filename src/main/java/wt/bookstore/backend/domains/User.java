@@ -8,6 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+/**
+ * The entity used for the users database
+ */
 @Entity
 public class User {
 
@@ -38,7 +41,7 @@ public class User {
 	public long getId() {
 		return id;
 	}
-	
+
 	public void setId(long id) {
 		this.id = id;
 	}
@@ -70,7 +73,7 @@ public class User {
 	public List<Loan> getLoans() {
 		return loans;
 	}
-	
+
 	public void setLoans(List<Loan> loans) {
 		this.loans = loans;
 	}
@@ -82,5 +85,4 @@ public class User {
 	public void setReservations(List<Reservation> reservations) {
 		this.reservations = reservations;
 	}
-
 }

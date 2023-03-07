@@ -7,6 +7,9 @@ import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 
+/**
+ * The entity used for the reservations database
+ */
 @Entity
 public class Reservation {
 
@@ -23,6 +26,22 @@ public class Reservation {
     private User user;
 
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
+
     public Book getBook() {
         return book;
     }
@@ -37,21 +56,5 @@ public class Reservation {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public long getId() {
-		return id;
-	}
-	
-	public void setId(long id) {
-		this.id = id;
-	}
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
     }
 }
