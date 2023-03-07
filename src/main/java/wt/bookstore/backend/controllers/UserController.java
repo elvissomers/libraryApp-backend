@@ -63,16 +63,17 @@ public class UserController {
         userRepository.save(user);
     }
     
+    /*
+     * Uit gecomment omdat we put pas later gaan implementeren
+     */
 
-
-    @RequestMapping(value = "user/{id}", method = RequestMethod.PUT)
-    public void update(@PathVariable long id, @RequestBody SaveUserDto saveUserDto) {
-        Optional<User> optional = userRepository.findById(id);
-        optional.get().setName(saveUserDto.getName());
-        optional.get().seteMailAddress(saveUserDto.geteMailAddress());
-        optional.get().setAdmin(saveUserDto.isAdmin());
-        userRepository.save(optional.get());
-    }
+//    @RequestMapping(value = "user/{id}", method = RequestMethod.PUT)
+//    public void update(@PathVariable long id, @RequestBody SaveUserDto saveUserDto) {
+//        Optional<User> optional = userRepository.findById(id);
+//        optional.get().setName(saveUserDto.getName());
+//        optional.get().seteMailAddress(saveUserDto.geteMailAddress());
+//        userRepository.save(optional.get());
+//    }
 
     @RequestMapping(value = "user/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable long id) {

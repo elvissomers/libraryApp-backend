@@ -18,7 +18,10 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-	private String name;
+	private String firstName;
+
+	private String lastName;
+
 	private String eMailAddress;
 	private boolean admin;
 
@@ -28,30 +31,12 @@ public class User {
 	@OneToMany(mappedBy = "user", orphanRemoval = true)
 	private List<Reservation> reservations;
 
-	public User(String name, String eMailAddress, boolean admin) {
-		this.name = name;
-		this.eMailAddress = eMailAddress;
-		this.admin = admin;
-	}
-
-	public User() {
-
-	}
-
 	public long getId() {
 		return id;
 	}
-
+	
 	public void setId(long id) {
 		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
 	}
 
 	public String geteMailAddress() {
@@ -73,7 +58,7 @@ public class User {
 	public List<Loan> getLoans() {
 		return loans;
 	}
-
+	
 	public void setLoans(List<Loan> loans) {
 		this.loans = loans;
 	}
@@ -84,5 +69,21 @@ public class User {
 
 	public void setReservations(List<Reservation> reservations) {
 		this.reservations = reservations;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
 	}
 }
