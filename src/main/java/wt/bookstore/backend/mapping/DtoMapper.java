@@ -60,7 +60,8 @@ public class DtoMapper {
          * Used to create a User object from a SaveUserDto object
          */
         User user = new User();
-        user.setName(saveUserDto.getName());
+        user.setFirstName(saveUserDto.getFirstName());
+        user.setLastName(saveUserDto.getLastName());
         user.seteMailAddress(saveUserDto.geteMailAddress());
         user.setAdmin(false);
 
@@ -109,8 +110,9 @@ public class DtoMapper {
          */
         loanDto.setStartDate(loan.getStartDate());
         loanDto.setEndDate(loan.getEndDate());
-        loanDto.setUserName(loan.getUser().getName());
-        loanDto.setCopyName(loan.getCopy().getBook().getTitle());
+        loanDto.setUserFirstName(loan.getUser().getFirstName());
+        loanDto.setUserLastName(loan.getUser().getLastName());
+        loanDto.setBookTitle(loan.getCopy().getBook().getTitle());
         loanDto.setId(loan.getId());
         return loanDto;
 
@@ -123,7 +125,8 @@ public class DtoMapper {
         ReservationDto reservationDto = new ReservationDto();
 
         reservationDto.setBookTitle(reservation.getBook().getTitle());
-        reservationDto.setUserName(reservation.getUser().getName());
+        reservationDto.setUserFirstName(reservation.getUser().getFirstName());
+        reservationDto.setUserLastName(reservation.getUser().getLastName());
         reservationDto.setDate(reservation.getDate());
         reservationDto.setId(reservation.getId());
 
@@ -138,7 +141,8 @@ public class DtoMapper {
 
         userDto.setAdmin(user.isAdmin());
         userDto.seteMailAddress(user.geteMailAddress());
-        userDto.setName(user.getName());
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
         userDto.setId(user.getId());
 
         return userDto;
