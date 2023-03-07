@@ -2,6 +2,8 @@ package wt.bookstore.backend.dto;
 
 public class BookDto {
 
+    private long id;
+
     private long isbn;
 
     private String title;
@@ -30,5 +32,13 @@ public class BookDto {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 }

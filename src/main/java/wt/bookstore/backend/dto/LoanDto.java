@@ -10,12 +10,25 @@ import java.util.Optional;
 
 public class LoanDto {
 
+	private long id;
+
 	private LocalDate startDate;
-	
+
 	private LocalDate endDate;
-	
-	private String userName;
-	private String copyName;
+
+	private String userFirstName;
+
+	private String userLastName;
+
+	private String bookTitle;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	public LocalDate getStartDate() {
 		return startDate;
@@ -33,21 +46,27 @@ public class LoanDto {
 		this.endDate = endDate;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUserFirstName() {
+		return userFirstName;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUserFirstName(String userFirstName) {
+		this.userFirstName = userFirstName;
 	}
 
-	public String getCopyName() {
-		return copyName;
+	public String getUserLastName() {
+		return userLastName;
 	}
 
-	public void setCopyName(String copyName) {
-		this.copyName = copyName;
+	public void setUserLastName(String userLastName) {
+		this.userLastName = userLastName;
 	}
 
+	public String getBookTitle() {
+		return bookTitle;
+	}
 
+	public void setBookTitle(String bookTitle) {
+		this.bookTitle = bookTitle;
+	}
 }
