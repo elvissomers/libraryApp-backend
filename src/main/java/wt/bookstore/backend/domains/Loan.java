@@ -4,6 +4,9 @@ import java.time.LocalDate;
 
 import jakarta.persistence.*;
 
+/**
+ * The entity used for the loans database
+ */
 @Entity
 public class Loan {
 	
@@ -36,7 +39,7 @@ public class Loan {
 	public long getId() {
 		return id;
 	}
-	
+
 	public void setId(long id) {
 		this.id = id;
 	}
@@ -60,7 +63,7 @@ public class Loan {
 	public User getUser() {
 		return user;
 	}
-	
+
 	public void setUser(User user) {
 		this.user = user;
 	}
@@ -72,5 +75,4 @@ public class Loan {
 	public void setCopy(Copy copy) {
 		this.copy = copy;
 	}
-
 }

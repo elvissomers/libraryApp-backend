@@ -8,6 +8,11 @@ import wt.bookstore.backend.repository.IUserRepository;
 import java.time.LocalDate;
 import java.util.Optional;
 
+/**
+ * Data Transfer Object for the {@link wt.bookstore.backend.domains.Loan} class that is sent to the frontend. The
+ * fields in this class contain the information of a loan object that is deemed relevant to the user and are determined
+ * by the needs of the frontend.
+ */
 public class LoanDto {
 
 	private long id;

@@ -5,6 +5,9 @@ import java.util.List;
 
 import jakarta.persistence.*;
 
+/**
+ * The entity used for the books database
+ */
 @Entity
 public class Book {
 
@@ -67,7 +70,20 @@ public class Book {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-	
 
+	public List<Copy> getCopies() {
+		return copies;
+	}
 
+	public void setCopies(List<Copy> copies) {
+		this.copies = copies;
+	}
+
+	public List<Reservation> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
+	}
 }

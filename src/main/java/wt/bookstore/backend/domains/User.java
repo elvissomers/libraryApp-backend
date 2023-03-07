@@ -8,6 +8,9 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 
+/**
+ * The entity used for the users database
+ */
 @Entity
 public class User {
 
@@ -20,7 +23,6 @@ public class User {
 	private String lastName;
 
 	private String eMailAddress;
-
 	private boolean admin;
 
 	@OneToMany(mappedBy = "user", orphanRemoval = true)

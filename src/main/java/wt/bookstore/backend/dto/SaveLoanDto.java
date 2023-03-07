@@ -2,6 +2,10 @@ package wt.bookstore.backend.dto;
 
 import java.time.LocalDate;
 
+/**
+ * Data Transfer Object for the {@link wt.bookstore.backend.domains.Loan} class that is sent from the frontend to the
+ * backend. The fields in this class should contain the information needed to create a loan object.
+ */
 public class SaveLoanDto {
 
 	private LocalDate startDate;

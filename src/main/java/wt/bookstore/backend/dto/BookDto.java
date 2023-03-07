@@ -1,5 +1,10 @@
 package wt.bookstore.backend.dto;
 
+/**
+ * Data Transfer Object for the {@link wt.bookstore.backend.domains.Book} class that is sent to the frontend. The
+ * fields in this class contain the information of a book object that is deemed relevant to the user and are determined
+ * by the needs of the frontend.
+ */
 public class BookDto {
 
     private long id;
