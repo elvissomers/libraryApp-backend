@@ -169,7 +169,7 @@ public class DtoMapper {
 
         bookDto.setAuthor(book.getAuthor());
         bookDto.setIsbn(book.getIsbn());
-        bookDto.setId(bookDto.getId());
+        bookDto.setId(book.getId());
         bookDto.setTitle(book.getTitle());
 
         return bookDto;
