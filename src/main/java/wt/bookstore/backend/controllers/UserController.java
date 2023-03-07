@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
+import wt.bookstore.backend.dto.ChangeUserDto;
 import wt.bookstore.backend.dto.SaveUserDto;
 import wt.bookstore.backend.dto.UserDto;
 import wt.bookstore.backend.mapping.DtoMapper;
@@ -86,6 +87,27 @@ public class UserController {
     public void updateAdmin(@PathVariable long id, @RequestBody boolean admin){
         Optional<User> optionalUser = userRepository.findById(id);
         optionalUser.get().setAdmin(admin);
+
+        userRepository.save(optionalUser.get());
+    }
+
+    @RequestMapping(value = "user/{id}", method = RequestMethod.PUT)
+    public void update(@PathVariable long id, @RequestBody ChangeUserDto changeUserDto){
+        Optional<User> optionalUser = userRepository.findById(id);
+        String newFirstName = changeUserDto.getFirstName();
+        String newLastName = changeUserDto.getLastName();
+        String newEmailAddress = changeUserDto.getEmailAddress();
+
+        if (newFirstName != null){
+            optionalUser.get().setFirstName(newFirstName);
+        }
+        if (newLastName != null){
+            optionalUser.get().setLastName(newLastName);
+        }
+        if (newEmailAddress != null){
+            optionalUser.get().seteMailAddress(newEmailAddress);
+        }
+        // Removed admin from changeuserdto because a boolean cannot be null
 
         userRepository.save(optionalUser.get());
     }

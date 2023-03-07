@@ -6,6 +6,7 @@ import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.dto.BookDto;
+import wt.bookstore.backend.dto.ChangeBookDto;
 import wt.bookstore.backend.dto.SaveBookDto;
 import wt.bookstore.backend.mapping.DtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
@@ -77,6 +78,27 @@ public class BookController {
     public void updateAuthor(@PathVariable long id, @RequestBody String author){
         Optional<Book> optionalBook = bookRepository.findById(id);
         optionalBook.get().setAuthor(author);
+
+        bookRepository.save(optionalBook.get());
+    }
+
+    @RequestMapping(value = "book/{id}", method = RequestMethod.PUT)
+    public void update(@PathVariable long id, @RequestBody ChangeBookDto changeBookDto){
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        long newIsbn = changeBookDto.getIsbn();
+        String newTitle = changeBookDto.getTitle();
+        String newAuthor = changeBookDto.getAuthor();
+
+        if (newIsbn != 0){
+            // TODO: maybe switch to long -> Long and boolean -> Boolean?
+            optionalBook.get().setIsbn(newIsbn);
+        }
+        if (newTitle != null){
+            optionalBook.get().setTitle(newTitle);
+        }
+        if (newAuthor != null){
+            optionalBook.get().setAuthor(newAuthor);
+        }
 
         bookRepository.save(optionalBook.get());
     }

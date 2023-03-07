@@ -8,8 +8,6 @@ public class ChangeUserDto {
 
     private String emailAddress;
 
-    private boolean admin;
-
     public String getFirstName() {
         return firstName;
     }
@@ -32,13 +30,5 @@ public class ChangeUserDto {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
-    }
-
-    public boolean isAdmin() {
-        return admin;
-    }
-
-    public void setAdmin(boolean admin) {
-        this.admin = admin;
     }
 }
