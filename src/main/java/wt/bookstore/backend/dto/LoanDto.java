@@ -10,12 +10,22 @@ import java.util.Optional;
 
 public class LoanDto {
 
+	private long id;
+
 	private LocalDate startDate;
 	
 	private LocalDate endDate;
 	
 	private String userName;
 	private String copyName;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	public LocalDate getStartDate() {
 		return startDate;

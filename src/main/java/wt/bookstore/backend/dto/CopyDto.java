@@ -3,10 +3,20 @@ package wt.bookstore.backend.dto;
 import java.util.List;
 
 public class CopyDto {
+
+    private long id;
+
     private boolean available;
 
     private String bookTitle;
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public boolean isAvailable() {
         return available;

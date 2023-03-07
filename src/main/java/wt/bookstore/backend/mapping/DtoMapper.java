@@ -62,7 +62,7 @@ public class DtoMapper {
         User user = new User();
         user.setName(saveUserDto.getName());
         user.seteMailAddress(saveUserDto.geteMailAddress());
-        user.setAdmin(saveUserDto.isAdmin());
+        user.setAdmin(false);
 
         return user;
     }
@@ -111,6 +111,7 @@ public class DtoMapper {
         loanDto.setEndDate(loan.getEndDate());
         loanDto.setUserName(loan.getUser().getName());
         loanDto.setCopyName(loan.getCopy().getBook().getTitle());
+        loanDto.setId(loan.getId());
         return loanDto;
 
     }
@@ -124,6 +125,7 @@ public class DtoMapper {
         reservationDto.setBookTitle(reservation.getBook().getTitle());
         reservationDto.setUserName(reservation.getUser().getName());
         reservationDto.setDate(reservation.getDate());
+        reservationDto.setId(reservation.getId());
 
         return reservationDto;
     }
@@ -137,6 +139,7 @@ public class DtoMapper {
         userDto.setAdmin(user.isAdmin());
         userDto.seteMailAddress(user.geteMailAddress());
         userDto.setName(user.getName());
+        userDto.setId(user.getId());
 
         return userDto;
     }
@@ -149,6 +152,7 @@ public class DtoMapper {
 
         copyDto.setAvailable(copy.isAvailable());
         copyDto.setBookTitle(copy.getBook().getTitle());
+        copyDto.setId(copy.getId());
 
         return copyDto;
     }
@@ -161,6 +165,7 @@ public class DtoMapper {
 
         bookDto.setAuthor(book.getAuthor());
         bookDto.setIsbn(book.getIsbn());
+        bookDto.setId(bookDto.getId());
         bookDto.setTitle(book.getTitle());
 
         return bookDto;

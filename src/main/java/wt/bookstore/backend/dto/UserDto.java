@@ -2,18 +2,22 @@ package wt.bookstore.backend.dto;
 
 public class UserDto {
 
-    private String name;
+    private long id;
+
+    private String firstName;
+
+    private String lastName;
 
     private String eMailAddress;
 
     private boolean admin;
 
-    public String getName() {
-        return name;
+    public long getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String geteMailAddress() {
@@ -30,5 +34,21 @@ public class UserDto {
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 }
