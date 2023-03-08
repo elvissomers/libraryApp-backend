@@ -3,9 +3,6 @@ package wt.bookstore.backend.domains;
 import java.time.LocalDate;
 
 import jakarta.persistence.*;
-import org.springframework.cglib.core.Local;
-
-import java.time.LocalDate;
 
 /**
  * The entity used for the reservations database

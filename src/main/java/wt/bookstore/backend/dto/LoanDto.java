@@ -1,12 +1,6 @@
 package wt.bookstore.backend.dto;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import wt.bookstore.backend.domains.Loan;
-import wt.bookstore.backend.domains.User;
-import wt.bookstore.backend.repository.IUserRepository;
-
 import java.time.LocalDate;
-import java.util.Optional;
 
 /**
  * Data Transfer Object for the {@link wt.bookstore.backend.domains.Loan} class that is sent to the frontend. The
