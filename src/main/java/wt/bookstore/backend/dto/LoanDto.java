@@ -8,15 +8,32 @@ import wt.bookstore.backend.repository.IUserRepository;
 import java.time.LocalDate;
 import java.util.Optional;
 
+/**
+ * Data Transfer Object for the {@link wt.bookstore.backend.domains.Loan} class that is sent to the frontend. The
+ * fields in this class contain the information of a loan object that is deemed relevant to the user and are determined
+ * by the needs of the frontend.
+ */
 public class LoanDto {
 
+	private long id;
+
 	private LocalDate startDate;
-	
+
 	private LocalDate endDate;
-	
-	private String userName;
-	private String copyName;
-	private long reservationId;
+
+	private String userFirstName;
+
+	private String userLastName;
+
+	private String bookTitle;
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
 
 	public LocalDate getStartDate() {
 		return startDate;
@@ -34,27 +51,27 @@ public class LoanDto {
 		this.endDate = endDate;
 	}
 
-	public String getUserName() {
-		return userName;
+	public String getUserFirstName() {
+		return userFirstName;
 	}
 
-	public void setUserName(String userName) {
-		this.userName = userName;
+	public void setUserFirstName(String userFirstName) {
+		this.userFirstName = userFirstName;
 	}
 
-	public String getCopyName() {
-		return copyName;
+	public String getUserLastName() {
+		return userLastName;
 	}
 
-	public void setCopyName(String copyName) {
-		this.copyName = copyName;
+	public void setUserLastName(String userLastName) {
+		this.userLastName = userLastName;
 	}
 
-	public long getReservationId() {
-		return reservationId;
+	public String getBookTitle() {
+		return bookTitle;
 	}
 
-	public void setReservationId(long reservationId) {
-		this.reservationId = reservationId;
+	public void setBookTitle(String bookTitle) {
+		this.bookTitle = bookTitle;
 	}
 }

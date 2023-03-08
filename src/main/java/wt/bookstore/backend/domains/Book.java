@@ -2,9 +2,13 @@ package wt.bookstore.backend.domains;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import jakarta.persistence.*;
 
+/**
+ * The entity used for the books database
+ */
 @Entity
 public class Book {
 
@@ -20,19 +24,12 @@ public class Book {
 
 	@Column(nullable = false, length = 100)
 	private String author;
-	
-	@ManyToMany()
-	@JoinTable(
-			name = "book_keywords",
-			joinColumns = @JoinColumn(name = "book_id"),
-			inverseJoinColumns = @JoinColumn(name = "keyword_id"))
-	private List<Keyword> keywords = new ArrayList<>();
 
 	@OneToMany(mappedBy = "book", orphanRemoval = true)
-	private List<Copy> copies;
+	private List<Copy> copies = new ArrayList<>();
 
 	@OneToMany(mappedBy = "book", orphanRemoval = true)
-	private List<Reservation> reservations;
+	private List<Reservation> reservations = new ArrayList<>();
 
 	public Book(long isbn, String title, String author) {
 		this.isbn = isbn;
@@ -74,17 +71,33 @@ public class Book {
 	public void setAuthor(String author) {
 		this.author = author;
 	}
-	
-	public List<Keyword> getKeywords() {
-		return keywords;
-	}
-	
-	public void setKeywords(List<Keyword> keywords) {
-		this.keywords = keywords;
+
+	public List<Copy> getCopies() {
+		return copies;
 	}
 
-	public void addKeyword(Keyword keyword){
-		keywords.add(keyword);
+	public void setCopies(List<Copy> copies) {
+		this.copies = copies;
 	}
 
+	public List<Reservation> getReservations() {
+		return reservations;
+	}
+
+	public void setReservations(List<Reservation> reservations) {
+		this.reservations = reservations;
+	}
+
+	/**
+	 * Used to get a random copy from the list of copies of this book
+	 *
+	 * @return Copy, a random copy from this books copies
+	 */
+	public Copy getRandomCopy(){
+		Random rand = new Random();
+
+		Copy randomCopy = copies.get(rand.nextInt(copies.size()));
+
+		return randomCopy;
+	}
 }

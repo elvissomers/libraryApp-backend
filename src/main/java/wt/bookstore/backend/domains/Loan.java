@@ -4,6 +4,9 @@ import java.time.LocalDate;
 
 import jakarta.persistence.*;
 
+/**
+ * The entity used for the loans database
+ */
 @Entity
 public class Loan {
 	
@@ -20,9 +23,6 @@ public class Loan {
 	@ManyToOne(optional = false)
 	private Copy copy;
 
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "reservation_id", referencedColumnName = "id")
-	private Reservation reservation;
 
 	public Loan() {
 		
@@ -39,19 +39,23 @@ public class Loan {
 	public long getId() {
 		return id;
 	}
-	
+
 	public void setId(long id) {
 		this.id = id;
 	}
+
 	public LocalDate getStartDate() {
 		return startDate;
 	}
+
 	public void setStartDate(LocalDate startDate) {
 		this.startDate = startDate;
 	}
+
 	public LocalDate getEndDate() {
 		return endDate;
 	}
+
 	public void setEndDate(LocalDate endDate) {
 		this.endDate = endDate;
 	}
@@ -59,7 +63,7 @@ public class Loan {
 	public User getUser() {
 		return user;
 	}
-	
+
 	public void setUser(User user) {
 		this.user = user;
 	}
@@ -70,13 +74,5 @@ public class Loan {
 
 	public void setCopy(Copy copy) {
 		this.copy = copy;
-	}
-
-	public Reservation getReservation() {
-		return reservation;
-	}
-
-	public void setReservation(Reservation reservation) {
-		this.reservation = reservation;
 	}
 }
