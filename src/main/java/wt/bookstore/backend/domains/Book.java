@@ -93,6 +93,7 @@ public class Book {
 	 *
 	 * @return Copy, a random copy from this books copies
 	 */
+	// TODO: Make a function that picks a random AVAILABLE copy
 	public Copy getRandomCopy(){
 		Random rand = new Random();
 
