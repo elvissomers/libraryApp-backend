@@ -60,44 +60,6 @@ public class LoanController {
 		return false;
 	}
 
-	@RequestMapping(value = "loan/{id}", method = RequestMethod.PUT)
-	public boolean update(@PathVariable long id, @RequestBody SaveLoanDto saveLoanDto) {
-
-		Optional<User> userOptional = userRepository.findById(saveLoanDto.getUserId());
-		Optional<Reservation> reservationOptional = reservationRepository.findById(saveLoanDto.getReservationId());
-		Optional<Copy> copyOptional = copyRepository.findById(saveLoanDto.getCopyId());
-		/*
-		 * Converts a post DTO to a loan object, if the post DTO misses a userId, loanId
-		 * or reservationId it returns null, since it will not be a valid data entry
-		 */
-
-
-		/*
-		 * Checks whether the id given in the url is a valid loanId
-		 */
-		Optional<Loan> optional = loanRepository.findById(id);
-		if (optional.isEmpty())
-			return false;
-
-		/*
-		 * Overwrites all the existing fields (except the ID) of the loan with the given loadId for the
-		 * values given in the post DTO and saves it back in the database
-		 */
-		Loan existingLoan = optional.get();
-
-		userOptional.ifPresent(existingLoan::setUser);
-		copyOptional.ifPresent(existingLoan::setCopy);
-		reservationOptional.ifPresent(existingLoan::setReservation);
-		if (saveLoanDto.getStartDate() != null) {
-			existingLoan.setStartDate(saveLoanDto.getStartDate());
-		}
-		if (saveLoanDto.getEndDate() != null) {
-			existingLoan.setEndDate(saveLoanDto.getEndDate());
-		}
-
-		loanRepository.save(existingLoan);
-		return true;
-	}
 
 	@RequestMapping(value = "loan/{id}", method = RequestMethod.DELETE)
 	public void delete(@PathVariable long id) {
