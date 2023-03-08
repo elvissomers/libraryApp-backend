@@ -45,10 +45,6 @@ public class KeywordController {
          * given dto to the existing keyword.
          * If not, it will create a new Keyword object.
          */
-//        Keyword testKeyword = new Keyword();
-//        testKeyword.setName("test");
-//        keywordRepository.save(testKeyword);
-//        return true;
 
 
     	long bookId = saveKeywordDto.getBookId();
@@ -56,31 +52,33 @@ public class KeywordController {
         Optional<Keyword> keywordInTable = keywordRepository.findByName(saveKeywordDto.getName());
 
 
-//        if (keywordInTable.isPresent()) {
-//            // Do we need these both? Or only one?
-//            optionalBook.get().addKeyword(keywordInTable.get());
-//            keywordInTable.get().addBook(optionalBook.get());
-//            return true;
-//        } else {
-        //}
-        Keyword keyword = DtoMapper.dtoToKeyword(saveKeywordDto, bookRepository);
+        if (keywordInTable.isPresent()) {
+            optionalBook.get().addKeyword(keywordInTable.get());
+            keywordInTable.get().addBook(optionalBook.get());
+
+            bookRepository.save(optionalBook.get()); // Misschien is één van de twee overbodig,
+            keywordRepository.save(keywordInTable.get()); // maar het veroorzaakt geen problemen
+            return true;
+        } else {
+            //}
+            Keyword keyword = DtoMapper.dtoToKeyword(saveKeywordDto, bookRepository);
             if (keyword != null) {
                 keywordRepository.save(keyword);
                 return true;
             } else {
                 return false;
             }
-
+        }
     }
 
-
-    @RequestMapping(value = "keyword/{id}", method = RequestMethod.PUT)
-    public void update(@PathVariable long id, @RequestBody Keyword keyword) {
-        Optional<Keyword> optional = keywordRepository.findById(id);
-//        optional.get().setBookId(keyword.getBookId());
-//        optional.get().setKeywordId(keyword.getKeywordId());
-        keywordRepository.save(optional.get());
-    }
+//
+//    @RequestMapping(value = "keyword/{id}", method = RequestMethod.PUT)
+//    public void update(@PathVariable long id, @RequestBody Keyword keyword) {
+//        Optional<Keyword> optional = keywordRepository.findById(id);
+////        optional.get().setBookId(keyword.getBookId());
+////        optional.get().setKeywordId(keyword.getKeywordId());
+//        keywordRepository.save(optional.get());
+//    }
 
     @RequestMapping(value = "keyword/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable long id) {

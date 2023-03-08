@@ -90,6 +90,7 @@ public class DtoMapper {
         if (bookOptional.isPresent()) {
             keyword.addBook(bookOptional.get());
             bookOptional.get().addKeyword(keyword);
+            //bookRepository.save(bookOptional.get()); - causes error?
         } else {
             return null;
         }

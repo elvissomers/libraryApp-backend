@@ -13,6 +13,8 @@ import jakarta.persistence.ManyToMany;
 @Entity
 public class Keyword {
 
+	// TODO: Make keyword name non-case-sensitive
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
