@@ -1,1 +1,1 @@
-packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"wt.bookstore.backend.controllers"}];updateSearchResults();
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"wt.bookstore"},{"l":"wt.bookstore.backend.controllers"},{"l":"wt.bookstore.backend.domains"},{"l":"wt.bookstore.backend.dto"},{"l":"wt.bookstore.backend.mapping"},{"l":"wt.bookstore.backend.repository"}];updateSearchResults();

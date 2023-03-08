@@ -2,12 +2,26 @@ package wt.bookstore.backend.dto;
 
 import java.util.List;
 
+/**
+ * Data Transfer Object for the {@link wt.bookstore.backend.domains.Copy} class that is sent to the frontend. The
+ * fields in this class contain the information of a copy object that is deemed relevant to the user and are determined
+ * by the needs of the frontend.
+ */
 public class CopyDto {
+
+    private long id;
+
     private boolean available;
 
-    private long bookId;
+    private String bookTitle;
 
-    private List<Long> loanIds;
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
 
     public boolean isAvailable() {
         return available;
@@ -17,19 +31,11 @@ public class CopyDto {
         this.available = available;
     }
 
-    public long getBookId() {
-        return bookId;
+    public String getBookTitle() {
+        return bookTitle;
     }
 
-    public void setBookId(long bookId) {
-        this.bookId = bookId;
-    }
-
-    public List<Long> getLoanIds() {
-        return loanIds;
-    }
-
-    public void setLoanIds(List<Long> loanIds) {
-        this.loanIds = loanIds;
+    public void setBookTitle(String bookTitle) {
+        this.bookTitle = bookTitle;
     }
 }

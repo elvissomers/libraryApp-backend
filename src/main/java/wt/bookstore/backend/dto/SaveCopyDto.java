@@ -1,17 +1,12 @@
 package wt.bookstore.backend.dto;
 
+/**
+ * Data Transfer Object for the {@link wt.bookstore.backend.domains.Copy} class that is sent from the frontend to the
+ * backend. The fields in this class should contain the information needed to create a copy object.
+ */
 public class SaveCopyDto {
-    private boolean available;
 
     private long bookId;
-
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
 
     public long getBookId() {
         return bookId;

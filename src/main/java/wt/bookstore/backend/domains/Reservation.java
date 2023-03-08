@@ -7,6 +7,9 @@ import org.springframework.cglib.core.Local;
 
 import java.time.LocalDate;
 
+/**
+ * The entity used for the reservations database
+ */
 @Entity
 public class Reservation {
 
@@ -22,9 +25,22 @@ public class Reservation {
     @ManyToOne(optional = false)
     private User user;
 
-    @OneToOne(optional = true, mappedBy = "reservation")
-    // Is dit wel nodig? Loan heeft een reservation maar moet het inverse ook zo zijn?
-    private Loan loan;
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public LocalDate getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDate date) {
+        this.date = date;
+    }
 
     public Book getBook() {
         return book;
@@ -40,29 +56,5 @@ public class Reservation {
 
     public void setUser(User user) {
         this.user = user;
-    }
-
-    public Loan getLoan() {
-        return loan;
-    }
-
-    public void setLoan(Loan loan) {
-        this.loan = loan;
-    }
-
-    public long getId() {
-		return id;
-	}
-	
-	public void setId(long id) {
-		this.id = id;
-	}
-
-    public LocalDate getDate() {
-        return date;
-    }
-
-    public void setDate(LocalDate date) {
-        this.date = date;
     }
 }
