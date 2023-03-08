@@ -16,9 +16,7 @@ import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
-import wt.bookstore.backend.dto.ChangeLoanDto;
-import wt.bookstore.backend.dto.LoanDto;
-import wt.bookstore.backend.dto.SaveLoanDto;
+import wt.bookstore.backend.dto.*;
 import wt.bookstore.backend.mapping.DtoMapper;
 import wt.bookstore.backend.repository.ICopyRepository;
 import wt.bookstore.backend.repository.ILoanRepository;
@@ -65,6 +63,20 @@ public class LoanController {
 			return true;
 		}
 		return false;
+	}
+
+	@RequestMapping(value = "loan/create/fromreservation", method = RequestMethod.POST)
+	public boolean createFromReservation(@RequestBody SaveReservationDto saveReservationDto, CopyDto copyDto){
+		Loan loan = new Loan();
+
+		Optional<Copy> copy = copyRepository.findById(copyDto.getId());
+		Optional<User> user = userRepository.findById(saveReservationDto.getUserId());
+
+		loan.setStartDate(saveReservationDto.getDate());
+		loan.setCopy(copy.get());
+		loan.setUser(user.get());
+
+		loanRepository.save(loan);
 	}
 
 
