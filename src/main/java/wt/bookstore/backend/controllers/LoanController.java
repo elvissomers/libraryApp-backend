@@ -85,7 +85,7 @@ public class LoanController {
 	}
 
 	@RequestMapping(value = "loan/create/fromreservation", method = RequestMethod.POST)
-	public boolean createFromReservation(@RequestBody SaveReservationDto saveReservationDto, CopyDto copyDto){
+	public void createFromReservation(@RequestBody SaveReservationDto saveReservationDto, CopyDto copyDto){
 		Loan loan = new Loan();
 
 		Optional<Copy> copy = copyRepository.findById(copyDto.getId());
