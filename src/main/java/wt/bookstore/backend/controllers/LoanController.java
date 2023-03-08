@@ -16,10 +16,13 @@ import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.dto.ChangeLoanDto;
 import wt.bookstore.backend.dto.LoanDto;
 import wt.bookstore.backend.dto.SaveLoanDto;
+import wt.bookstore.backend.domains.*;
+import wt.bookstore.backend.dto.*;
 import wt.bookstore.backend.mapping.DtoMapper;
 import wt.bookstore.backend.repository.ICopyRepository;
 import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IUserRepository;
+import wt.bookstore.backend.repository.*;
 
 /**
  * The controller class that sets the API endpoints for the CRUD operations of the database that handles the loans.
@@ -36,6 +39,9 @@ public class LoanController {
 
 	@Autowired
 	private ICopyRepository copyRepository;
+
+	@Autowired
+	private IBookRepository bookRepository;
 
 
 	/*
@@ -80,6 +86,22 @@ public class LoanController {
 			return true;
 		}
 		return false;
+	}
+
+	@RequestMapping(value = "loan/create/fromreservation", method = RequestMethod.POST)
+	public void createFromReservation(@RequestBody SaveReservationDto saveReservationDto, CopyDto copyDto){
+		Loan loan = new Loan();
+
+		Optional<User> user = userRepository.findById(saveReservationDto.getUserId());
+		Optional<Book> book = bookRepository.findById(saveReservationDto.getBookId());
+
+		Copy copy = book.get().getRandomCopy();
+
+		loan.setStartDate(saveReservationDto.getDate());
+		loan.setCopy(copy);
+		loan.setUser(user.get());
+
+		loanRepository.save(loan);
 	}
 
 
