@@ -12,6 +12,8 @@ public class SaveUserDto {
 
     private String eMailAddress;
 
+    private boolean admin;
+
     public String geteMailAddress() {
         return eMailAddress;
     }
@@ -34,5 +36,13 @@ public class SaveUserDto {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 }

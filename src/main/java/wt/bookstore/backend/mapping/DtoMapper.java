@@ -84,7 +84,7 @@ public class DtoMapper {
         user.setFirstName(saveUserDto.getFirstName());
         user.setLastName(saveUserDto.getLastName());
         user.seteMailAddress(saveUserDto.geteMailAddress());
-        user.setAdmin(false);
+        user.setAdmin(saveUserDto.isAdmin());
 
         return user;
     }
