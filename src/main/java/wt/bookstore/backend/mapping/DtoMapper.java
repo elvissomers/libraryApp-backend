@@ -8,8 +8,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * This class contains all the methods needed to map a DTO to an entity or an entity to an DTO for all the entities and
+ * all the DTO's
+ */
 public class DtoMapper {
 
+    /**
+     * Method that transforms a DTO from a post request to an object that can be used for a database
+     * @param saveLoanDto ({@link wt.bookstore.backend.dto.SaveLoanDto}) DTO to be transformed to an object
+     * @param userRepository ({@link wt.bookstore.backend.repository.IUserRepository}) Access to User database necessary to check if userdata in DTO is valid
+     * @param copyRepository ({@link wt.bookstore.backend.repository.ICopyRepository}) Access to Copy database necessary to check if copydata in DTO is valid
+     * @return loan ({@link wt.bookstore.backend.domains.Loan}) object that can serve as entity for a database
+     */
     public static Loan dtoToLoan(SaveLoanDto saveLoanDto, IUserRepository userRepository, ICopyRepository copyRepository) {
         /*
          * Used to create a Loan object from a saveLoanDto object
@@ -33,6 +44,13 @@ public class DtoMapper {
         return loan;
     }
 
+    /**
+     * Method that transforms a DTO from a post request to an object that can be used for a database
+     * @param saveReservationDto ({@link wt.bookstore.backend.dto.SaveReservationDto}) DTO to be transformed to an object
+     * @param userRepository ({@link wt.bookstore.backend.repository.IUserRepository}) Access to User database necessary to check if userdata in DTO is valid
+     * @param bookRepository ({@link wt.bookstore.backend.repository.IBookRepository}) Access to Book database necessary to check if bookdata in DTO is valid
+     * @return reservation ({@link wt.bookstore.backend.domains.Reservation}) object that can serve as entity for a database
+     */
     public static Reservation dtoToReservation(SaveReservationDto saveReservationDto, IUserRepository userRepository, IBookRepository bookRepository) {
         /*
          * Used to create a Reservation object from a saveReservationDto object
@@ -55,6 +73,11 @@ public class DtoMapper {
         return reservation;
     }
 
+    /**
+     * Method that transforms a DTO from a post request to an object that can be used for a database
+     * @param saveUserDto ({@link wt.bookstore.backend.dto.SaveUserDto}) DTO to be transformed to an object
+     * @return user ({@link wt.bookstore.backend.domains.User}) object that can serve as entity for a database
+     */
     public static User dtoToUser(SaveUserDto saveUserDto) {
         /*
          * Used to create a User object from a SaveUserDto object
@@ -68,6 +91,12 @@ public class DtoMapper {
         return user;
     }
 
+    /**
+     * Method that transforms a DTO from a post request to an object that can be used for a database
+     * @param saveCopyDto ({@link wt.bookstore.backend.dto.SaveCopyDto}) DTO to be transformed to an object
+     * @param bookRepository ({@link wt.bookstore.backend.repository.IBookRepository}) Access to Book database necessary to check if bookdata in DTO is valid
+     * @return copy ({@link wt.bookstore.backend.domains.Copy}) object that can serve as entity for a database
+     */
     public static Copy dtoToCopy(SaveCopyDto saveCopyDto, IBookRepository bookRepository) {
         /*
          * Used to create a Copy obejct from a SaveCopyDto object
@@ -85,6 +114,11 @@ public class DtoMapper {
         }
     }
 
+    /**
+     * Method that transforms a DTO from a post request to an object that can be used for a database
+     * @param saveBookDto ({@link wt.bookstore.backend.dto.SaveBookDto}) DTO to be transformed to an object
+     * @return book ({@link wt.bookstore.backend.domains.Book}) object that can serve as entity for a database
+     */
     public static Book dtoToBook(SaveBookDto saveBookDto){
         /*
          * Used to create a Book object from a Dto

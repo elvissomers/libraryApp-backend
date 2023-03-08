@@ -1,5 +1,9 @@
 package wt.bookstore.backend.dto;
 
+/**
+ * Data Transfer Object for the {@link wt.bookstore.backend.domains.Book} class that is sent from the frontend to the
+ * backend. The fields in this class should contain the information needed to create a book object.
+ */
 public class SaveBookDto {
 
     private long isbn;

@@ -2,6 +2,11 @@ package wt.bookstore.backend.dto;
 
 import java.time.LocalDate;
 
+/**
+ * Data Transfer Object for the {@link wt.bookstore.backend.domains.Reservation} class that is sent to the frontend. The
+ * fields in this class contain the information of a reservation object that is deemed relevant to the user and are determined
+ * by the needs of the frontend.
+ */
 public class ReservationDto {
 
     private long id;
