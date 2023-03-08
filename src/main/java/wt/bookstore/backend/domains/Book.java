@@ -2,6 +2,7 @@ package wt.bookstore.backend.domains;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import jakarta.persistence.*;
 
@@ -85,5 +86,18 @@ public class Book {
 
 	public void setReservations(List<Reservation> reservations) {
 		this.reservations = reservations;
+	}
+
+	/**
+	 * Used to get a random copy from the list of copies of this book
+	 *
+	 * @return Copy, a random copy from this books copies
+	 */
+	public Copy getRandomCopy(){
+		Random rand = new Random();
+
+		Copy randomCopy = copies.get(rand.nextInt(copies.size()));
+
+		return randomCopy;
 	}
 }

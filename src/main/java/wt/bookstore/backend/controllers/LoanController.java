@@ -12,16 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import wt.bookstore.backend.domains.Copy;
-import wt.bookstore.backend.domains.Loan;
-import wt.bookstore.backend.domains.Reservation;
-import wt.bookstore.backend.domains.User;
+import wt.bookstore.backend.domains.*;
 import wt.bookstore.backend.dto.*;
 import wt.bookstore.backend.mapping.DtoMapper;
-import wt.bookstore.backend.repository.ICopyRepository;
-import wt.bookstore.backend.repository.ILoanRepository;
-import wt.bookstore.backend.repository.IReservationRepository;
-import wt.bookstore.backend.repository.IUserRepository;
+import wt.bookstore.backend.repository.*;
 
 /**
  * The controller class that sets the API endpoints for the CRUD operations of the database that handles the loans.
@@ -38,6 +32,9 @@ public class LoanController {
 
 	@Autowired
 	private ICopyRepository copyRepository;
+
+	@Autowired
+	private IBookRepository bookRepository;
 
 
 	/*
@@ -88,11 +85,13 @@ public class LoanController {
 	public void createFromReservation(@RequestBody SaveReservationDto saveReservationDto, CopyDto copyDto){
 		Loan loan = new Loan();
 
-		Optional<Copy> copy = copyRepository.findById(copyDto.getId());
 		Optional<User> user = userRepository.findById(saveReservationDto.getUserId());
+		Optional<Book> book = bookRepository.findById(saveReservationDto.getBookId());
+
+		Copy copy = book.get().getRandomCopy();
 
 		loan.setStartDate(saveReservationDto.getDate());
-		loan.setCopy(copy.get());
+		loan.setCopy(copy);
 		loan.setUser(user.get());
 
 		loanRepository.save(loan);
