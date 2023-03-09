@@ -1,5 +1,7 @@
 package wt.bookstore.backend.dto;
 
+import org.springframework.beans.factory.annotation.Value;
+
 /**
  * Data Transfer Object for the {@link wt.bookstore.backend.domains.User} class that is sent from the frontend to the
  * backend. The fields in this class should contain the information needed to create a user object.
@@ -12,6 +14,9 @@ public class SaveUserDto {
 
     private String emailAddress;
 
+//    @Value("${password: 1234")
+//    private String password;
+
     private boolean admin;
 
     public String getEmailAddress() {
@@ -21,6 +26,14 @@ public class SaveUserDto {
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
     }
+
+//    public String getPassword() {
+//        return password;
+//    }
+//
+//    public void setPassword(String password) {
+//        this.password = password;
+//    }
 
     public String getFirstName() {
         return firstName;
