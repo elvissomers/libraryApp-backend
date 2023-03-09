@@ -6,14 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import wt.bookstore.backend.domains.Keyword;
 import wt.bookstore.backend.dto.KeywordDto;
 import wt.bookstore.backend.dto.SaveKeywordDto;
-import wt.bookstore.backend.mapping.DtoMapper;
 import wt.bookstore.backend.mapping.KeywordDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.IKeywordRepository;
 import wt.bookstore.backend.domains.Book;
 
-import java.security.Key;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -40,16 +37,15 @@ public class KeywordController {
         return Optional.of(keywordMapper.keywordToDto(keywordRepository.findById(id).get()));
     }
 
+    /**
+     * Used to create/modify a keyword in the keyword table from a saveKeyWordDto object.
+     *
+     * If the keyword is already present in the table, it will append the book in the
+     * given dto to the existing keyword.
+     * If not, it will create a new Keyword object.
+     */
     @RequestMapping(value="keyword/create", method = RequestMethod.POST)
     public boolean create(@RequestBody SaveKeywordDto saveKeywordDto) {
-        /**
-         * Used to create/modify a keyword in the keyword table from a saveKeyWordDto object.
-         *
-         * If the keyword is already present in the table, it will append the book in the
-         * given dto to the existing keyword.
-         * If not, it will create a new Keyword object.
-         */
-
 
     	long bookId = saveKeywordDto.getBookId();
         Optional<Book> optionalBook = bookRepository.findById(bookId);

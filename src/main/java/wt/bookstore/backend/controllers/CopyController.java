@@ -7,7 +7,6 @@ import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.dto.CopyDto;
 import wt.bookstore.backend.dto.SaveCopyDto;
 import wt.bookstore.backend.mapping.CopyDtoMapper;
-import wt.bookstore.backend.mapping.DtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
 
