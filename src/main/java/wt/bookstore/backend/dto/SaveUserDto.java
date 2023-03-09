@@ -38,6 +38,7 @@ public class SaveUserDto {
         this.lastName = lastName;
     }
 
+<<<<<<< Updated upstream
     public boolean isAdmin() {
         return admin;
     }
@@ -45,4 +46,13 @@ public class SaveUserDto {
     public void setAdmin(boolean admin) {
         this.admin = admin;
     }
+=======
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+>>>>>>> Stashed changes
 }

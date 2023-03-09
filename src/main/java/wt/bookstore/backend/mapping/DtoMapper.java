@@ -13,22 +13,18 @@ public class DtoMapper {
          * Used to create a Loan object from a saveLoanDto object
          */
         Optional<User> userOptional = userRepository.findById(saveLoanDto.getUserId());
-        Optional<Reservation> reservationOptional = reservationRepository.findById(saveLoanDto.getReservationId());
         Optional<Copy> copyOptional = copyRepository.findById(saveLoanDto.getCopyId());
 
         /*
          * Check whether all necessary fields are present in the post DTO, e.g. You can not make a loan object without
          * knowing which copy is loaned
          */
-        if (userOptional.isEmpty() || reservationOptional.isEmpty() || copyOptional.isEmpty())
-            return null;
 
         Loan loan = new Loan();
         loan.setStartDate(saveLoanDto.getStartDate()); //Possibly Null
         loan.setEndDate(saveLoanDto.getEndDate()); //Possibly Null
         loan.setUser(userOptional.get());
         loan.setCopy(copyOptional.get());
-        loan.setReservation(reservationOptional.get());
 
         return loan;
     }
@@ -38,7 +34,6 @@ public class DtoMapper {
          * Used to create a Reservation object from a saveReservationDto object
          */
         Optional<User> userOptional = userRepository.findById(saveReservationDto.getUserId());
-        Optional<Loan> loanOptional = loanRepository.findById(saveReservationDto.getLoanId());
         Optional<Book> bookOptional = bookRepository.findById(saveReservationDto.getBookId());
 
         /*
@@ -50,9 +45,6 @@ public class DtoMapper {
 
         Reservation reservation = new Reservation();
         reservation.setDate(saveReservationDto.getDate());
-        if (loanOptional.isPresent()) {
-            reservation.setLoan(loanOptional.get());
-        }
         reservation.setBook(bookOptional.get());
         reservation.setUser(userOptional.get());
 
@@ -64,7 +56,8 @@ public class DtoMapper {
          * Used to create a User object from a SaveUserDto object
          */
         User user = new User();
-        user.setName(saveUserDto.getName());
+        user.setFirstName(saveUserDto.getFirstName());
+        user.setLastName(saveUserDto.getLastName());
         user.seteMailAddress(saveUserDto.geteMailAddress());
         user.setAdmin(saveUserDto.isAdmin());
 
@@ -107,9 +100,9 @@ public class DtoMapper {
          */
         loanDto.setStartDate(loan.getStartDate());
         loanDto.setEndDate(loan.getEndDate());
-        loanDto.setUserName(loan.getUser().getName());
-        loanDto.setCopyName(loan.getCopy().getBook().getTitle());
-        loanDto.setReservationId(loan.getReservation().getId());
+        loanDto.setUserFirstName(loan.getUser().getFirstName());
+        loanDto.setUserLastName(loan.getUser().getLastName());
+        loanDto.setBookTitle(loan.getCopy().getBook().getTitle());
         return loanDto;
 
     }
@@ -121,7 +114,8 @@ public class DtoMapper {
         ReservationDto reservationDto = new ReservationDto();
 
         reservationDto.setBookTitle(reservation.getBook().getTitle());
-        reservationDto.setUserName(reservation.getUser().getName());
+        reservationDto.setUserFirstName(reservation.getUser().getFirstName());
+        reservationDto.setUserLastName(reservationDto.getUserLastName());
         reservationDto.setDate(reservation.getDate());
 
         return reservationDto;
@@ -135,7 +129,8 @@ public class DtoMapper {
 
         userDto.setAdmin(user.isAdmin());
         userDto.seteMailAddress(user.geteMailAddress());
-        userDto.setName(user.getName());
+        userDto.setFirstName(user.getFirstName());
+        userDto.setLastName(user.getLastName());
 
         return userDto;
     }
