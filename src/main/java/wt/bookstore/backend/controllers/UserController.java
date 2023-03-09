@@ -1,14 +1,14 @@
 package wt.bookstore.backend.controllers;
 
+import org.apache.juli.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
-import wt.bookstore.backend.dto.ChangeUserDto;
-import wt.bookstore.backend.dto.SaveUserDto;
-import wt.bookstore.backend.dto.UserDto;
+import wt.bookstore.backend.dto.*;
+import wt.bookstore.backend.mapping.DtoMapper;
 import wt.bookstore.backend.mapping.UserDtoMapper;
 import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
@@ -81,29 +81,6 @@ public class UserController {
     /*
      * PUT endpoints
      */
-    @RequestMapping(value = "user/{id}/firstname", method = RequestMethod.PUT)
-    public void updateFirstName(@PathVariable long id, @RequestBody String firstName){
-        Optional<User> optionalUser = userRepository.findById(id);
-        optionalUser.get().setFirstName(firstName);
-
-        userRepository.save(optionalUser.get());
-    }
-
-    @RequestMapping(value = "user/{id}/lastname", method = RequestMethod.PUT)
-    public void updateLastName(@PathVariable long id, @RequestBody String lastName){
-        Optional<User> optionalUser = userRepository.findById(id);
-        optionalUser.get().setLastName(lastName);
-
-        userRepository.save(optionalUser.get());
-    }
-
-    @RequestMapping(value = "user/{id}/emailaddress", method = RequestMethod.PUT)
-    public void updateEmailAddress(@PathVariable long id, @RequestBody String emailAddress){
-        Optional<User> optionalUser = userRepository.findById(id);
-        optionalUser.get().seteMailAddress(emailAddress);
-
-        userRepository.save(optionalUser.get());
-    }
 
     @RequestMapping(value = "user/{id}/admin", method = RequestMethod.PUT)
     public void updateAdmin(@PathVariable long id, @RequestBody boolean admin){
@@ -120,15 +97,11 @@ public class UserController {
         String newLastName = changeUserDto.getLastName();
         String newEmailAddress = changeUserDto.getEmailAddress();
 
-        if (newFirstName != null){
-            optionalUser.get().setFirstName(newFirstName);
-        }
-        if (newLastName != null){
-            optionalUser.get().setLastName(newLastName);
-        }
-        if (newEmailAddress != null){
-            optionalUser.get().seteMailAddress(newEmailAddress);
-        }
+        // TODO
+        optionalUser.get().setFirstName(newFirstName);
+        optionalUser.get().setLastName(newLastName);
+        optionalUser.get().setEmailAddress(newEmailAddress);
+//        optionalUser.get().setAdmin(newAdmin);
         // Removed admin from changeuserdto because a boolean cannot be null
 
         userRepository.save(optionalUser.get());
@@ -165,6 +138,29 @@ public class UserController {
     	 * Used to find all reservations of a user
     	 */
     	return reservationRepository.findByUserId(id);
+    }
+
+    @PostMapping("api/user/login")
+    public LoginResponseDto Login(@RequestBody LoginRequestDto loginRequestDto){
+        Optional<User> userOptional = userRepository.findByEmailAddressAndPassword(
+                loginRequestDto.getUsername(), loginRequestDto.getPassword()
+        );
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            String token = RandomStringGenerator();
+
+            // Save token to user
+            user.setToken(token);
+            userRepository.save(user);
+
+            return new LoginResponseDto(token, user.isAdmin());
+        }
+
+        return null;
+    }
+
+    public String RandomStringGenerator() {
+        return "abcd";
     }
 
 }

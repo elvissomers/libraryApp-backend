@@ -15,7 +15,7 @@ public class UserDtoMapper {
         User user = new User();
         user.setFirstName(saveUserDto.getFirstName());
         user.setLastName(saveUserDto.getLastName());
-        user.seteMailAddress(saveUserDto.geteMailAddress());
+        user.setEmailAddress(saveUserDto.getEmailAddress());
         user.setAdmin(saveUserDto.isAdmin());
 
         return user;
@@ -28,7 +28,7 @@ public class UserDtoMapper {
         UserDto userDto = new UserDto();
 
         userDto.setAdmin(user.isAdmin());
-        userDto.seteMailAddress(user.geteMailAddress());
+        userDto.setEmailAddress(user.getEmailAddress());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
 
