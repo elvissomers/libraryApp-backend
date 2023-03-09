@@ -6,28 +6,17 @@ import wt.bookstore.backend.repository.*;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+@Component
 public class DtoMapper {
 
-    public static Loan dtoToLoan(SaveLoanDto saveLoanDto, IUserRepository userRepository, ICopyRepository copyRepository){
-        /*
-         * Used to create a Loan object from a saveLoanDto object
-         */
-        Optional<User> userOptional = userRepository.findById(saveLoanDto.getUserId());
-        Optional<Copy> copyOptional = copyRepository.findById(saveLoanDto.getCopyId());
+	@Autowired
+	private IUserRepository userRepository;
 
-        /*
-         * Check whether all necessary fields are present in the post DTO, e.g. You can not make a loan object without
-         * knowing which copy is loaned
-         */
-
-        Loan loan = new Loan();
-        loan.setStartDate(saveLoanDto.getStartDate()); //Possibly Null
-        loan.setEndDate(saveLoanDto.getEndDate()); //Possibly Null
-        loan.setUser(userOptional.get());
-        loan.setCopy(copyOptional.get());
-
-        return loan;
-    }
+	@Autowired
+	private ICopyRepository copyRepository;
 
     public static Reservation dtoToReservation(SaveReservationDto saveReservationDto, IUserRepository userRepository, IBookRepository bookRepository){
         /*
@@ -126,23 +115,6 @@ public class DtoMapper {
         return keyword;
     }
 
-    public static LoanDto loanToDto(Loan loan){
-        /*
-         * Used to create a LoanDto object from a Loan object
-         */
-        LoanDto loanDto = new LoanDto();
-        /*
-         * The loan get DTO only has to contain information usefull to the user, e.g. Can contain the copy name instead
-         * of the copy id
-         */
-        loanDto.setStartDate(loan.getStartDate());
-        loanDto.setEndDate(loan.getEndDate());
-        loanDto.setUserFirstName(loan.getUser().getFirstName());
-        loanDto.setUserLastName(loan.getUser().getLastName());
-        loanDto.setBookTitle(loan.getCopy().getBook().getTitle());
-        return loanDto;
-
-    }
 
     public static ReservationDto reservationToDto(Reservation reservation){
         /*

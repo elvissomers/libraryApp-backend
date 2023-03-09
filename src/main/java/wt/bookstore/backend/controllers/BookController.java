@@ -72,52 +72,17 @@ public class BookController {
         Book book = DtoMapper.dtoToBook(saveBookDto);
         bookRepository.save(book);
     }
-    
 
-    /*
-     * PUT endpoints from here
-     */
-    @RequestMapping(value="book/{id}/isbn", method = RequestMethod.PUT)
-    public void updateIsbn(@PathVariable long id, @RequestBody long isbn){
-        Optional<Book> optionalBook = bookRepository.findById(id);
-        optionalBook.get().setIsbn(isbn);
-
-        bookRepository.save(optionalBook.get());
-    }
-
-    @RequestMapping(value="book/{id}/title", method = RequestMethod.PUT)
-    public void updateTitle(@PathVariable long id, @RequestBody String title){
-        Optional<Book> optionalBook = bookRepository.findById(id);
-        optionalBook.get().setTitle(title);
-
-        bookRepository.save(optionalBook.get());
-    }
-
-    @RequestMapping(value="book/{id}/author", method = RequestMethod.PUT)
-    public void updateAuthor(@PathVariable long id, @RequestBody String author){
-        Optional<Book> optionalBook = bookRepository.findById(id);
-        optionalBook.get().setAuthor(author);
-
-        bookRepository.save(optionalBook.get());
-    }
-
-    @RequestMapping(value = "book/{id}", method = RequestMethod.PUT)
+    // @RequestMapping(value = "book/{id}", method = RequestMethod.PUT)
+    @PutMapping("book/{id}")
     public void update(@PathVariable long id, @RequestBody ChangeBookDto changeBookDto){
         Optional<Book> optionalBook = bookRepository.findById(id);
-        long newIsbn = changeBookDto.getIsbn();
-        String newTitle = changeBookDto.getTitle();
-        String newAuthor = changeBookDto.getAuthor();
+        if (optionalBook.isEmpty())
+        	return;
 
-        if (newIsbn != 0){
-            // TODO: maybe switch to long -> Long and boolean -> Boolean?
-            optionalBook.get().setIsbn(newIsbn);
-        }
-        if (newTitle != null){
-            optionalBook.get().setTitle(newTitle);
-        }
-        if (newAuthor != null){
-            optionalBook.get().setAuthor(newAuthor);
-        }
+        optionalBook.get().setIsbn(changeBookDto.getIsbn());
+        optionalBook.get().setTitle(changeBookDto.getTitle());
+        optionalBook.get().setAuthor(changeBookDto.getAuthor());
 
         bookRepository.save(optionalBook.get());
     }

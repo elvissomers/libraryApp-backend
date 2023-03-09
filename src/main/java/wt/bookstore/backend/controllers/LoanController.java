@@ -12,17 +12,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import wt.bookstore.backend.domains.Book;
+import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.domains.Loan;
+import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.ChangeLoanDto;
 import wt.bookstore.backend.dto.LoanDto;
 import wt.bookstore.backend.dto.SaveLoanDto;
-import wt.bookstore.backend.domains.*;
-import wt.bookstore.backend.dto.*;
+import wt.bookstore.backend.dto.SaveReservationDto;
 import wt.bookstore.backend.mapping.DtoMapper;
-import wt.bookstore.backend.repository.ICopyRepository;
+import wt.bookstore.backend.mapping.LoanDtoMapper;
+import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IUserRepository;
-import wt.bookstore.backend.repository.*;
 
 /**
  * The controller class that sets the API endpoints for the CRUD operations of the database that handles the loans.
@@ -38,11 +40,10 @@ public class LoanController {
 	private IUserRepository userRepository;
 
 	@Autowired
-	private ICopyRepository copyRepository;
-
-	@Autowired
 	private IBookRepository bookRepository;
 
+	@Autowired
+	private LoanDtoMapper mapper;
 
 	/*
 	 * GET endpoints from here
@@ -56,7 +57,7 @@ public class LoanController {
 	@RequestMapping(value = "loan", method = RequestMethod.GET)
 	public Stream<LoanDto> findAll() {
 		// Loan omzetten naar LoanDto
-		return loanRepository.findAll().stream().map(DtoMapper::loanToDto);
+		return loanRepository.findAll().stream().map(mapper::loanToDto);
 	}
 
 	/**
@@ -66,7 +67,7 @@ public class LoanController {
 	 */
 	@RequestMapping(value = "loan/{id}", method = RequestMethod.GET)
 	public Optional<LoanDto> find(@PathVariable long id) {
-		return Optional.of(DtoMapper.loanToDto(loanRepository.findById(id).get()));
+		return Optional.of(mapper.loanToDto(loanRepository.findById(id).get()));
 	}
 
 
@@ -80,7 +81,7 @@ public class LoanController {
 	 */
 	@RequestMapping(value = "loan/create", method = RequestMethod.POST)
 	public boolean create(@RequestBody SaveLoanDto saveLoanDto) {
-		Loan loan = DtoMapper.dtoToLoan(saveLoanDto,userRepository,  copyRepository);
+		Loan loan = mapper.dtoToLoan(saveLoanDto);
 		if (loan != null) {
 			loanRepository.save(loan);
 			return true;
