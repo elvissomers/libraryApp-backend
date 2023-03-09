@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.*;
+import wt.bookstore.backend.dto.ChangeReservationDto;
 import wt.bookstore.backend.dto.ReservationDto;
 import wt.bookstore.backend.dto.SaveReservationDto;
 import wt.bookstore.backend.mapping.ReservationDtoMapper;
@@ -87,10 +88,11 @@ public class ReservationController {
     /*
      * PUT endpoints from here
      */
+
     @PutMapping("reservation/{id}/date")
-    public void updateDate(@PathVariable long id, @RequestBody LocalDate date){
+    public void updateDate(@PathVariable long id, @RequestBody ChangeReservationDto changeReservationDto){
         Optional<Reservation> optionalReservation = reservationRepository.findById(id);
-        optionalReservation.get().setDate(date);
+        optionalReservation.get().setDate(changeReservationDto.getDate());
 
         reservationRepository.save(optionalReservation.get());
     }

@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.Copy;
+import wt.bookstore.backend.dto.ChangeCopyDto;
 import wt.bookstore.backend.dto.CopyDto;
 import wt.bookstore.backend.dto.SaveCopyDto;
 import wt.bookstore.backend.mapping.CopyDtoMapper;
@@ -77,22 +78,16 @@ public class CopyController {
     /*
      * PUT endpoints from here
      */
+
     @PutMapping("copy/{id}/available")
-    public void updateAvailable(@PathVariable long id, @RequestBody boolean available){
+    public void updateAvailable(@PathVariable long id, @RequestBody ChangeCopyDto changeCopyDto){
+
         Optional<Copy> optionalCopy = copyRepository.findById(id);
-        optionalCopy.get().setAvailable(available);
+        optionalCopy.get().setAvailable(changeCopyDto.isAvailable());
 
         copyRepository.save(optionalCopy.get());
     }
 
-//    @RequestMapping(value = "copy/{id}", method = RequestMethod.PUT)
-//    public void update(@PathVariable long id, @RequestBody Copy copy) {
-//        Optional<Copy> optional = copyRepository.findById(id);
-//        optional.get().setAvailable(copy.isAvailable());
-////        optional.get().setHeldByUserId(copy.getHeldByUserId());
-////        optional.get().setBookId(copy.getBookId());
-//        copyRepository.save(optional.get());
-//    }
 
     @DeleteMapping("copy/{id}")
     public void delete(@PathVariable long id) {

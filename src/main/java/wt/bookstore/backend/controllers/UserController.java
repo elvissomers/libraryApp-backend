@@ -79,15 +79,6 @@ public class UserController {
     /*
      * PUT endpoints
      */
-
-    @PutMapping("user/{id}/admin")
-    public void updateAdmin(@PathVariable long id, @RequestBody boolean admin){
-        Optional<User> optionalUser = userRepository.findById(id);
-        optionalUser.get().setAdmin(admin);
-
-        userRepository.save(optionalUser.get());
-    }
-
     @PutMapping("user/{id}")
     public void update(@PathVariable long id, @RequestBody ChangeUserDto changeUserDto){
         Optional<User> optionalUser = userRepository.findById(id);
@@ -95,14 +86,14 @@ public class UserController {
         String newLastName = changeUserDto.getLastName();
         String newEmailAddress = changeUserDto.getEmailAddress();
         String newPassword = changeUserDto.getPassword();
+        boolean newAdmin = changeUserDto.isAdmin();
 
         // TODO
         optionalUser.get().setFirstName(newFirstName);
         optionalUser.get().setLastName(newLastName);
         optionalUser.get().setEmailAddress(newEmailAddress);
         optionalUser.get().setPassword(newPassword);
-//        optionalUser.get().setAdmin(newAdmin);
-        // Removed admin from changeuserdto because a boolean cannot be null
+        optionalUser.get().setAdmin(newAdmin);
 
         userRepository.save(optionalUser.get());
     }
