@@ -22,8 +22,28 @@ public class User {
 
 	private String lastName;
 
-	private String eMailAddress;
+	private String emailAddress;
+
+	private String password;
+
+	private String token;
 	private boolean admin;
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
+	}
 
 	@OneToMany(mappedBy = "user", orphanRemoval = true)
 	private List<Loan> loans;
@@ -39,12 +59,12 @@ public class User {
 		this.id = id;
 	}
 
-	public String geteMailAddress() {
-		return eMailAddress;
+	public String getEmailAddress() {
+		return emailAddress;
 	}
 
-	public void seteMailAddress(String eMailAddress) {
-		this.eMailAddress = eMailAddress;
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
 	}
 
 	public boolean isAdmin() {
