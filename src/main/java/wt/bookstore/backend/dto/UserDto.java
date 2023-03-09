@@ -13,7 +13,7 @@ public class UserDto {
 
     private String lastName;
 
-    private String eMailAddress;
+    private String emailAddress;
 
     private boolean admin;
 
@@ -25,12 +25,12 @@ public class UserDto {
         this.id = id;
     }
 
-    public String geteMailAddress() {
-        return eMailAddress;
+    public String getEmailAddress() {
+        return emailAddress;
     }
 
-    public void seteMailAddress(String eMailAddress) {
-        this.eMailAddress = eMailAddress;
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 
     public boolean isAdmin() {

@@ -19,6 +19,26 @@ public class ReservationDto {
 
     private String bookTitle;
 
+    private long userId;
+
+    public long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(long userId) {
+        this.userId = userId;
+    }
+
+    public long getBookId() {
+        return bookId;
+    }
+
+    public void setBookId(long bookId) {
+        this.bookId = bookId;
+    }
+
+    private long bookId;
+
     public long getId() {
         return id;
     }
