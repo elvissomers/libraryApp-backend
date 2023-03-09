@@ -7,6 +7,7 @@ import wt.bookstore.backend.domains.Keyword;
 import wt.bookstore.backend.dto.KeywordDto;
 import wt.bookstore.backend.dto.SaveKeywordDto;
 import wt.bookstore.backend.mapping.DtoMapper;
+import wt.bookstore.backend.mapping.KeywordDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.IKeywordRepository;
 import wt.bookstore.backend.domains.Book;
@@ -26,14 +27,17 @@ public class KeywordController {
     @Autowired
     private IBookRepository bookRepository;
 
+    @Autowired
+    private KeywordDtoMapper keywordMapper;
+
     @RequestMapping(value = "keyword", method = RequestMethod.GET)
     public Stream<KeywordDto> findAll() {
-        return keywordRepository.findAll().stream().map(DtoMapper::keywordToDto);
+        return keywordRepository.findAll().stream().map(keywordMapper::keywordToDto);
     }
 
     @RequestMapping(value = "keyword/{id}", method = RequestMethod.GET)
     public Optional<KeywordDto> find(@PathVariable long id) {
-        return Optional.of(DtoMapper.keywordToDto(keywordRepository.findById(id).get()));
+        return Optional.of(keywordMapper.keywordToDto(keywordRepository.findById(id).get()));
     }
 
     @RequestMapping(value="keyword/create", method = RequestMethod.POST)
@@ -61,7 +65,7 @@ public class KeywordController {
             return true;
         } else {
             //}
-            Keyword keyword = DtoMapper.dtoToKeyword(saveKeywordDto, bookRepository);
+            Keyword keyword = keywordMapper.dtoToKeyword(saveKeywordDto);
             if (keyword != null) {
                 keywordRepository.save(keyword);
                 return true;

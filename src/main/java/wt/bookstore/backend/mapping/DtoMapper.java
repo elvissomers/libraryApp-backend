@@ -94,28 +94,6 @@ public class DtoMapper {
         return book;
     }
 
-    public static Keyword dtoToKeyword(SaveKeywordDto saveKeywordDto, IBookRepository bookRepository){
-        /*
-         * Used to create a Keyword object from a SaveKeywordDto object
-         */
-        Keyword keyword = new Keyword();
-        keyword.setName(saveKeywordDto.getName());
-
-        // Creates an empty booklist to append the book corresponding to the id in the
-        // saveKeywordDto object, so a keyword object can be created
-        Optional<Book> bookOptional = bookRepository.findById(saveKeywordDto.getBookId());
-        if (bookOptional.isPresent()) {
-            keyword.addBook(bookOptional.get());
-            bookOptional.get().addKeyword(keyword);
-            //bookRepository.save(bookOptional.get()); - causes error?
-        } else {
-            return null;
-        }
-
-        return keyword;
-    }
-
-
     public static ReservationDto reservationToDto(Reservation reservation){
         /*
          * Used to create a ReservationDto object from a Reservation object
@@ -171,15 +149,4 @@ public class DtoMapper {
         return bookDto;
     }
 
-
-    public static KeywordDto keywordToDto(Keyword keyword){
-        /*
-         * Used to create a KeywordDto object from a Keyword object
-         */
-        KeywordDto keywordDto = new KeywordDto();
-
-        keywordDto.setName(keyword.getName());
-
-        return keywordDto;
-    }
 }
