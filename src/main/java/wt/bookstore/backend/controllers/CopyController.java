@@ -85,16 +85,6 @@ public class CopyController {
 
         copyRepository.save(optionalCopy.get());
     }
-
-//    @RequestMapping(value = "copy/{id}", method = RequestMethod.PUT)
-//    public void update(@PathVariable long id, @RequestBody Copy copy) {
-//        Optional<Copy> optional = copyRepository.findById(id);
-//        optional.get().setAvailable(copy.isAvailable());
-////        optional.get().setHeldByUserId(copy.getHeldByUserId());
-////        optional.get().setBookId(copy.getBookId());
-//        copyRepository.save(optional.get());
-//    }
-
     @RequestMapping(value = "copy/{id}", method = RequestMethod.DELETE)
     public void delete(@PathVariable long id) {
         copyRepository.deleteById(id);
