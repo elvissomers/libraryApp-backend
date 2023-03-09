@@ -76,7 +76,6 @@ public class BookController {
         bookRepository.save(book);
     }
 
-    // @RequestMapping(value = "book/{id}", method = RequestMethod.PUT)
     @PutMapping("book/{id}")
     public void update(@PathVariable long id, @RequestBody ChangeBookDto changeBookDto){
         Optional<Book> optionalBook = bookRepository.findById(id);
@@ -90,18 +89,6 @@ public class BookController {
         bookRepository.save(optionalBook.get());
     }
 
-
-//    @RequestMapping(value = "book/{id}", method = RequestMethod.PUT)
-//    public void update(@PathVariable long id, @RequestBody Book book) {
-//        Optional<Book> optional = bookRepository.findById(id);
-//        optional.get().setTitle(book.getTitle());
-//        optional.get().setIsbn(book.getIsbn());
-//        optional.get().setAuthor(book.getAuthor());
-//
-//        bookRepository.save(optional.get());
-//    }
-
-
     /*
      * DELETE endpoints from here
      */
@@ -109,22 +96,24 @@ public class BookController {
     public void delete(@PathVariable long id) {
         bookRepository.deleteById(id);
     }
-    
-    @GetMapping("book/{id}/copies")
-    public List<Copy> findCopies(@PathVariable long id){
-    	/**
-    	 * Used to find all copies of a specific book
-    	 */
-    	return copyRepository.findByBookId(id);
-    }
-    
-    @GetMapping("book/{id}/reservations")
-    public List<Reservation> findReservations(@PathVariable long id){
-    	/**
-    	 * Used to find all reservations of a specific book
-    	 */
-    	return reservationRepository.findByBookId(id);
-    }
-    
+
+
+    //TODO: implementeer deze met DTO's
+//    @RequestMapping(value = "book/{id}/copies", method = RequestMethod.GET)
+//    public List<Copy> findCopies(@PathVariable long id){
+//    	/**
+//    	 * Used to find all copies of a specific book
+//    	 */
+//    	return copyRepository.findByBookId(id);
+//    }
+//
+//    @RequestMapping(value = "book/{id}/reservations", method = RequestMethod.GET)
+//    public List<Reservation> findReservations(@PathVariable long id){
+//    	/**
+//    	 * Used to find all reservations of a specific book
+//    	 */
+//    	return reservationRepository.findByBookId(id);
+//    }
+//
 
 }
