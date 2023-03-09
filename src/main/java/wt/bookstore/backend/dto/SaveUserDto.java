@@ -10,16 +10,16 @@ public class SaveUserDto {
 
     private String lastName;
 
-    private String eMailAddress;
+    private String emailAddress;
 
     private boolean admin;
 
-    public String geteMailAddress() {
-        return eMailAddress;
+    public String getEmailAddress() {
+        return emailAddress;
     }
 
-    public void seteMailAddress(String eMailAddress) {
-        this.eMailAddress = eMailAddress;
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 
     public String getFirstName() {
