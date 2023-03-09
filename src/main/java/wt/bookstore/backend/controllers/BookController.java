@@ -57,7 +57,7 @@ public class BookController {
     @RequestMapping(value = "bookPage/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
     public Stream<BookDto> findAllByPage(@PathVariable int pageNumber, @PathVariable int numberPerPage) {
         Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
-        return bookRepository.findAll(pageable).stream().map(DtoMapper::bookToDto);
+        return bookRepository.findAll(pageable).stream().map(bookMapper::bookToDto);
     }
 
     /**
@@ -108,7 +108,7 @@ public class BookController {
 
     @RequestMapping(value = "booksearch/{query}", method = RequestMethod.GET)
     public Stream<BookDto> searchBooks(@PathVariable String query) {
-        return bookRepository.findByTitleContainingOrAuthorContaining(query, query).stream().map(DtoMapper::bookToDto);
+        return bookRepository.findByTitleContainingOrAuthorContaining(query, query).stream().map(bookMapper::bookToDto);
 
 
 
@@ -129,5 +129,5 @@ public class BookController {
 //    	return reservationRepository.findByBookId(id);
 //    }
 //
-
+    }
 }
