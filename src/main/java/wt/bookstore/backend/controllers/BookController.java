@@ -1,6 +1,8 @@
 package wt.bookstore.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Copy;
@@ -12,6 +14,7 @@ import wt.bookstore.backend.mapping.BookDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -49,6 +52,12 @@ public class BookController {
     @GetMapping("book")
     public Stream<BookDto> findAll() {
         return bookRepository.findAll().stream().map(bookMapper::bookToDto);
+    }
+
+    @RequestMapping(value = "bookPage/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<BookDto> findAllByPage(@PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+        return bookRepository.findAll(pageable).stream().map(DtoMapper::bookToDto);
     }
 
     /**
@@ -96,6 +105,11 @@ public class BookController {
     public void delete(@PathVariable long id) {
         bookRepository.deleteById(id);
     }
+
+    @RequestMapping(value = "booksearch/{query}", method = RequestMethod.GET)
+    public Stream<BookDto> searchBooks(@PathVariable String query) {
+        return bookRepository.findByTitleContainingOrAuthorContaining(query, query).stream().map(DtoMapper::bookToDto);
+
 
 
     //TODO: implementeer deze met DTO's
