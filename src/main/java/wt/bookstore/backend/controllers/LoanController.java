@@ -104,21 +104,7 @@ public class LoanController {
 	/*
 	 * PUT endpoints from here
 	 */
-	@PutMapping("loan/{id}/startdate")
-	public void updateStartDate(@PathVariable long id, @RequestBody LocalDate startDate){
-		Optional<Loan> optionalLoan = loanRepository.findById(id);
-		optionalLoan.get().setStartDate(startDate);
 
-		loanRepository.save(optionalLoan.get());
-	}
-
-	@PutMapping("loan/{id}/enddate")
-	public void updateEndDate(@PathVariable long id, @RequestBody LocalDate endDate){
-		Optional<Loan> optionalLoan = loanRepository.findById(id);
-		optionalLoan.get().setEndDate(endDate);
-
-		loanRepository.save(optionalLoan.get());
-	}
 
 	@PutMapping("loan/{id}")
 	public void update(@PathVariable long id, @RequestBody ChangeLoanDto changeLoanDto){

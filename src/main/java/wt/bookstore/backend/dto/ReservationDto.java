@@ -20,6 +20,8 @@ public class ReservationDto {
     private String bookTitle;
 
     private long userId;
+    
+    private long bookId;
 
     public long getUserId() {
         return userId;
@@ -36,9 +38,7 @@ public class ReservationDto {
     public void setBookId(long bookId) {
         this.bookId = bookId;
     }
-
-    private long bookId;
-
+    
     public long getId() {
         return id;
     }
