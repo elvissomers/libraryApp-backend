@@ -43,7 +43,7 @@ public class LoanController {
 	private IBookRepository bookRepository;
 
 	@Autowired
-	private LoanDtoMapper mapper;
+	private LoanDtoMapper loanMapper;
 
 	/*
 	 * GET endpoints from here
@@ -57,7 +57,7 @@ public class LoanController {
 	@RequestMapping(value = "loan", method = RequestMethod.GET)
 	public Stream<LoanDto> findAll() {
 		// Loan omzetten naar LoanDto
-		return loanRepository.findAll().stream().map(mapper::loanToDto);
+		return loanRepository.findAll().stream().map(loanMapper::loanToDto);
 	}
 
 	/**
@@ -67,7 +67,7 @@ public class LoanController {
 	 */
 	@RequestMapping(value = "loan/{id}", method = RequestMethod.GET)
 	public Optional<LoanDto> find(@PathVariable long id) {
-		return Optional.of(mapper.loanToDto(loanRepository.findById(id).get()));
+		return Optional.of(loanMapper.loanToDto(loanRepository.findById(id).get()));
 	}
 
 
@@ -81,7 +81,7 @@ public class LoanController {
 	 */
 	@RequestMapping(value = "loan/create", method = RequestMethod.POST)
 	public boolean create(@RequestBody SaveLoanDto saveLoanDto) {
-		Loan loan = mapper.dtoToLoan(saveLoanDto);
+		Loan loan = loanMapper.dtoToLoan(saveLoanDto);
 		if (loan != null) {
 			loanRepository.save(loan);
 			return true;

@@ -10,6 +10,7 @@ import wt.bookstore.backend.dto.ChangeUserDto;
 import wt.bookstore.backend.dto.SaveUserDto;
 import wt.bookstore.backend.dto.UserDto;
 import wt.bookstore.backend.mapping.DtoMapper;
+import wt.bookstore.backend.mapping.UserDtoMapper;
 import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
 import wt.bookstore.backend.repository.IUserRepository;
@@ -35,6 +36,9 @@ public class UserController {
     @Autowired
     private IReservationRepository reservationRepository;
 
+    @Autowired
+    private UserDtoMapper userMapper;
+
 
     /*
      * GET endpoints from here
@@ -46,7 +50,7 @@ public class UserController {
      */
     @RequestMapping(value = "user", method = RequestMethod.GET)
     public Stream<UserDto> findAll() {
-        return userRepository.findAll().stream().map(DtoMapper::userToDto);
+        return userRepository.findAll().stream().map(userMapper::userToDto);
     }
 
     /**
@@ -56,7 +60,7 @@ public class UserController {
      */
     @RequestMapping(value = "user/{id}", method = RequestMethod.GET)
     public Optional<UserDto> find(@PathVariable long id) {
-        return Optional.of(DtoMapper.userToDto(userRepository.findById(id).get()));
+        return Optional.of(userMapper.userToDto(userRepository.findById(id).get()));
     }
 
 
@@ -70,7 +74,7 @@ public class UserController {
      */
     @RequestMapping(value="user/create", method = RequestMethod.POST)
     public void create(@RequestBody SaveUserDto saveUserDto) {
-        User user = DtoMapper.dtoToUser(saveUserDto);
+        User user = userMapper.dtoToUser(saveUserDto);
         userRepository.save(user);
     }
 

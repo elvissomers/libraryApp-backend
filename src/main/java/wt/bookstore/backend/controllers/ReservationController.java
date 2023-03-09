@@ -7,6 +7,7 @@ import wt.bookstore.backend.domains.*;
 import wt.bookstore.backend.dto.ReservationDto;
 import wt.bookstore.backend.dto.SaveReservationDto;
 import wt.bookstore.backend.mapping.DtoMapper;
+import wt.bookstore.backend.mapping.ReservationDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
@@ -36,6 +37,9 @@ public class ReservationController {
     @Autowired
     private ILoanRepository loanRepository;
 
+    @Autowired
+    private ReservationDtoMapper reservationMapper;
+
 
     /*
      * GET endpoints from here
@@ -47,7 +51,7 @@ public class ReservationController {
      */
     @RequestMapping(value = "reservation", method = RequestMethod.GET)
     public Stream<ReservationDto> findAll() {
-        return reservationRepository.findAll().stream().map(DtoMapper::reservationToDto);
+        return reservationRepository.findAll().stream().map(reservationMapper::reservationToDto);
     }
 
     /**
@@ -58,7 +62,7 @@ public class ReservationController {
     @RequestMapping(value = "reservation/{id}", method = RequestMethod.GET)
     public Optional<ReservationDto> find(@PathVariable long id) {
         Optional<Reservation> optionalReservation = reservationRepository.findById(id);
-        return Optional.of(DtoMapper.reservationToDto(optionalReservation.get()));
+        return Optional.of(reservationMapper.reservationToDto(optionalReservation.get()));
     }
 
 
@@ -72,7 +76,7 @@ public class ReservationController {
      */
     @RequestMapping(value="reservation/create", method = RequestMethod.POST)
     public boolean create(@RequestBody SaveReservationDto saveReservationDto) {
-        Reservation reservation = DtoMapper.dtoToReservation(saveReservationDto, userRepository, bookRepository);
+        Reservation reservation = reservationMapper.dtoToReservation(saveReservationDto);
         if (reservation != null) {
             reservationRepository.save(reservation);
             return true;
