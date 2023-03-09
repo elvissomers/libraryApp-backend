@@ -14,6 +14,7 @@ public class Reservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+    @Column(nullable = false)
 	private LocalDate date;
 
     @ManyToOne(optional = false)

@@ -14,6 +14,7 @@ public class Loan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
+	@Column(nullable = false)
 	private LocalDate startDate;
 	private LocalDate endDate;
 	

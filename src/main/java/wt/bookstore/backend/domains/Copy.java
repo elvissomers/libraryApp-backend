@@ -1,6 +1,7 @@
 package wt.bookstore.backend.domains;
 
 import jakarta.persistence.*;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ public class Copy {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
 
+    @Column(nullable = false)
 	private boolean available;
 
     @ManyToOne(optional = false)
