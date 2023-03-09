@@ -8,7 +8,6 @@ import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.*;
-import wt.bookstore.backend.mapping.DtoMapper;
 import wt.bookstore.backend.mapping.UserDtoMapper;
 import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
@@ -77,12 +76,11 @@ public class UserController {
         userRepository.save(user);
     }
 
-
     /*
      * PUT endpoints
      */
 
-    @RequestMapping(value = "user/{id}/admin", method = RequestMethod.PUT)
+    @PutMapping("user/{id}/admin")
     public void updateAdmin(@PathVariable long id, @RequestBody boolean admin){
         Optional<User> optionalUser = userRepository.findById(id);
         optionalUser.get().setAdmin(admin);
@@ -90,17 +88,19 @@ public class UserController {
         userRepository.save(optionalUser.get());
     }
 
-    @RequestMapping(value = "user/{id}", method = RequestMethod.PUT)
+    @PutMapping("user/{id}")
     public void update(@PathVariable long id, @RequestBody ChangeUserDto changeUserDto){
         Optional<User> optionalUser = userRepository.findById(id);
         String newFirstName = changeUserDto.getFirstName();
         String newLastName = changeUserDto.getLastName();
         String newEmailAddress = changeUserDto.getEmailAddress();
+        String newPassword = changeUserDto.getPassword();
 
         // TODO
         optionalUser.get().setFirstName(newFirstName);
         optionalUser.get().setLastName(newLastName);
         optionalUser.get().setEmailAddress(newEmailAddress);
+        optionalUser.get().setPassword(newPassword);
 //        optionalUser.get().setAdmin(newAdmin);
         // Removed admin from changeuserdto because a boolean cannot be null
 
