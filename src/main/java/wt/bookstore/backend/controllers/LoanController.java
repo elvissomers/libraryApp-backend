@@ -20,7 +20,6 @@ import wt.bookstore.backend.dto.ChangeLoanDto;
 import wt.bookstore.backend.dto.LoanDto;
 import wt.bookstore.backend.dto.SaveLoanDto;
 import wt.bookstore.backend.dto.SaveReservationDto;
-import wt.bookstore.backend.mapping.DtoMapper;
 import wt.bookstore.backend.mapping.LoanDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ILoanRepository;
