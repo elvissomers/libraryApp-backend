@@ -37,7 +37,7 @@ public class SaveUserDto {
     public void setLastName(String lastName) {
         this.lastName = lastName;
     }
-    
+
     public boolean isAdmin() {
         return admin;
     }
