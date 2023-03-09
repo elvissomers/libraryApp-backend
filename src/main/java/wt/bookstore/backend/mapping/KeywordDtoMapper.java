@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
-public class DtoMapper {
+public class KeywordDtoMapper {
 
 	@Autowired
 	private IUserRepository userRepository;
@@ -18,15 +18,10 @@ public class DtoMapper {
 	@Autowired
 	private ICopyRepository copyRepository;
 
+    @Autowired
+    private IBookRepository bookRepository;
 
-
-
-
-
-
-
-
-    public static Keyword dtoToKeyword(SaveKeywordDto saveKeywordDto, IBookRepository bookRepository){
+    public Keyword dtoToKeyword(SaveKeywordDto saveKeywordDto){
         /*
          * Used to create a Keyword object from a SaveKeywordDto object
          */
@@ -48,16 +43,7 @@ public class DtoMapper {
     }
 
 
-
-
-
-
-
-
-
-
-
-    public static KeywordDto keywordToDto(Keyword keyword){
+    public KeywordDto keywordToDto(Keyword keyword){
         /*
          * Used to create a KeywordDto object from a Keyword object
          */
