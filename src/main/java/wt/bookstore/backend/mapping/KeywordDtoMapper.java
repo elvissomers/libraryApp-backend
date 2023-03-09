@@ -1,5 +1,6 @@
 package wt.bookstore.backend.mapping;
 
+
 import wt.bookstore.backend.domains.*;
 import wt.bookstore.backend.dto.*;
 import wt.bookstore.backend.repository.*;
@@ -8,15 +9,17 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import wt.bookstore.backend.domains.Book;
+import wt.bookstore.backend.domains.Keyword;
+import wt.bookstore.backend.dto.KeywordDto;
+import wt.bookstore.backend.dto.SaveKeywordDto;
+import wt.bookstore.backend.repository.IBookRepository;
+import wt.bookstore.backend.repository.IUserRepository;
+
+import java.util.Optional;
 
 @Component
 public class KeywordDtoMapper {
-
-	@Autowired
-	private IUserRepository userRepository;
-
-	@Autowired
-	private ICopyRepository copyRepository;
 
     @Autowired
     private IBookRepository bookRepository;
@@ -41,7 +44,6 @@ public class KeywordDtoMapper {
 
         return keyword;
     }
-
 
     public KeywordDto keywordToDto(Keyword keyword){
         /*
