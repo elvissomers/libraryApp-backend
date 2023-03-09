@@ -27,12 +27,12 @@ public class KeywordController {
     @Autowired
     private KeywordDtoMapper keywordMapper;
 
-    @RequestMapping(value = "keyword", method = RequestMethod.GET)
+    @GetMapping("keyword")
     public Stream<KeywordDto> findAll() {
         return keywordRepository.findAll().stream().map(keywordMapper::keywordToDto);
     }
 
-    @RequestMapping(value = "keyword/{id}", method = RequestMethod.GET)
+    @GetMapping("keyword/{id}")
     public Optional<KeywordDto> find(@PathVariable long id) {
         return Optional.of(keywordMapper.keywordToDto(keywordRepository.findById(id).get()));
     }
@@ -44,7 +44,7 @@ public class KeywordController {
      * given dto to the existing keyword.
      * If not, it will create a new Keyword object.
      */
-    @RequestMapping(value="keyword/create", method = RequestMethod.POST)
+    @PostMapping("keyword/create")
     public boolean create(@RequestBody SaveKeywordDto saveKeywordDto) {
 
     	long bookId = saveKeywordDto.getBookId();
@@ -80,7 +80,7 @@ public class KeywordController {
 //        keywordRepository.save(optional.get());
 //    }
 
-    @RequestMapping(value = "keyword/{id}", method = RequestMethod.DELETE)
+    @DeleteMapping("keyword/{id}")
     public void delete(@PathVariable long id) {
     	keywordRepository.deleteById(id);
     }
