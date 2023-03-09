@@ -8,6 +8,7 @@ import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.dto.BookDto;
 import wt.bookstore.backend.dto.ChangeBookDto;
 import wt.bookstore.backend.dto.SaveBookDto;
+import wt.bookstore.backend.mapping.BookDtoMapper;
 import wt.bookstore.backend.mapping.DtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
@@ -33,6 +34,9 @@ public class BookController {
     @Autowired
     private IReservationRepository reservationRepository;
 
+    @Autowired
+    private BookDtoMapper bookMapper;
+
 
     /*
      * GET endpoints from here
@@ -45,7 +49,7 @@ public class BookController {
      */
     @RequestMapping(value = "book", method = RequestMethod.GET)
     public Stream<BookDto> findAll() {
-        return bookRepository.findAll().stream().map(DtoMapper::bookToDto);
+        return bookRepository.findAll().stream().map(bookMapper::bookToDto);
     }
 
     /**
@@ -55,7 +59,7 @@ public class BookController {
      */
     @RequestMapping(value = "book/{id}", method = RequestMethod.GET)
     public Optional<BookDto> find(@PathVariable long id) {
-        return Optional.of(DtoMapper.bookToDto(bookRepository.findById(id).get()));
+        return Optional.of(bookMapper.bookToDto(bookRepository.findById(id).get()));
     }
 
 
@@ -69,7 +73,7 @@ public class BookController {
      */
     @RequestMapping(value="book/create", method = RequestMethod.POST)
     public void create(@RequestBody SaveBookDto saveBookDto) {
-        Book book = DtoMapper.dtoToBook(saveBookDto);
+        Book book = bookMapper.dtoToBook(saveBookDto);
         bookRepository.save(book);
     }
 
