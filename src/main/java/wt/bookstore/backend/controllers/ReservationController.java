@@ -130,8 +130,9 @@ public class ReservationController {
     }
 
     @RequestMapping(value = "reservation/{id}", method = RequestMethod.DELETE)
-    public void delete(@PathVariable long id) {
+    public boolean delete(@PathVariable long id) {
         reservationRepository.deleteById(id);
+        return true;
     }
 
 

@@ -8,7 +8,6 @@ import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.*;
-import wt.bookstore.backend.mapping.DtoMapper;
 import wt.bookstore.backend.mapping.UserDtoMapper;
 import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;

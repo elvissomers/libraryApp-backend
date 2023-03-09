@@ -53,6 +53,9 @@ public class ReservationDtoMapper {
         reservationDto.setUserFirstName(reservation.getUser().getFirstName());
         reservationDto.setUserLastName(reservation.getUser().getLastName());
         reservationDto.setDate(reservation.getDate());
+        reservationDto.setId(reservation.getId());
+        reservationDto.setUserId(reservation.getUser().getId());
+        reservationDto.setBookId(reservation.getBook().getId());
 
         return reservationDto;
     }
