@@ -86,10 +86,10 @@ public class BookController {
     }
 
     @PutMapping("book/{id}")
-    public void update(@PathVariable long id, @RequestBody ChangeBookDto changeBookDto){
+    public void update(@PathVariable long id, @RequestBody ChangeBookDto changeBookDto) {
         Optional<Book> optionalBook = bookRepository.findById(id);
         if (optionalBook.isEmpty())
-        	return;
+            return;
 
         optionalBook.get().setIsbn(changeBookDto.getIsbn());
         optionalBook.get().setTitle(changeBookDto.getTitle());
@@ -106,9 +106,11 @@ public class BookController {
         bookRepository.deleteById(id);
     }
 
-    @RequestMapping(value = "booksearch/{query}", method = RequestMethod.GET)
-    public Stream<BookDto> searchBooks(@PathVariable String query) {
-        return bookRepository.findByTitleContainingOrAuthorContaining(query, query).stream().map(bookMapper::bookToDto);
+    @RequestMapping(value = "booksearch/{query}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<BookDto> searchBooks(@PathVariable String query, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+        return bookRepository.findByTitleContainingOrAuthorContaining(query, query, pageable).stream().map(bookMapper::bookToDto);
+    }
 
 
 
@@ -129,5 +131,4 @@ public class BookController {
 //    	return reservationRepository.findByBookId(id);
 //    }
 //
-    }
 }
