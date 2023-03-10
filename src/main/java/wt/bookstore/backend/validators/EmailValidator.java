@@ -21,9 +21,7 @@ public class EmailValidator implements ConstraintValidator<EmailConstraint, Stri
     public boolean isValid(String emailField,
                            ConstraintValidatorContext cxt) {
         String testEmailPattern = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$";
-//        String emailPattern = ".*@.*";
         return patternMatches(emailField, testEmailPattern);
-//        return (emailField != null);
     }
 
 
