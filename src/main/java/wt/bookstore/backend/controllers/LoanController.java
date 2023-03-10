@@ -95,6 +95,7 @@ public class LoanController {
 	 */
 	@PostMapping("loan/create/fromreservation")
 	public void createFromReservation(@RequestBody SaveReservationDto saveReservationDto){
+		//TODO : implement specific return for non-available book
 		Loan loan = new Loan();
 
 		Optional<User> user = userRepository.findById(saveReservationDto.getUserId());

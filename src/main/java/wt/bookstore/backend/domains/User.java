@@ -3,6 +3,7 @@ package wt.bookstore.backend.domains;
 import java.util.List;
 
 import jakarta.persistence.*;
+import wt.bookstore.backend.validators.EmailConstraint;
 
 /**
  * The entity used for the users database
@@ -18,7 +19,7 @@ public class User {
 	private String firstName;
 	@Column(nullable = false, length = 64)
 	private String lastName;
-	@Column(nullable = false, length = 128)
+	@EmailConstraint
 	private String emailAddress;
 	@Column(nullable = false, length = 128)
 	private String password;
