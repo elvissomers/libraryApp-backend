@@ -15,6 +15,7 @@ import wt.bookstore.backend.repository.IUserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Stream;
 
 
@@ -138,7 +139,7 @@ public class UserController {
         );
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            String token = RandomStringGenerator();
+            String token = generateRandomString(60);
 
             // Save token to user
             user.setToken(token);
@@ -148,6 +149,20 @@ public class UserController {
         }
 
         return null;
+    }
+
+    public String generateRandomString(int targetStringLength) {
+
+        int leftLimit = 48; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        Random random = new Random();
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
+        return generatedString;
     }
 
     public String RandomStringGenerator() {
