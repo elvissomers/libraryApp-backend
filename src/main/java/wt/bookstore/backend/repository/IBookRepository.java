@@ -9,5 +9,5 @@ import java.util.List;
 public interface IBookRepository extends JpaRepository<Book, Long> {
 
 
-    List<Book> findByTitleContainingOrAuthorContaining(String title, String Author);
+    List<Book> findByTitleContainingOrAuthorContaining(String title, String Author, Pageable pageable);
 }
