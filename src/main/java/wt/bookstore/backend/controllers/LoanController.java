@@ -17,6 +17,7 @@ import wt.bookstore.backend.dto.SaveLoanDto;
 import wt.bookstore.backend.dto.SaveReservationDto;
 import wt.bookstore.backend.mapping.LoanDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
+import wt.bookstore.backend.repository.ICopyRepository;
 import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IUserRepository;
 
@@ -35,6 +36,9 @@ public class LoanController {
 
 	@Autowired
 	private IBookRepository bookRepository;
+
+	@Autowired
+	private ICopyRepository copyRepository;
 
 	@Autowired
 	private LoanDtoMapper loanMapper;
@@ -84,6 +88,11 @@ public class LoanController {
 	}
 
 
+	/**
+	 * Used to create a Loan from a reservation Dto object.
+	 * If no copies of the reserved book are available, it gives a 500 http error
+	 * @param saveReservationDto
+	 */
 	@PostMapping("loan/create/fromreservation")
 	public void createFromReservation(@RequestBody SaveReservationDto saveReservationDto){
 		Loan loan = new Loan();
@@ -91,10 +100,16 @@ public class LoanController {
 		Optional<User> user = userRepository.findById(saveReservationDto.getUserId());
 		Optional<Book> book = bookRepository.findById(saveReservationDto.getBookId());
 
-		Copy copy = book.get().getRandomCopy();
+		Copy copy = book.get().getRandomAvailableCopy();
 
+		// Set copy to unavailable!
+		Optional<Copy> copyOptional = copyRepository.findById(copy.getId());
+		copyOptional.get().setAvailable(false);
+		copyRepository.save(copyOptional.get());
+
+		// TODO : this should be the current date instead of the reservation start date!
 		loan.setStartDate(saveReservationDto.getDate());
-		loan.setCopy(copy);
+		loan.setCopy(copyOptional.get());
 		loan.setUser(user.get());
 
 		loanRepository.save(loan);
