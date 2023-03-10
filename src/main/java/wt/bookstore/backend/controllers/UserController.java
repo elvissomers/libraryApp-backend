@@ -153,7 +153,7 @@ public class UserController {
 
     public String generateRandomString(int targetStringLength) {
 
-        int leftLimit = 48; // letter '0'
+        int leftLimit = 48; // letter 'a'
         int rightLimit = 122; // letter 'z'
         Random random = new Random();
         String generatedString = random.ints(leftLimit, rightLimit + 1)
@@ -165,5 +165,8 @@ public class UserController {
         return generatedString;
     }
 
+    public String RandomStringGenerator() {
+        return "abcd";
+    }
 
 }
