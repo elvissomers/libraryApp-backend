@@ -4,6 +4,7 @@ import java.util.List;
 
 import jakarta.persistence.*;
 import wt.bookstore.backend.validators.EmailConstraint;
+import wt.bookstore.backend.validators.NameConstraint;
 
 /**
  * The entity used for the users database
@@ -15,9 +16,9 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-	@Column(nullable = false, length = 64)
+	@NameConstraint
 	private String firstName;
-	@Column(nullable = false, length = 64)
+	@NameConstraint
 	private String lastName;
 	@EmailConstraint
 	private String emailAddress;
