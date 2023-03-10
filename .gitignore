@@ -32,3 +32,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+### node modules ###
+!**/src/main/java/wt/bookstore/frontend/

@@ -1,0 +1,6 @@
+wt.bookstore
+wt.bookstore.backend.controllers
+wt.bookstore.backend.domains
+wt.bookstore.backend.dto
+wt.bookstore.backend.mapping
+wt.bookstore.backend.repository
