@@ -110,6 +110,10 @@ public class Book {
 		keywords.add(keyword);
 	}
 
+	public void addCopy(Copy copy){
+		copies.add(copy);
+	}
+
 	// TODO : een call hiernaar elke keer dat een copy (un)available wordt
 	// TODO - Is dit nodig?
 	public void setAvailableCopies(){
