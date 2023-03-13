@@ -3,6 +3,7 @@ package wt.bookstore.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.dto.ChangeCopyDto;
 import wt.bookstore.backend.dto.CopyDto;
@@ -11,6 +12,7 @@ import wt.bookstore.backend.mapping.CopyDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -52,6 +54,18 @@ public class CopyController {
     @GetMapping("copy/{id}")
     public Optional<CopyDto> find(@PathVariable long id) {
         return Optional.of(copyMapper.copyToDto(copyRepository.findById(id).get()));
+    }
+
+    @GetMapping("book/copies/{id}")
+    public Stream<CopyDto> findByBook(@PathVariable long id){
+        Optional<Book> optionalBook = bookRepository.findById(id);
+
+        if (optionalBook.isEmpty()){
+            // TODO: implement some other error message here
+            return null;
+        }
+
+        return copyRepository.findByBook(optionalBook.get()).stream().map(copyMapper::copyToDto);
     }
 
 
