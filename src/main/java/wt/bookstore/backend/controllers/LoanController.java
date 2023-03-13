@@ -141,22 +141,40 @@ public class LoanController {
 	 * PUT endpoints from here
 	 */
 
-
+	/**
+	 * Used to "change" a loan - in the frontend this will be used to end a loan,
+	 * which means changing its end date. No other attributes are changed.
+	 *  -- It also sets the copy back to available.
+	 *
+	 * @param id the id of the loan to change
+	 * @param changeLoanDto contains only an end date as of now (should be today)
+	 * @return true if change was succesful, false otherwise
+	 */
 	@PutMapping("loan/{id}")
-	public void update(@PathVariable long id, @RequestBody ChangeLoanDto changeLoanDto){
+	public boolean update(@PathVariable long id, @RequestBody ChangeLoanDto changeLoanDto){
 		Optional<Loan> optionalLoan = loanRepository.findById(id);
+
+		if (optionalLoan.isEmpty()){
+			return false;
+		}
+
+		// We will also set the used copy back to available
+		Copy copy = optionalLoan.get().getCopy();
+		copy.setAvailable(true);
+		copyRepository.save(copy);
+
+		// Should be set to current date in the front end
 		LocalDate newEndDate = changeLoanDto.getEndDate();
-		LocalDate newStartDate = changeLoanDto.getStartDate();
 
 		if (newEndDate != null){
 			optionalLoan.get().setEndDate(newEndDate);
 		}
-		if (newStartDate != null){
-			optionalLoan.get().setStartDate(newStartDate);
-		}
 
 		loanRepository.save(optionalLoan.get());
+		return true;
 	}
+
+
 
 
 	/*
