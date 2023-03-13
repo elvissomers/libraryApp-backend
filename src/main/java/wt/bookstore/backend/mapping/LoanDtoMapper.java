@@ -47,7 +47,6 @@ public class LoanDtoMapper {
 
         Loan loan = new Loan();
         loan.setStartDate(saveLoanDto.getStartDate()); //Possibly Null
-        loan.setEndDate(saveLoanDto.getEndDate()); //Possibly Null
         loan.setUser(userOptional.get());
         loan.setCopy(copyOptional.get());
 
