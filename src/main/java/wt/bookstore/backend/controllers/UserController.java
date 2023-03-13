@@ -1,6 +1,5 @@
 package wt.bookstore.backend.controllers;
 
-import org.apache.juli.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
