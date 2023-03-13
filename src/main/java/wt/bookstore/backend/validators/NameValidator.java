@@ -20,7 +20,7 @@ public class NameValidator implements ConstraintValidator<NameConstraint, String
     @Override
     public boolean isValid(String nameField,
                            ConstraintValidatorContext cxt) {
-        String namePattern = "^[a-zA-Z]{1,64}$";
+        String namePattern = "^[a-zA-Z]{1}[a-zA-Z- ]{0,62}[a-zA-Z]{1}$";
         return patternMatches(nameField, namePattern);
     }
 
