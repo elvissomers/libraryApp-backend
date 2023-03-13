@@ -52,6 +52,7 @@ public class LoanDtoMapper {
          * The loan get DTO only has to contain information usefull to the user, e.g. Can contain the copy name instead
          * of the copy id
          */
+        loanDto.setId(loan.getId());
         loanDto.setStartDate(loan.getStartDate());
         loanDto.setEndDate(loan.getEndDate());
         loanDto.setUserFirstName(loan.getUser().getFirstName());
