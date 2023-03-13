@@ -67,6 +67,7 @@ public class LoanDtoMapper {
         loanDto.setUserFirstName(loan.getUser().getFirstName());
         loanDto.setUserLastName(loan.getUser().getLastName());
         loanDto.setBookTitle(loan.getCopy().getBook().getTitle());
+        loanDto.setId(loan.getId());
         return loanDto;
 
     }
