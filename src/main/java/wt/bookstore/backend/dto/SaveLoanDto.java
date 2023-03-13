@@ -8,7 +8,7 @@ import java.time.LocalDate;
  */
 public class SaveLoanDto {
 
-	// TODO: make start date the current date
+	// TODO: make start date the current date - wordt gedaan in frontend
 	private LocalDate startDate;
 	
 	private long userId;
