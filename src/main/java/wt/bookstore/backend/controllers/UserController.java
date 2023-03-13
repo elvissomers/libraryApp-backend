@@ -116,21 +116,22 @@ public class UserController {
         userRepository.deleteById(id);
     }
 
-    @GetMapping("user/{id}/loans")
-    public List<Loan> findLoans(@PathVariable long id){
-    	/**
-    	 * Used to find all loans of a user
-    	 */
-    	return loanRepository.findByUserId(id);
-    }
-
-    @GetMapping("user/{id}/reservations")
-    public List<Reservation> findReservations(@PathVariable long id){
-    	/**
-    	 * Used to find all reservations of a user
-    	 */
-    	return reservationRepository.findByUserId(id);
-    }
+    // TODO: implement the endpoints below in a proper way
+//    @GetMapping("user/{id}/loans")
+//    public List<Loan> findLoans(@PathVariable long id){
+//    	/**
+//    	 * Used to find all loans of a user
+//    	 */
+//    	return loanRepository.findByUserId(id);
+//    }
+//
+//    @GetMapping("user/{id}/reservations")
+//    public List<Reservation> findReservations(@PathVariable long id){
+//    	/**
+//    	 * Used to find all reservations of a user
+//    	 */
+//    	return reservationRepository.findByUserId(id);
+//    }
 
     @PostMapping("api/user/login")
     public LoginResponseDto Login(@RequestBody LoginRequestDto loginRequestDto){
