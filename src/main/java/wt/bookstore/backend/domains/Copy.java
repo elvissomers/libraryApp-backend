@@ -1,8 +1,6 @@
 package wt.bookstore.backend.domains;
 
 import jakarta.persistence.*;
-import org.springframework.beans.factory.annotation.Value;
-
 import java.util.List;
 
 /**
