@@ -1,7 +1,10 @@
 package wt.bookstore.backend.controllers;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,16 +97,21 @@ public class LoanController {
 	 * @param saveReservationDto
 	 */
 	@PostMapping("loan/create/fromreservation")
-	public void createFromReservation(@RequestBody SaveReservationDto saveReservationDto){
-		//TODO : implement specific return for non-available book
+	public boolean createFromReservation(@RequestBody SaveReservationDto saveReservationDto){
 		Loan loan = new Loan();
 
 		Optional<User> user = userRepository.findById(saveReservationDto.getUserId());
 		Optional<Book> book = bookRepository.findById(saveReservationDto.getBookId());
+		List<Copy> copyList = copyRepository.findByAvailableTrueAndBook(book.get());
 
-		Copy copy = book.get().getRandomAvailableCopy();
+		if (user.isEmpty() || book.isEmpty()){
+			return false;
+		}
+		if (copyList.isEmpty()){
+			return false;
+		}
 
-		// Set copy to unavailable!
+		Copy copy = getRandomElement(copyList);
 		Optional<Copy> copyOptional = copyRepository.findById(copy.getId());
 		copyOptional.get().setAvailable(false);
 		copyRepository.save(copyOptional.get());
@@ -114,6 +122,7 @@ public class LoanController {
 		loan.setUser(user.get());
 
 		loanRepository.save(loan);
+		return true;
 	}
 
 
@@ -148,5 +157,13 @@ public class LoanController {
 	}
 
 
+	// TODO : move "misc" functions to separate file ?
+	public Copy getRandomElement(List<Copy> list){
+		Random rand = new Random();
+
+		Copy randomCopy = list.get(rand.nextInt(list.size()));
+
+		return randomCopy;
+	}
 
 }
