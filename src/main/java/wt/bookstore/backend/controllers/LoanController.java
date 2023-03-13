@@ -99,6 +99,9 @@ public class LoanController {
 		Loan loan = loanMapper.dtoToLoan(saveLoanDto);
 		if (loan != null) {
 			Copy copy = loan.getCopy();
+			if (!copy.isAvailable()){
+				return false;
+			}
 			copy.setAvailable(false);
 			copyRepository.save(copy);
 			loanRepository.save(loan);
