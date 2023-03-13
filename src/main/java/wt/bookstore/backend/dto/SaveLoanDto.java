@@ -14,7 +14,7 @@ public class SaveLoanDto {
 	
 	private long userId;
 
-	private long copyId;
+	private int copyNumber;
 
 
 	public LocalDate getStartDate() {
@@ -41,13 +41,11 @@ public class SaveLoanDto {
 		this.userId = userId;
 	}
 
-	public long getCopyId() {
-		return copyId;
+	public int getCopyNumber() {
+		return copyNumber;
 	}
 
-	public void setCopyId(long copyId) {
-		this.copyId = copyId;
+	public void setCopyNumber(int copyNumber) {
+		this.copyNumber = copyNumber;
 	}
-
-
 }

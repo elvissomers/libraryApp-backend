@@ -21,6 +21,8 @@ public class LoanDto {
 
 	private String bookTitle;
 
+	private int copyNumber;
+
 	public long getId() {
 		return id;
 	}
@@ -67,5 +69,13 @@ public class LoanDto {
 
 	public void setBookTitle(String bookTitle) {
 		this.bookTitle = bookTitle;
+	}
+
+	public int getCopyNumber() {
+		return copyNumber;
+	}
+
+	public void setCopyNumber(int copyNumber) {
+		this.copyNumber = copyNumber;
 	}
 }
