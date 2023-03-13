@@ -89,7 +89,8 @@ public class UserController {
         String newPassword = changeUserDto.getPassword();
         boolean newAdmin = changeUserDto.isAdmin();
 
-        // TODO
+        // TODO - haal if statements ook weg uit andere put endpoints
+        // TODO - maakt dit korter door bovenstaande regels in onderstaande te plaatsen
         optionalUser.get().setFirstName(newFirstName);
         optionalUser.get().setLastName(newLastName);
         optionalUser.get().setEmailAddress(newEmailAddress);
@@ -116,7 +117,7 @@ public class UserController {
         userRepository.deleteById(id);
     }
 
-    // TODO: implement the endpoints below in a proper way
+    //TODO: implement the endpoints below in a proper way
 //    @GetMapping("user/{id}/loans")
 //    public List<Loan> findLoans(@PathVariable long id){
 //    	/**
