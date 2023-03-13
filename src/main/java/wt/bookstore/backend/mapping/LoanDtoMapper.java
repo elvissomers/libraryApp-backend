@@ -5,11 +5,13 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.LoanDto;
 import wt.bookstore.backend.dto.SaveLoanDto;
+import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
 import wt.bookstore.backend.repository.IUserRepository;
 
@@ -21,18 +23,27 @@ public class LoanDtoMapper {
 	
 	@Autowired
 	private ICopyRepository copyRepository;
+
+    @Autowired
+    private IBookRepository bookRepository;
 	
 	public Loan dtoToLoan(SaveLoanDto saveLoanDto) {
         /*
          * Used to create a Loan object from a saveLoanDto object
          */
         Optional<User> userOptional = userRepository.findById(saveLoanDto.getUserId());
-        Optional<Copy> copyOptional = copyRepository.findById(saveLoanDto.getCopyId());
+        Optional<Book> bookOptional = bookRepository.findById(saveLoanDto.getBookId());
+        Optional<Copy> copyOptional = copyRepository.findByBookAndNumber(bookOptional.get(),
+                saveLoanDto.getCopyNumber()
+        );
 
         /*
          * Check whether all necessary fields are present in the post DTO, e.g. You can not make a loan object without
          * knowing which copy is loaned
          */
+        if (userOptional.isEmpty() || copyOptional.isEmpty()){
+            return null;
+        }
 
         Loan loan = new Loan();
         loan.setStartDate(saveLoanDto.getStartDate()); //Possibly Null

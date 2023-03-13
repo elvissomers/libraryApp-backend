@@ -14,6 +14,8 @@ public class SaveLoanDto {
 	
 	private long userId;
 
+	private long bookId;
+
 	private int copyNumber;
 
 
@@ -47,5 +49,13 @@ public class SaveLoanDto {
 
 	public void setCopyNumber(int copyNumber) {
 		this.copyNumber = copyNumber;
+	}
+
+	public long getBookId() {
+		return bookId;
+	}
+
+	public void setBookId(long bookId) {
+		this.bookId = bookId;
 	}
 }
