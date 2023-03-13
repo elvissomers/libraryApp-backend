@@ -57,7 +57,7 @@ public class CopyController {
     }
 
     @GetMapping("book/copies/{id}")
-    public Stream<CopyDto> findByBook(@PathVariable long id){
+    public Stream<CopyDto> findAvailableByBook(@PathVariable long id){
         Optional<Book> optionalBook = bookRepository.findById(id);
 
         if (optionalBook.isEmpty()){
@@ -93,8 +93,8 @@ public class CopyController {
      * PUT endpoints from here
      */
 
-    @PutMapping("copy/{id}/available")
-    public void updateAvailable(@PathVariable long id, @RequestBody ChangeCopyDto changeCopyDto){
+    @PutMapping("copy/{id}")
+    public void update(@PathVariable long id, @RequestBody ChangeCopyDto changeCopyDto){
 
         Optional<Copy> optionalCopy = copyRepository.findById(id);
         optionalCopy.get().setAvailable(changeCopyDto.isAvailable());
