@@ -2,6 +2,8 @@ package wt.bookstore.backend.controllers;
 
 import org.apache.juli.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.Loan;
@@ -61,6 +63,13 @@ public class UserController {
     public Optional<UserDto> find(@PathVariable long id) {
         return Optional.of(userMapper.userToDto(userRepository.findById(id).get()));
     }
+
+    @RequestMapping(value = "usersearch/{query}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<UserDto> searchBooks(@PathVariable String query, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+        return userRepository.findByFirstNameOrLastName(query, query, pageable).stream().map(userMapper::userToDto);
+    }
+
 
 
     /*

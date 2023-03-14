@@ -11,4 +11,6 @@ public interface IBookRepository extends JpaRepository<Book, Long> {
 
 
     List<Book> findByTitleContainingOrAuthorContaining(String title, String Author, Pageable pageable);
+
+    List<Book> findByTitleContainingOrAuthorContainingOrKeywords_NameContaining(String title, String Author, String Keyword);
 }

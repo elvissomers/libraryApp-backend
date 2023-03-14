@@ -8,16 +8,12 @@ import java.util.Random;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
-import wt.bookstore.backend.domains.Book;
-import wt.bookstore.backend.domains.Copy;
-import wt.bookstore.backend.domains.Loan;
-import wt.bookstore.backend.domains.User;
-import wt.bookstore.backend.dto.ChangeLoanDto;
-import wt.bookstore.backend.dto.LoanDto;
-import wt.bookstore.backend.dto.SaveLoanDto;
-import wt.bookstore.backend.dto.SaveReservationDto;
+import wt.bookstore.backend.domains.*;
+import wt.bookstore.backend.dto.*;
 import wt.bookstore.backend.mapping.LoanDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
@@ -193,6 +189,12 @@ public class LoanController {
 		Copy randomCopy = list.get(rand.nextInt(list.size()));
 
 		return randomCopy;
+	}
+
+	@RequestMapping(value = "loansearch/{query}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+	public Stream<LoanDto> searchLoans(@PathVariable String query, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+		Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+		return loanRepository.findByUser_FirstNameOrUser_LastNameOrCopy_Book_TitleContaining(query, query, query, pageable).stream().map(loanMapper::loanToDto);
 	}
 
 }
