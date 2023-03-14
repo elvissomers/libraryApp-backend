@@ -12,7 +12,6 @@ import wt.bookstore.backend.mapping.CopyDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
