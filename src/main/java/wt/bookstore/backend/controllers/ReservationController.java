@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.*;
-import wt.bookstore.backend.dto.BookDto;
 import wt.bookstore.backend.dto.ChangeReservationDto;
 import wt.bookstore.backend.dto.ReservationDto;
 import wt.bookstore.backend.dto.SaveReservationDto;

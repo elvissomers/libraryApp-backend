@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import wt.bookstore.backend.domains.Loan;
-import wt.bookstore.backend.domains.Reservation;
 
 public interface ILoanRepository extends JpaRepository<Loan, Long>{
 

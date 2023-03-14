@@ -2,10 +2,7 @@ package wt.bookstore.backend.validators;
 
 import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
-import org.hibernate.annotations.Target;
-
 import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
