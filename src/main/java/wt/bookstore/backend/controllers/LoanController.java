@@ -16,6 +16,7 @@ import wt.bookstore.backend.domains.*;
 import wt.bookstore.backend.dto.*;
 import wt.bookstore.backend.mapping.LoanDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
+import wt.bookstore.backend.repository.ICopyRepository;
 import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IUserRepository;
 
@@ -34,6 +35,9 @@ public class LoanController {
 
 	@Autowired
 	private IBookRepository bookRepository;
+
+	@Autowired
+	private ICopyRepository copyRepository;
 
 	@Autowired
 	private LoanDtoMapper loanMapper;
