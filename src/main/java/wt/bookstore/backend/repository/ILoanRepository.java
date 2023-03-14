@@ -7,10 +7,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.domains.Reservation;
+import wt.bookstore.backend.domains.User;
 
 public interface ILoanRepository extends JpaRepository<Loan, Long>{
 
     List<Loan> findByUser_FirstNameOrUser_LastNameOrCopy_Book_TitleContaining(String firstName, String lastName, String title, Pageable pageable);
 
-
+    List<Loan> findByUser(User user);
 }

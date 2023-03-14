@@ -126,21 +126,31 @@ public class UserController {
     }
 
     //TODO: implement the endpoints below in a proper way
-//    @GetMapping("user/{id}/loans")
-//    public List<Loan> findLoans(@PathVariable long id){
-//    	/**
-//    	 * Used to find all loans of a user
-//    	 */
-//    	return loanRepository.findByUserId(id);
-//    }
-//
-//    @GetMapping("user/{id}/reservations")
-//    public List<Reservation> findReservations(@PathVariable long id){
-//    	/**
-//    	 * Used to find all reservations of a user
-//    	 */
-//    	return reservationRepository.findByUserId(id);
-//    }
+    @GetMapping("user/{id}/loans")
+    public List<Loan> findLoans(@PathVariable long id){
+    	/**
+    	 * Used to find all loans of a user
+    	 */
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return loanRepository.findByUser(user.get());
+        } else {
+            return null;
+        }
+    }
+
+    @GetMapping("user/{id}/reservations")
+    public List<Reservation> findReservations(@PathVariable long id){
+    	/**
+    	 * Used to find all reservations of a user
+    	 */
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return reservationRepository.findByUser(user.get());
+        } else {
+            return null;
+        }
+    }
 
     @PostMapping("api/user/login")
     public LoginResponseDto Login(@RequestBody LoginRequestDto loginRequestDto){
