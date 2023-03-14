@@ -13,4 +13,10 @@ public interface ILoanRepository extends JpaRepository<Loan, Long>{
     List<Loan> findByUser_FirstNameOrUser_LastNameOrCopy_Book_TitleContaining(String firstName, String lastName, String title, Pageable pageable);
 
     List<Loan> findByUser(User user);
+
+    // Used to find all "open" loans (that are not yet returned) for a specific user
+    List<Loan> findByUserAndEndDateNull(User user);
+
+    // Used to find all "open" loans (that are not yet returned)
+    List<Loan> findByEndDateNull();
 }

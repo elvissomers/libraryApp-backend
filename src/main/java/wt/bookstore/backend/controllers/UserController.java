@@ -139,6 +139,19 @@ public class UserController {
         }
     }
 
+    @GetMapping("user/{id}/loans/open")
+    public List<Loan> findOpenLoans(@PathVariable long id){
+        /**
+         * Used to find "open" (not yet returned) loans of a user
+         */
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return loanRepository.findByUserAndEndDateNull(user.get());
+        } else {
+            return null;
+        }
+    }
+
     @GetMapping("user/{id}/reservations")
     public List<Reservation> findReservations(@PathVariable long id){
     	/**

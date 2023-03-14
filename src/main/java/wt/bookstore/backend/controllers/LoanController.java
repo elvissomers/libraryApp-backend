@@ -56,6 +56,11 @@ public class LoanController {
 		return loanRepository.findAll().stream().map(loanMapper::loanToDto);
 	}
 
+	@GetMapping("loan/open")
+	public Stream<LoanDto> findAllAvailable() {
+		return loanRepository.findByEndDateNull().stream().map(loanMapper::loanToDto);
+	}
+
 	/**
 	 * Returns a single {@link wt.bookstore.backend.dto.LoanDto} with a certain id for a GET request to {database_location}/loan/{id}.
 	 * @param id (long) of the loan you want to get.
