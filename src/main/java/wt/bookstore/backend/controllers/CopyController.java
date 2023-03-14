@@ -3,6 +3,7 @@ package wt.bookstore.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.dto.ChangeCopyDto;
 import wt.bookstore.backend.dto.CopyDto;
@@ -11,6 +12,7 @@ import wt.bookstore.backend.mapping.CopyDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -54,6 +56,18 @@ public class CopyController {
         return Optional.of(copyMapper.copyToDto(copyRepository.findById(id).get()));
     }
 
+    @GetMapping("book/copies/{id}")
+    public Stream<CopyDto> findAvailableByBook(@PathVariable long id){
+        Optional<Book> optionalBook = bookRepository.findById(id);
+
+        if (optionalBook.isEmpty()){
+            // TODO: implement some other error message here
+            return null;
+        }
+
+        return copyRepository.findByAvailableTrueAndBook(optionalBook.get()).stream().map(copyMapper::copyToDto);
+    }
+
 
     /*
      * POST endpoints starting from here
@@ -79,11 +93,12 @@ public class CopyController {
      * PUT endpoints from here
      */
 
-    @PutMapping("copy/{id}/available")
-    public void updateAvailable(@PathVariable long id, @RequestBody ChangeCopyDto changeCopyDto){
+    @PutMapping("copy/{id}")
+    public void update(@PathVariable long id, @RequestBody ChangeCopyDto changeCopyDto){
 
         Optional<Copy> optionalCopy = copyRepository.findById(id);
         optionalCopy.get().setAvailable(changeCopyDto.isAvailable());
+        optionalCopy.get().setNumber(changeCopyDto.getNumber());
 
         copyRepository.save(optionalCopy.get());
     }

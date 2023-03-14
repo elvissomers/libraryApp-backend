@@ -28,6 +28,7 @@ public class CopyDtoMapper {
         Copy copy = new Copy();
         // We always set to true because a newly created copy is always available
         copy.setAvailable(true);
+        copy.setNumber(saveCopyDto.getNumber());
         Optional<Book> optionalBook = bookRepository.findById(saveCopyDto.getBookId());
 
         if (optionalBook.isPresent()) {
@@ -47,6 +48,7 @@ public class CopyDtoMapper {
         copyDto.setAvailable(copy.isAvailable());
         copyDto.setBookTitle(copy.getBook().getTitle());
         copyDto.setId(copy.getId());
+        copyDto.setNumber(copy.getNumber());
 
         return copyDto;
     }

@@ -1,6 +1,8 @@
 package wt.bookstore.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.Loan;
@@ -61,6 +63,13 @@ public class UserController {
         return Optional.of(userMapper.userToDto(userRepository.findById(id).get()));
     }
 
+    @RequestMapping(value = "usersearch/{query}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<UserDto> searchBooks(@PathVariable String query, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+        return userRepository.findByFirstNameOrLastName(query, query, pageable).stream().map(userMapper::userToDto);
+    }
+
+
 
     /*
      * POST endpoints from here
@@ -88,7 +97,8 @@ public class UserController {
         String newPassword = changeUserDto.getPassword();
         boolean newAdmin = changeUserDto.isAdmin();
 
-        // TODO
+        // TODO - haal if statements ook weg uit andere put endpoints
+        // TODO - maakt dit korter door bovenstaande regels in onderstaande te plaatsen
         optionalUser.get().setFirstName(newFirstName);
         optionalUser.get().setLastName(newLastName);
         optionalUser.get().setEmailAddress(newEmailAddress);
@@ -115,21 +125,22 @@ public class UserController {
         userRepository.deleteById(id);
     }
 
-    @GetMapping("user/{id}/loans")
-    public List<Loan> findLoans(@PathVariable long id){
-    	/**
-    	 * Used to find all loans of a user
-    	 */
-    	return loanRepository.findByUserId(id);
-    }
-
-    @GetMapping("user/{id}/reservations")
-    public List<Reservation> findReservations(@PathVariable long id){
-    	/**
-    	 * Used to find all reservations of a user
-    	 */
-    	return reservationRepository.findByUserId(id);
-    }
+    //TODO: implement the endpoints below in a proper way
+//    @GetMapping("user/{id}/loans")
+//    public List<Loan> findLoans(@PathVariable long id){
+//    	/**
+//    	 * Used to find all loans of a user
+//    	 */
+//    	return loanRepository.findByUserId(id);
+//    }
+//
+//    @GetMapping("user/{id}/reservations")
+//    public List<Reservation> findReservations(@PathVariable long id){
+//    	/**
+//    	 * Used to find all reservations of a user
+//    	 */
+//    	return reservationRepository.findByUserId(id);
+//    }
 
     @PostMapping("api/user/login")
     public LoginResponseDto Login(@RequestBody LoginRequestDto loginRequestDto){

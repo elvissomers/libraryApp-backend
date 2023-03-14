@@ -34,6 +34,7 @@ public class UserDtoMapper {
         userDto.setEmailAddress(user.getEmailAddress());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
+        userDto.setId(user.getId());
 
         return userDto;
     }
