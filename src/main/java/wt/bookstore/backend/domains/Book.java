@@ -111,17 +111,6 @@ public class Book {
 		copies.add(copy);
 	}
 
-	// TODO : een call hiernaar elke keer dat een copy (un)available wordt
-	// TODO - Is dit nodig?
-	public void setAvailableCopies(){
-		availableCopies = new ArrayList<>();
-		for (Copy copy : copies){
-			if (copy.isAvailable()){
-				availableCopies.add(copy);
-			}
-		}
-	}
-
 	/**
 	 * Used to get a random copy from the list of copies of this book
 	 *
