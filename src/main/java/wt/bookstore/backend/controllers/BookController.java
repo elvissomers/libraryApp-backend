@@ -14,6 +14,7 @@ import wt.bookstore.backend.repository.ICopyRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
 
 
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -46,23 +47,18 @@ public class BookController {
      * Returns a Stream of {@link wt.bookstore.backend.dto.BookDto} for a GET request to {database_location}/book.
      * @return Stream of {@link wt.bookstore.backend.dto.BookDto}'s
      */
-    @GetMapping("book")
+    @GetMapping("book/get")
     public Stream<BookDto> findAll() {
         return bookRepository.findAll().stream().map(bookMapper::bookToDto);
     }
 
-    @RequestMapping(value = "bookPage/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<BookDto> findAllByPage(@PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
-        return bookRepository.findAll(pageable).stream().map(bookMapper::bookToDto);
-    }
 
     /**
      * Returns a single {@link wt.bookstore.backend.dto.BookDto} with a certain id for a GET request to {database_location}/book/{id}.
      * @param id (long) of the book you want to get.
      * @return Single {@link wt.bookstore.backend.dto.BookDto}
      */
-    @GetMapping("book/{id}")
+    @GetMapping("book/get/{id}")
     public Optional<BookDto> find(@PathVariable long id) {
         return Optional.of(bookMapper.bookToDto(bookRepository.findById(id).get()));
     }
@@ -82,7 +78,7 @@ public class BookController {
         bookRepository.save(book);
     }
 
-    @PutMapping("book/{id}")
+    @PutMapping("book/update/{id}")
     public void update(@PathVariable long id, @RequestBody ChangeBookDto changeBookDto) {
         Optional<Book> optionalBook = bookRepository.findById(id);
         if (optionalBook.isEmpty())
@@ -98,15 +94,77 @@ public class BookController {
     /*
      * DELETE endpoints from here
      */
-    @DeleteMapping("book/{id}")
+    @DeleteMapping("book/delete/{id}")
     public void delete(@PathVariable long id) {
         bookRepository.deleteById(id);
     }
 
-    @RequestMapping(value = "booksearch/{query}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<BookDto> searchBooks(@PathVariable String query, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+
+    @RequestMapping(value = "book/pageable/get/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<BookDto> getBooksPageable(@PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+        return bookRepository.findAll(pageable).stream().map(bookMapper::bookToDto);
+    }
+    @RequestMapping(value = "book/pageable/search/{query}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<BookDto> searchBooksPageable(@PathVariable String query, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
         Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
         return bookRepository.findByTitleContainingOrAuthorContaining(query, query, pageable).stream().map(bookMapper::bookToDto);
+    }
+
+    @RequestMapping(value = "book/pageable/search/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<BookDto> sortNormalBooksPageable(@PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+        if (directionOfSort.equals("asc")) {
+            if (propertyToSearchBy.equals("title")) {
+                return bookRepository.findAllByOrderByTitleAsc(pageable).stream().map(bookMapper::bookToDto);
+            }
+            if (propertyToSearchBy.equals("isbn")) {
+                return bookRepository.findAllByOrderByIsbnAsc(pageable).stream().map(bookMapper::bookToDto);
+            }
+            if (propertyToSearchBy.equals("author")) {
+                return bookRepository.findAllByOrderByAuthorAsc(pageable).stream().map(bookMapper::bookToDto);
+            }
+        }
+        if (directionOfSort.equals("desc")) {
+            if (propertyToSearchBy.equals("title")) {
+                return bookRepository.findAllByOrderByTitleDesc(pageable).stream().map(bookMapper::bookToDto);
+            }
+            if (propertyToSearchBy.equals("isbn")) {
+                return bookRepository.findAllByOrderByIsbnDesc(pageable).stream().map(bookMapper::bookToDto);
+            }
+            if (propertyToSearchBy.equals("author")) {
+                return bookRepository.findAllByOrderByAuthorDesc(pageable).stream().map(bookMapper::bookToDto);
+            }
+        }
+        return this.getBooksPageable(pageNumber, numberPerPage);
+        }
+
+    @RequestMapping(value = "book/pageable/search/{searchTerm}/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<BookDto> sortSearchBooksPageable(@PathVariable String searchTerm, @PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+        if (directionOfSort.equals("asc")) {
+            if (propertyToSearchBy.equals("title")) {
+                return bookRepository.findByTitleContainingOrAuthorContainingOrderByTitleAsc(searchTerm, searchTerm, pageable).stream().map(bookMapper::bookToDto);
+            }
+            if (propertyToSearchBy.equals("isbn")) {
+                return bookRepository.findByTitleContainingOrAuthorContainingOrderByIsbnAsc(searchTerm, searchTerm, pageable).stream().map(bookMapper::bookToDto);
+            }
+            if (propertyToSearchBy.equals("author")) {
+                return bookRepository.findByTitleContainingOrAuthorContainingOrderByAuthorAsc(searchTerm, searchTerm, pageable).stream().map(bookMapper::bookToDto);
+            }
+        }
+        if (directionOfSort.equals("desc")) {
+            if (propertyToSearchBy.equals("title")) {
+                return bookRepository.findByTitleContainingOrAuthorContainingOrderByTitleDesc(searchTerm, searchTerm, pageable).stream().map(bookMapper::bookToDto);
+            }
+            if (propertyToSearchBy.equals("isbn")) {
+                return bookRepository.findByTitleContainingOrAuthorContainingOrderByIsbnDesc(searchTerm, searchTerm, pageable).stream().map(bookMapper::bookToDto);
+            }
+            if (propertyToSearchBy.equals("author")) {
+                return bookRepository.findByTitleContainingOrAuthorContainingOrderByAuthorDesc(searchTerm, searchTerm, pageable).stream().map(bookMapper::bookToDto);
+            }
+        }
+        return this.searchBooksPageable(searchTerm, pageNumber, numberPerPage);
     }
 
 

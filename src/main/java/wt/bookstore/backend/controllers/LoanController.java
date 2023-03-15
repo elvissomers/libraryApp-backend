@@ -50,13 +50,13 @@ public class LoanController {
 	 * @return Stream of {@link wt.bookstore.backend.dto.LoanDto}'s
 	 */
    
-	@GetMapping("loan")
+	@GetMapping("loan/get")
 	public Stream<LoanDto> findAll() {
 		// Loan omzetten naar LoanDto
 		return loanRepository.findAll().stream().map(loanMapper::loanToDto);
 	}
 
-	@GetMapping("loan/open")
+	@GetMapping("loan/get/open")
 	public Stream<LoanDto> findAllAvailable() {
 		return loanRepository.findByEndDateNull().stream().map(loanMapper::loanToDto);
 	}
@@ -66,7 +66,7 @@ public class LoanController {
 	 * @param id (long) of the loan you want to get.
 	 * @return Single {@link wt.bookstore.backend.dto.LoanDto}
 	 */
-	@GetMapping("loan/{id}")
+	@GetMapping("loan/get/{id}")
 	public Optional<LoanDto> find(@PathVariable long id) {
 		return Optional.of(loanMapper.loanToDto(loanRepository.findById(id).get()));
 	}
@@ -151,7 +151,7 @@ public class LoanController {
 	 * @param changeLoanDto contains only an end date as of now (should be today)
 	 * @return true if change was succesful, false otherwise
 	 */
-	@PutMapping("loan/{id}")
+	@PutMapping("loan/update/{id}")
 	public boolean update(@PathVariable long id, @RequestBody ChangeLoanDto changeLoanDto){
 		Optional<Loan> optionalLoan = loanRepository.findById(id);
 
@@ -181,7 +181,7 @@ public class LoanController {
 	/*
 	 * DELETE endpoints from here
 	 */
-	@DeleteMapping("loan/{id}")
+	@DeleteMapping("loan/delete/{id}")
 	public void delete(@PathVariable long id) {
 		loanRepository.deleteById(id);
 	}
@@ -196,10 +196,83 @@ public class LoanController {
 		return randomCopy;
 	}
 
-	@RequestMapping(value = "loansearch/{query}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-	public Stream<LoanDto> searchLoans(@PathVariable String query, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+	@RequestMapping(value = "loan/pageable/get/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+	public Stream<LoanDto> getLoansPageable(@PathVariable int pageNumber, @PathVariable int numberPerPage) {
+		Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+		return loanRepository.findAll(pageable).stream().map(loanMapper::loanToDto);
+	}
+	@RequestMapping(value = "loan/pageable/search/{query}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+	public Stream<LoanDto> searchLoansPageable(@PathVariable String query, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
 		Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
 		return loanRepository.findByUser_FirstNameOrUser_LastNameOrCopy_Book_TitleContaining(query, query, query, pageable).stream().map(loanMapper::loanToDto);
+	}
+
+	@RequestMapping(value = "loan/pageable/search/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+	public Stream<LoanDto> sortNormalLoansPageable(@PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+		Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+		if (directionOfSort.equals("asc")) {
+			if (propertyToSearchBy.equals("firstName")) {
+				return loanRepository.findAllByOrderByUser_FirstNameAsc(pageable).stream().map(loanMapper::loanToDto);
+			}
+			if (propertyToSearchBy.equals("startDate")) {
+				return loanRepository.findAllByOrderByStartDateAsc(pageable).stream().map(loanMapper::loanToDto);
+			}
+			if (propertyToSearchBy.equals("lastName")) {
+				return loanRepository.findAllByOrderByUser_LastNameAsc(pageable).stream().map(loanMapper::loanToDto);
+			}
+			if (propertyToSearchBy.equals("bookTitle")) {
+				return loanRepository.findAllByOrderByCopy_Book_TitleAsc(pageable).stream().map(loanMapper::loanToDto);
+			}
+		}
+		if (directionOfSort.equals("desc")) {
+			if (propertyToSearchBy.equals("firstName")) {
+				return loanRepository.findAllByOrderByUser_FirstNameDesc(pageable).stream().map(loanMapper::loanToDto);
+			}
+			if (propertyToSearchBy.equals("startDate")) {
+				return loanRepository.findAllByOrderByStartDateDesc(pageable).stream().map(loanMapper::loanToDto);
+			}
+			if (propertyToSearchBy.equals("lastName")) {
+				return loanRepository.findAllByOrderByUser_LastNameDesc(pageable).stream().map(loanMapper::loanToDto);
+			}
+			if (propertyToSearchBy.equals("bookTitle")) {
+				return loanRepository.findAllByOrderByCopy_Book_TitleDesc(pageable).stream().map(loanMapper::loanToDto);
+			}
+		}
+		return this.getLoansPageable(pageNumber, numberPerPage);
+	}
+
+	@RequestMapping(value = "loan/pageable/search/{searchTerm}/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+	public Stream<LoanDto> sortSearchBooksPageable(@PathVariable String searchTerm, @PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+		Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+		if (directionOfSort.equals("asc")) {
+			if (propertyToSearchBy.equals("firstName")) {
+				return loanRepository.findByUser_FirstNameOrUser_LastNameOrCopy_Book_TitleContainingOrderByUser_FirstNameAsc(searchTerm, searchTerm, searchTerm, pageable).stream().map(loanMapper::loanToDto);
+			}
+			if (propertyToSearchBy.equals("startDate")) {
+				return loanRepository.findByUser_FirstNameOrUser_LastNameOrCopy_Book_TitleContainingOrderByStartDateAsc(searchTerm, searchTerm, searchTerm, pageable).stream().map(loanMapper::loanToDto);
+			}
+			if (propertyToSearchBy.equals("lastName")) {
+				return loanRepository.findByUser_FirstNameOrUser_LastNameOrCopy_Book_TitleContainingOrderByUser_LastNameAsc(searchTerm, searchTerm, searchTerm, pageable).stream().map(loanMapper::loanToDto);
+			}
+			if (propertyToSearchBy.equals("bookTitle")) {
+				return loanRepository.findByUser_FirstNameOrUser_LastNameOrCopy_Book_TitleContainingOrderByCopy_Book_TitleAsc(searchTerm, searchTerm, searchTerm, pageable).stream().map(loanMapper::loanToDto);
+			}
+		}
+		if (directionOfSort.equals("desc")) {
+			if (propertyToSearchBy.equals("firstName")) {
+				return loanRepository.findByUser_FirstNameOrUser_LastNameOrCopy_Book_TitleContainingOrderByUser_FirstNameDesc(searchTerm, searchTerm, searchTerm, pageable).stream().map(loanMapper::loanToDto);
+			}
+			if (propertyToSearchBy.equals("startDate")) {
+				return loanRepository.findByUser_FirstNameOrUser_LastNameOrCopy_Book_TitleContainingOrderByStartDateDesc(searchTerm, searchTerm, searchTerm, pageable).stream().map(loanMapper::loanToDto);
+			}
+			if (propertyToSearchBy.equals("lastName")) {
+				return loanRepository.findByUser_FirstNameOrUser_LastNameOrCopy_Book_TitleContainingOrderByUser_LastNameDesc(searchTerm, searchTerm, searchTerm, pageable).stream().map(loanMapper::loanToDto);
+			}
+			if (propertyToSearchBy.equals("bookTitle")) {
+				return loanRepository.findByUser_FirstNameOrUser_LastNameOrCopy_Book_TitleContainingOrderByCopy_Book_TitleDesc(searchTerm, searchTerm, searchTerm, pageable).stream().map(loanMapper::loanToDto);
+			}
+		}
+		return this.searchLoansPageable(searchTerm, pageNumber, numberPerPage);
 	}
 
 }
