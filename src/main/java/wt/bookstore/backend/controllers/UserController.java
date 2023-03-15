@@ -1,7 +1,8 @@
 package wt.bookstore.backend.controllers;
 
-import org.apache.juli.logging.Log;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.Loan;
@@ -15,6 +16,7 @@ import wt.bookstore.backend.repository.IUserRepository;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Random;
 import java.util.stream.Stream;
 
 
@@ -61,6 +63,13 @@ public class UserController {
         return Optional.of(userMapper.userToDto(userRepository.findById(id).get()));
     }
 
+    @RequestMapping(value = "usersearch/{query}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<UserDto> searchBooks(@PathVariable String query, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+        return userRepository.findByFirstNameOrLastName(query, query, pageable).stream().map(userMapper::userToDto);
+    }
+
+
 
     /*
      * POST endpoints from here
@@ -88,7 +97,8 @@ public class UserController {
         String newPassword = changeUserDto.getPassword();
         boolean newAdmin = changeUserDto.isAdmin();
 
-        // TODO
+        // TODO - haal if statements ook weg uit andere put endpoints
+        // TODO - maakt dit korter door bovenstaande regels in onderstaande te plaatsen
         optionalUser.get().setFirstName(newFirstName);
         optionalUser.get().setLastName(newLastName);
         optionalUser.get().setEmailAddress(newEmailAddress);
@@ -115,12 +125,31 @@ public class UserController {
         userRepository.deleteById(id);
     }
 
+    //TODO: implement the endpoints below in a proper way
     @GetMapping("user/{id}/loans")
     public List<Loan> findLoans(@PathVariable long id){
     	/**
     	 * Used to find all loans of a user
     	 */
-    	return loanRepository.findByUserId(id);
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return loanRepository.findByUser(user.get());
+        } else {
+            return null;
+        }
+    }
+
+    @GetMapping("user/{id}/loans/open")
+    public List<Loan> findOpenLoans(@PathVariable long id){
+        /**
+         * Used to find "open" (not yet returned) loans of a user
+         */
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return loanRepository.findByUserAndEndDateNull(user.get());
+        } else {
+            return null;
+        }
     }
 
     @GetMapping("user/{id}/reservations")
@@ -128,7 +157,12 @@ public class UserController {
     	/**
     	 * Used to find all reservations of a user
     	 */
-    	return reservationRepository.findByUserId(id);
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return reservationRepository.findByUser(user.get());
+        } else {
+            return null;
+        }
     }
 
     @PostMapping("api/user/login")
@@ -138,7 +172,7 @@ public class UserController {
         );
         if (userOptional.isPresent()) {
             User user = userOptional.get();
-            String token = RandomStringGenerator();
+            String token = generateRandomString(60);
 
             // Save token to user
             user.setToken(token);
@@ -148,6 +182,20 @@ public class UserController {
         }
 
         return null;
+    }
+
+    public String generateRandomString(int targetStringLength) {
+
+        int leftLimit = 48; // letter 'a'
+        int rightLimit = 122; // letter 'z'
+        Random random = new Random();
+        String generatedString = random.ints(leftLimit, rightLimit + 1)
+                .filter(i -> (i <= 57 || i >= 65) && (i <= 90 || i >= 97))
+                .limit(targetStringLength)
+                .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+                .toString();
+
+        return generatedString;
     }
 
     public String RandomStringGenerator() {

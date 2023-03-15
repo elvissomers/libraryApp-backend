@@ -1,6 +1,8 @@
 package wt.bookstore.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.*;
@@ -13,7 +15,6 @@ import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
 import wt.bookstore.backend.repository.IUserRepository;
 
-import java.time.LocalDate;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -135,6 +136,12 @@ public class ReservationController {
     public boolean delete(@PathVariable long id) {
         reservationRepository.deleteById(id);
         return true;
+    }
+
+    @RequestMapping(value = "reservationsearch/{query}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<ReservationDto> searchReservations(@PathVariable String query, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+        return reservationRepository.findByUser_FirstNameOrUser_LastName(query, query, pageable).stream().map(reservationMapper::reservationToDto);
     }
 
 

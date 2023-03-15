@@ -5,8 +5,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import wt.bookstore.backend.domains.Book;
-import wt.bookstore.backend.domains.Copy;
-import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.dto.BookDto;
 import wt.bookstore.backend.dto.ChangeBookDto;
 import wt.bookstore.backend.dto.SaveBookDto;
@@ -16,7 +14,6 @@ import wt.bookstore.backend.repository.ICopyRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
 
 
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -86,10 +83,10 @@ public class BookController {
     }
 
     @PutMapping("book/{id}")
-    public void update(@PathVariable long id, @RequestBody ChangeBookDto changeBookDto){
+    public void update(@PathVariable long id, @RequestBody ChangeBookDto changeBookDto) {
         Optional<Book> optionalBook = bookRepository.findById(id);
         if (optionalBook.isEmpty())
-        	return;
+            return;
 
         optionalBook.get().setIsbn(changeBookDto.getIsbn());
         optionalBook.get().setTitle(changeBookDto.getTitle());
@@ -106,9 +103,12 @@ public class BookController {
         bookRepository.deleteById(id);
     }
 
-    @RequestMapping(value = "booksearch/{query}", method = RequestMethod.GET)
-    public Stream<BookDto> searchBooks(@PathVariable String query) {
-        return bookRepository.findByTitleContainingOrAuthorContaining(query, query).stream().map(bookMapper::bookToDto);
+    @RequestMapping(value = "booksearch/{query}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<BookDto> searchBooks(@PathVariable String query, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+        return bookRepository.findByTitleContainingOrAuthorContaining(query, query, pageable).stream().map(bookMapper::bookToDto);
+    }
+
 
 
 
@@ -129,5 +129,4 @@ public class BookController {
 //    	return reservationRepository.findByBookId(id);
 //    }
 //
-    }
 }
