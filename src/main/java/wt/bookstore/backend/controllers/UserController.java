@@ -186,9 +186,11 @@ public class UserController {
         return null;
     }
 
-    @PutMapping("user/logout/{id}")
-    public boolean deleteUserToken(@PathVariable long id) {
-        Optional<User> optionalUser = userRepository.findById(id);
+    @PutMapping("user/logout/")
+    public boolean deleteUserToken(
+            @RequestHeader("Authentication") String token
+    ) {
+        Optional<User> optionalUser = userRepository.findByToken(token);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
 
