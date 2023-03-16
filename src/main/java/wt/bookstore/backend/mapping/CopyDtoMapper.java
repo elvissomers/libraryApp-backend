@@ -41,8 +41,15 @@ public class CopyDtoMapper {
         }
 
         copy.setBook(optionalBook.get());
-        copy.setNumber(saveCopyDto.getNumber());
-
+        List<Copy> bookCopyList = copyRepository.findByBookOrderByNumberDesc(optionalBook.get());
+        // We set the copy number to the highest currect copy number + 1, or
+        // to 1 if there are no other copies of this book
+        if (bookCopyList.isEmpty()) {
+            copy.setNumber(1);
+        } else {
+            int currentNumber = bookCopyList.get(0).getNumber();
+            copy.setNumber(currentNumber + 1);
+        }
         return copy;
 
     }
