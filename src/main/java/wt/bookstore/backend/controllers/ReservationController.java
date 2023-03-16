@@ -78,7 +78,17 @@ public class ReservationController {
      * @param saveReservationDto ({@link wt.bookstore.backend.dto.SaveReservationDto}) is generated from the json body in the POST request and contains the information needed to create a {@link wt.bookstore.backend.domains.Reservation} object.
      */
     @PostMapping("reservation/create")
-    public boolean create(@RequestBody SaveReservationDto saveReservationDto) {
+    public boolean create(
+    		@RequestBody SaveReservationDto saveReservationDto,
+    		@RequestHeader("Authentication") String token
+    ) {
+    	// User moeten opvragen
+    	Optional<User> userOptional = this.userRepository.findByToken(token);
+    	if (userOptional.isEmpty())
+    		return false;
+
+    	User loogedInUser = userOptional.get();
+
         Reservation reservation = reservationMapper.dtoToReservation(saveReservationDto);
         if (reservation != null) {
             reservationRepository.save(reservation);

@@ -12,6 +12,7 @@ import wt.bookstore.backend.mapping.CopyDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -78,9 +79,11 @@ public class CopyController {
      */
     @PostMapping("copy/create")
     public boolean create(@RequestBody SaveCopyDto saveCopyDto) {
-        Copy copy = copyMapper.dtoToCopy(saveCopyDto);
-        if (copy != null) {
-            copyRepository.save(copy);
+        List<Copy> copyList = copyMapper.dtoToCopy(saveCopyDto);
+        if (!copyList.isEmpty()) {
+            for (Copy copy : copyList){
+                copyRepository.save(copy);
+            }
             return true;
         } else {
             return false;

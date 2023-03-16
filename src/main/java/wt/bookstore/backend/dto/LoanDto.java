@@ -8,21 +8,25 @@ import java.time.LocalDate;
  * by the needs of the frontend.
  */
 public class LoanDto {
-
+	// Attributes
 	private long id;
 
 	private LocalDate startDate;
 
 	private LocalDate endDate;
 
-	private String userFirstName;
+//	private String userFirstName;
+//
+//	private String userLastName;
 
-	private String userLastName;
-
+	private long bookId;
 	private String bookTitle;
+	private String bookAuthor;
+	private long bookIsbn;
 
 	private int copyNumber;
 
+	//	Methods
 	public long getId() {
 		return id;
 	}
@@ -47,21 +51,21 @@ public class LoanDto {
 		this.endDate = endDate;
 	}
 
-	public String getUserFirstName() {
-		return userFirstName;
-	}
-
-	public void setUserFirstName(String userFirstName) {
-		this.userFirstName = userFirstName;
-	}
-
-	public String getUserLastName() {
-		return userLastName;
-	}
-
-	public void setUserLastName(String userLastName) {
-		this.userLastName = userLastName;
-	}
+//	public String getUserFirstName() {
+//		return userFirstName;
+//	}
+//
+//	public void setUserFirstName(String userFirstName) {
+//		this.userFirstName = userFirstName;
+//	}
+//
+//	public String getUserLastName() {
+//		return userLastName;
+//	}
+//
+//	public void setUserLastName(String userLastName) {
+//		this.userLastName = userLastName;
+//	}
 
 	public String getBookTitle() {
 		return bookTitle;
@@ -77,5 +81,29 @@ public class LoanDto {
 
 	public void setCopyNumber(int copyNumber) {
 		this.copyNumber = copyNumber;
+	}
+
+	public long getBookId() {
+		return bookId;
+	}
+
+	public void setBookId(long bookId) {
+		this.bookId = bookId;
+	}
+
+	public String getBookAuthor() {
+		return bookAuthor;
+	}
+
+	public void setBookAuthor(String bookAuthor) {
+		this.bookAuthor = bookAuthor;
+	}
+
+	public long getBookIsbn() {
+		return bookIsbn;
+	}
+
+	public void setBookIsbn(long bookIsbn) {
+		this.bookIsbn = bookIsbn;
 	}
 }

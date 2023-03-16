@@ -10,6 +10,8 @@ import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.*;
+import wt.bookstore.backend.mapping.LoanDtoMapper;
+import wt.bookstore.backend.mapping.ReservationDtoMapper;
 import wt.bookstore.backend.mapping.UserDtoMapper;
 import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
@@ -39,6 +41,12 @@ public class UserController {
 
     @Autowired
     private UserDtoMapper userMapper;
+
+    @Autowired
+    private LoanDtoMapper loanMapper;
+
+    @Autowired
+    private ReservationDtoMapper reservationMapper;
 
 
     /*
@@ -121,39 +129,39 @@ public class UserController {
 
     //TODO: implement the endpoints below in a proper way
     @GetMapping("user/{id}/loans")
-    public List<Loan> findLoans(@PathVariable long id){
+    public Stream<LoanDto> findLoans(@PathVariable long id){
     	/**
     	 * Used to find all loans of a user
     	 */
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
-            return loanRepository.findByUser(user.get());
+            return loanRepository.findByUser(user.get()).stream().map(loanMapper::loanToDto);
         } else {
             return null;
         }
     }
 
     @GetMapping("user/{id}/loans/open")
-    public List<Loan> findOpenLoans(@PathVariable long id){
+    public Stream<LoanDto> findOpenLoans(@PathVariable long id){
         /**
          * Used to find "open" (not yet returned) loans of a user
          */
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
-            return loanRepository.findByUserAndEndDateNull(user.get());
+            return loanRepository.findByUserAndEndDateNull(user.get()).stream().map(loanMapper::loanToDto);
         } else {
             return null;
         }
     }
 
     @GetMapping("user/{id}/reservations")
-    public List<Reservation> findReservations(@PathVariable long id){
+    public Stream<ReservationDto> findReservations(@PathVariable long id){
     	/**
     	 * Used to find all reservations of a user
     	 */
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
-            return reservationRepository.findByUser(user.get());
+            return reservationRepository.findByUser(user.get()).stream().map(reservationMapper::reservationToDto);
         } else {
             return null;
         }
