@@ -19,4 +19,5 @@ public interface ILoanRepository extends JpaRepository<Loan, Long>{
 
     // Used to find all "open" loans (that are not yet returned)
     List<Loan> findByEndDateNull();
+
 }

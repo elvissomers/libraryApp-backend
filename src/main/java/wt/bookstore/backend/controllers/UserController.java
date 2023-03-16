@@ -3,6 +3,7 @@ package wt.bookstore.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.Loan;
@@ -56,7 +57,7 @@ public class UserController {
      * Returns a Stream of {@link wt.bookstore.backend.dto.UserDto} for a GET request to {database_location}/user.
      * @return Stream of {@link wt.bookstore.backend.dto.UserDto}'s
      */
-    @GetMapping("user")
+    @GetMapping("user/get")
     public Stream<UserDto> findAll() {
         return userRepository.findAll().stream().map(userMapper::userToDto);
     }
@@ -66,17 +67,10 @@ public class UserController {
      * @param id (long) of the user you want to get.
      * @return Single {@link wt.bookstore.backend.dto.UserDto}
      */
-    @GetMapping("user/{id}")
+    @GetMapping("user/get/{id}")
     public Optional<UserDto> find(@PathVariable long id) {
         return Optional.of(userMapper.userToDto(userRepository.findById(id).get()));
     }
-
-    @RequestMapping(value = "usersearch/{query}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<UserDto> searchBooks(@PathVariable String query, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
-        return userRepository.findByFirstNameOrLastName(query, query, pageable).stream().map(userMapper::userToDto);
-    }
-
 
 
     /*
@@ -222,6 +216,32 @@ public class UserController {
 
     public String RandomStringGenerator() {
         return "abcd";
+    }
+
+    @RequestMapping(value = "user/pageable/search/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<UserDto> sortNormalUsersPageable(@PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
+        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
+        if (directionOfSort.equals("asc")) {
+            return userRepository.findAll(pageableAsc).stream().map(userMapper::userToDto);
+        }
+        if (directionOfSort.equals("desc")) {
+            return userRepository.findAll(pageableDesc).stream().map(userMapper::userToDto);
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "user/pageable/search/{searchTerm}/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<UserDto> sortSearchUsersPageable(@PathVariable String searchTerm, @PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
+        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
+        if (directionOfSort.equals("asc")) {
+            return userRepository.findByFirstNameOrLastName(searchTerm, searchTerm, pageableAsc).stream().map(userMapper::userToDto);
+        }
+        if (directionOfSort.equals("desc")) {
+            return userRepository.findByFirstNameOrLastName(searchTerm, searchTerm, pageableDesc).stream().map(userMapper::userToDto);
+        }
+        return null;
     }
 
 }

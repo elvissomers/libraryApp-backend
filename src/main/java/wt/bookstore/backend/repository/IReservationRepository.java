@@ -14,4 +14,6 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
 
     List<Reservation> findByUser(User user);
 
+    List<Reservation> findByUser_FirstNameOrUser_LastNameOrBook_TitleContaining(String firstName, String lastName, String bookTitle, Pageable pageable);
+
 }
