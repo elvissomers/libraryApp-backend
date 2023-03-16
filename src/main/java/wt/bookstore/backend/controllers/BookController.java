@@ -5,6 +5,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 import wt.bookstore.backend.domains.Book;
+import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.dto.BookDto;
 import wt.bookstore.backend.dto.ChangeBookDto;
 import wt.bookstore.backend.dto.SaveBookDto;
@@ -14,6 +15,7 @@ import wt.bookstore.backend.repository.ICopyRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
 
 
+import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -49,6 +51,26 @@ public class BookController {
     @GetMapping("book")
     public Stream<BookDto> findAll() {
         return bookRepository.findAll().stream().map(bookMapper::bookToDto);
+    }
+
+    @GetMapping("book/{id}/getcopynumber")
+    public int getCurrentCopyNumber(@PathVariable long id) {
+        Optional<Book> optionalBook = bookRepository.findById(id);
+
+        if (optionalBook.isEmpty()){
+            // 0 Should be interpreted as an error: this book doesn't exist!
+            return 0;
+        }
+
+        List<Copy> bookCopyList = copyRepository.findByBookOrderByNumberDesc(optionalBook.get());
+        // We set the copy number to the highest currect copy number + 1, or
+        // to 1 if there are no other copies of this book
+        if (bookCopyList.isEmpty()) {
+            return 1;
+        } else {
+            int currentNumber = bookCopyList.get(0).getNumber();
+            return (currentNumber + 1);
+        }
     }
 
     @RequestMapping(value = "bookPage/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)

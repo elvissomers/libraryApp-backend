@@ -8,6 +8,17 @@ public class SaveCopyDto {
 
     private long bookId;
 
+    private int number;
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+
     public long getBookId() {
         return bookId;
     }
