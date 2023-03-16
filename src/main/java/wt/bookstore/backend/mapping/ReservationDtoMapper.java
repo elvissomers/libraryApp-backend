@@ -3,8 +3,10 @@ package wt.bookstore.backend.mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import wt.bookstore.backend.domains.Book;
+import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
+import wt.bookstore.backend.dto.ReservationAvailabilityDto;
 import wt.bookstore.backend.dto.ReservationDto;
 import wt.bookstore.backend.dto.SaveReservationDto;
 import wt.bookstore.backend.repository.IBookRepository;
@@ -56,6 +58,28 @@ public class ReservationDtoMapper {
         reservationDto.setId(reservation.getId());
         reservationDto.setUserId(reservation.getUser().getId());
         reservationDto.setBookId(reservation.getBook().getId());
+
+        return reservationDto;
+    }
+
+    public ReservationAvailabilityDto reservationToAvailabilityDto(Reservation reservation){
+        ReservationAvailabilityDto reservationDto = new ReservationAvailabilityDto();
+
+        reservationDto.setBookTitle(reservation.getBook().getTitle());
+        reservationDto.setUserFirstName(reservation.getUser().getFirstName());
+        reservationDto.setUserLastName(reservation.getUser().getLastName());
+        reservationDto.setDate(reservation.getDate());
+        reservationDto.setId(reservation.getId());
+        reservationDto.setUserId(reservation.getUser().getId());
+        reservationDto.setBookId(reservation.getBook().getId());
+
+        for(Copy copy: reservation.getBook().getCopies()) {
+            if (copy.isAvailable()) {
+                reservationDto.setAvailable(true);
+                return reservationDto;
+            }
+            reservationDto.setAvailable(false);
+        }
 
         return reservationDto;
     }
