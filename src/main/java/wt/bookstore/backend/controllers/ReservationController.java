@@ -3,6 +3,7 @@ package wt.bookstore.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.*;
@@ -140,83 +141,30 @@ public class ReservationController {
     }
 
 
-    @RequestMapping(value = "reservation/pageable/get/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<ReservationAvailabilityDto> getBooksPageable(@PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
-        return reservationRepository.findAll(pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-    }
-    @RequestMapping(value = "reservation/pageable/search/{query}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<ReservationAvailabilityDto> searchReservationsPageable(@PathVariable String query, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
-        return reservationRepository.findByUser_FirstNameOrUser_LastNameOrBook_TitleContaining(query, query, query, pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-    }
-
-    @RequestMapping(value = "reservation/pageable/search/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<ReservationAvailabilityDto> sortNormalReservationsPageable(@PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+    @RequestMapping(value = "reservation/pageable/search/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<ReservationAvailabilityDto> sortNormalBooksPageable(@PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
+        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
         if (directionOfSort.equals("asc")) {
-            if (propertyToSearchBy.equals("firstName")) {
-                return reservationRepository.findAllByOrderByUser_FirstNameAsc(pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-            }
-            if (propertyToSearchBy.equals("date")) {
-                return reservationRepository.findAllByOrderByDateAsc(pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-            }
-            if (propertyToSearchBy.equals("lastName")) {
-                return reservationRepository.findAllByOrderByUser_LastNameAsc(pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-            }
-            if (propertyToSearchBy.equals("bookTitle")) {
-                return reservationRepository.findAllByOrderByBook_TitleAsc(pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-            }
+            return reservationRepository.findAll(pageableAsc).stream().map(reservationMapper::reservationToAvailabilityDto);
         }
         if (directionOfSort.equals("desc")) {
-            if (propertyToSearchBy.equals("firstName")) {
-                return reservationRepository.findAllByOrderByUser_FirstNameDesc(pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-            }
-            if (propertyToSearchBy.equals("date")) {
-                return reservationRepository.findAllByOrderByDateDesc(pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-            }
-            if (propertyToSearchBy.equals("lastName")) {
-                return reservationRepository.findAllByOrderByUser_LastNameDesc(pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-            }
-            if (propertyToSearchBy.equals("bookTitle")) {
-                return reservationRepository.findAllByOrderByBook_TitleDesc(pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-            }
+            return reservationRepository.findAll(pageableDesc).stream().map(reservationMapper::reservationToAvailabilityDto);
         }
-        return this.getBooksPageable(pageNumber, numberPerPage);
+        return null;
     }
 
-    @RequestMapping(value = "reservation/pageable/search/{searchTerm}/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<ReservationAvailabilityDto> sortSearchBooksPageable(@PathVariable String searchTerm, @PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+    @RequestMapping(value = "reservation/pageable/search/{searchTerm}/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<ReservationAvailabilityDto> sortSearchBooksPageable(@PathVariable String searchTerm, @PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
+        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
         if (directionOfSort.equals("asc")) {
-            if (propertyToSearchBy.equals("firstName")) {
-                return reservationRepository.findByUser_FirstNameOrUser_LastNameOrBook_TitleContainingOrderByUser_FirstNameAsc(searchTerm, searchTerm, searchTerm, pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-            }
-            if (propertyToSearchBy.equals("date")) {
-                return reservationRepository.findByUser_FirstNameOrUser_LastNameOrBook_TitleContainingOrderByDateAsc(searchTerm, searchTerm, searchTerm, pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-            }
-            if (propertyToSearchBy.equals("lastName")) {
-                return reservationRepository.findByUser_FirstNameOrUser_LastNameOrBook_TitleContainingOrderByUser_LastNameAsc(searchTerm, searchTerm, searchTerm, pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-            }
-            if (propertyToSearchBy.equals("bookTitle")) {
-                return reservationRepository.findByUser_FirstNameOrUser_LastNameOrBook_TitleContainingOrderByBook_TitleAsc(searchTerm, searchTerm, searchTerm, pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-            }
+            return reservationRepository.findByUser_FirstNameOrUser_LastNameOrBook_TitleContaining(searchTerm, searchTerm, searchTerm, pageableAsc).stream().map(reservationMapper::reservationToAvailabilityDto);
         }
         if (directionOfSort.equals("desc")) {
-            if (propertyToSearchBy.equals("firstName")) {
-                return reservationRepository.findByUser_FirstNameOrUser_LastNameOrBook_TitleContainingOrderByUser_FirstNameDesc(searchTerm, searchTerm, searchTerm, pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-            }
-            if (propertyToSearchBy.equals("date")) {
-                return reservationRepository.findByUser_FirstNameOrUser_LastNameOrBook_TitleContainingOrderByDateDesc(searchTerm, searchTerm, searchTerm, pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-            }
-            if (propertyToSearchBy.equals("lastName")) {
-                return reservationRepository.findByUser_FirstNameOrUser_LastNameOrBook_TitleContainingOrderByUser_LastNameDesc(searchTerm, searchTerm, searchTerm, pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-            }
-            if (propertyToSearchBy.equals("bookTitle")) {
-                return reservationRepository.findByUser_FirstNameOrUser_LastNameOrBook_TitleContainingOrderByBook_TitleDesc(searchTerm, searchTerm, searchTerm, pageable).stream().map(reservationMapper::reservationToAvailabilityDto);
-            }
+            return reservationRepository.findByUser_FirstNameOrUser_LastNameOrBook_TitleContaining(searchTerm, searchTerm, searchTerm, pageableDesc).stream().map(reservationMapper::reservationToAvailabilityDto);
         }
-        return this.searchReservationsPageable(searchTerm, pageNumber, numberPerPage);
+        return null;
     }
 
 

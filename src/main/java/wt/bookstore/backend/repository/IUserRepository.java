@@ -14,16 +14,5 @@ public interface IUserRepository extends JpaRepository<User, Long>{
 
     List<User> findByFirstNameOrLastName(String firstName, String lastName, Pageable pageable);
 
-    List<User> findAllByOrderByFirstNameAsc(Pageable pageable);
-    List<User> findAllByOrderByEmailAddressAsc(Pageable pageable);
-    List<User> findAllByOrderByLastNameAsc(Pageable pageable);
-    List<User> findAllByOrderByFirstNameDesc(Pageable pageable);
-    List<User> findAllByOrderByEmailAddressDesc(Pageable pageable);
-    List<User> findAllByOrderByLastNameDesc(Pageable pageable);
-    List<User> findByFirstNameOrLastNameOrderByLastNameAsc(String author, String title, Pageable pageable);
-    List<User> findByFirstNameOrLastNameOrderByFirstNameAsc(String author, String title, Pageable pageable);
-    List<User> findByFirstNameOrLastNameOrderByEmailAddressAsc(String author, String title, Pageable pageable);
-    List<User> findByFirstNameOrLastNameOrderByLastNameDesc(String author, String title, Pageable pageable);
-    List<User> findByFirstNameOrLastNameOrderByFirstNameDesc(String author, String title, Pageable pageable);
-    List<User> findByFirstNameOrLastNameOrderByEmailAddressDesc(String author, String title, Pageable pageable);
+
 }

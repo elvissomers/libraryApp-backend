@@ -3,6 +3,7 @@ package wt.bookstore.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.Loan;
@@ -61,17 +62,6 @@ public class UserController {
     @GetMapping("user/get/{id}")
     public Optional<UserDto> find(@PathVariable long id) {
         return Optional.of(userMapper.userToDto(userRepository.findById(id).get()));
-    }
-
-    @RequestMapping(value = "user/pageable/get/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<UserDto> getUsersPageable(@PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
-        return userRepository.findAll(pageable).stream().map(userMapper::userToDto);
-    }
-    @RequestMapping(value = "user/pageable/search/{query}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<UserDto> searchUsersPageable(@PathVariable String query, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
-        return userRepository.findByFirstNameOrLastName(query, query, pageable).stream().map(userMapper::userToDto);
     }
 
 
@@ -206,60 +196,30 @@ public class UserController {
         return "abcd";
     }
 
-    @RequestMapping(value = "user/pageable/search/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<UserDto> sortNormalUsersPageable(@PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+    @RequestMapping(value = "user/pageable/search/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<UserDto> sortNormalUsersPageable(@PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
+        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
         if (directionOfSort.equals("asc")) {
-            if (propertyToSearchBy.equals("name")) {
-                return userRepository.findAllByOrderByFirstNameAsc(pageable).stream().map(userMapper::userToDto);
-            }
-            if (propertyToSearchBy.equals("emailAddress")) {
-                return userRepository.findAllByOrderByEmailAddressAsc(pageable).stream().map(userMapper::userToDto);
-            }
-            if (propertyToSearchBy.equals("surname")) {
-                return userRepository.findAllByOrderByLastNameAsc(pageable).stream().map(userMapper::userToDto);
-            }
+            return userRepository.findAll(pageableAsc).stream().map(userMapper::userToDto);
         }
         if (directionOfSort.equals("desc")) {
-            if (propertyToSearchBy.equals("name")) {
-                return userRepository.findAllByOrderByFirstNameDesc(pageable).stream().map(userMapper::userToDto);
-            }
-            if (propertyToSearchBy.equals("emailAddress")) {
-                return userRepository.findAllByOrderByEmailAddressDesc(pageable).stream().map(userMapper::userToDto);
-            }
-            if (propertyToSearchBy.equals("surname")) {
-                return userRepository.findAllByOrderByLastNameDesc(pageable).stream().map(userMapper::userToDto);
-            }
+            return userRepository.findAll(pageableDesc).stream().map(userMapper::userToDto);
         }
-        return this.getUsersPageable(pageNumber, numberPerPage);
+        return null;
     }
 
-    @RequestMapping(value = "user/pageable/search/{searchTerm}/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<UserDto> sortSearchUsersPageable(@PathVariable String searchTerm, @PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+    @RequestMapping(value = "user/pageable/search/{searchTerm}/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<UserDto> sortSearchUsersPageable(@PathVariable String searchTerm, @PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
+        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
         if (directionOfSort.equals("asc")) {
-            if (propertyToSearchBy.equals("name")) {
-                return userRepository.findByFirstNameOrLastNameOrderByFirstNameAsc(searchTerm, searchTerm, pageable).stream().map(userMapper::userToDto);
-            }
-            if (propertyToSearchBy.equals("emailAddress")) {
-                return userRepository.findByFirstNameOrLastNameOrderByEmailAddressAsc(searchTerm, searchTerm, pageable).stream().map(userMapper::userToDto);
-            }
-            if (propertyToSearchBy.equals("surname")) {
-                return userRepository.findByFirstNameOrLastNameOrderByLastNameAsc(searchTerm, searchTerm, pageable).stream().map(userMapper::userToDto);
-            }
+            return userRepository.findByFirstNameOrLastName(searchTerm, searchTerm, pageableAsc).stream().map(userMapper::userToDto);
         }
         if (directionOfSort.equals("desc")) {
-            if (propertyToSearchBy.equals("name")) {
-                return userRepository.findByFirstNameOrLastNameOrderByFirstNameDesc(searchTerm, searchTerm, pageable).stream().map(userMapper::userToDto);
-            }
-            if (propertyToSearchBy.equals("emailAddress")) {
-                return userRepository.findByFirstNameOrLastNameOrderByEmailAddressDesc(searchTerm, searchTerm, pageable).stream().map(userMapper::userToDto);
-            }
-            if (propertyToSearchBy.equals("surname")) {
-                return userRepository.findByFirstNameOrLastNameOrderByLastNameDesc(searchTerm, searchTerm, pageable).stream().map(userMapper::userToDto);
-            }
+            return userRepository.findByFirstNameOrLastName(searchTerm, searchTerm, pageableDesc).stream().map(userMapper::userToDto);
         }
-        return this.searchUsersPageable(searchTerm, pageNumber, numberPerPage);
+        return null;
     }
 
 }

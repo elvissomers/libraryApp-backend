@@ -3,6 +3,7 @@ package wt.bookstore.backend.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.dto.BookDto;
@@ -14,6 +15,7 @@ import wt.bookstore.backend.repository.ICopyRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
 
 
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -100,71 +102,30 @@ public class BookController {
     }
 
 
-    @RequestMapping(value = "book/pageable/get/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<BookDto> getBooksPageable(@PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
-        return bookRepository.findAll(pageable).stream().map(bookMapper::bookToDto);
-    }
-    @RequestMapping(value = "book/pageable/search/{query}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<BookDto> searchBooksPageable(@PathVariable String query, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
-        return bookRepository.findByTitleContainingOrAuthorContaining(query, query, pageable).stream().map(bookMapper::bookToDto);
-    }
-
     @RequestMapping(value = "book/pageable/search/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
     public Stream<BookDto> sortNormalBooksPageable(@PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).ascending());
+        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).descending());
         if (directionOfSort.equals("asc")) {
-            if (propertyToSearchBy.equals("title")) {
-                return bookRepository.findAllByOrderByTitleAsc(pageable).stream().map(bookMapper::bookToDto);
-            }
-            if (propertyToSearchBy.equals("isbn")) {
-                return bookRepository.findAllByOrderByIsbnAsc(pageable).stream().map(bookMapper::bookToDto);
-            }
-            if (propertyToSearchBy.equals("author")) {
-                return bookRepository.findAllByOrderByAuthorAsc(pageable).stream().map(bookMapper::bookToDto);
-            }
+            return bookRepository.findAll(pageableAsc).stream().map(bookMapper::bookToDto);
         }
         if (directionOfSort.equals("desc")) {
-            if (propertyToSearchBy.equals("title")) {
-                return bookRepository.findAllByOrderByTitleDesc(pageable).stream().map(bookMapper::bookToDto);
+            return bookRepository.findAll(pageableDesc).stream().map(bookMapper::bookToDto);
             }
-            if (propertyToSearchBy.equals("isbn")) {
-                return bookRepository.findAllByOrderByIsbnDesc(pageable).stream().map(bookMapper::bookToDto);
-            }
-            if (propertyToSearchBy.equals("author")) {
-                return bookRepository.findAllByOrderByAuthorDesc(pageable).stream().map(bookMapper::bookToDto);
-            }
-        }
-        return this.getBooksPageable(pageNumber, numberPerPage);
+        return null;
         }
 
     @RequestMapping(value = "book/pageable/search/{searchTerm}/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
     public Stream<BookDto> sortSearchBooksPageable(@PathVariable String searchTerm, @PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageable = PageRequest.of(pageNumber, numberPerPage);
+        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).ascending());
+        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).descending());
         if (directionOfSort.equals("asc")) {
-            if (propertyToSearchBy.equals("title")) {
-                return bookRepository.findByTitleContainingOrAuthorContainingOrderByTitleAsc(searchTerm, searchTerm, pageable).stream().map(bookMapper::bookToDto);
-            }
-            if (propertyToSearchBy.equals("isbn")) {
-                return bookRepository.findByTitleContainingOrAuthorContainingOrderByIsbnAsc(searchTerm, searchTerm, pageable).stream().map(bookMapper::bookToDto);
-            }
-            if (propertyToSearchBy.equals("author")) {
-                return bookRepository.findByTitleContainingOrAuthorContainingOrderByAuthorAsc(searchTerm, searchTerm, pageable).stream().map(bookMapper::bookToDto);
-            }
+            return bookRepository.findByTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableAsc).stream().map(bookMapper::bookToDto);
         }
         if (directionOfSort.equals("desc")) {
-            if (propertyToSearchBy.equals("title")) {
-                return bookRepository.findByTitleContainingOrAuthorContainingOrderByTitleDesc(searchTerm, searchTerm, pageable).stream().map(bookMapper::bookToDto);
-            }
-            if (propertyToSearchBy.equals("isbn")) {
-                return bookRepository.findByTitleContainingOrAuthorContainingOrderByIsbnDesc(searchTerm, searchTerm, pageable).stream().map(bookMapper::bookToDto);
-            }
-            if (propertyToSearchBy.equals("author")) {
-                return bookRepository.findByTitleContainingOrAuthorContainingOrderByAuthorDesc(searchTerm, searchTerm, pageable).stream().map(bookMapper::bookToDto);
-            }
+            return bookRepository.findByTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableDesc).stream().map(bookMapper::bookToDto);
         }
-        return this.searchBooksPageable(searchTerm, pageNumber, numberPerPage);
+        return null;
     }
 
 
