@@ -68,8 +68,10 @@ public class BookController {
         // We set the copy number to the highest currect copy number + 1, or
         // to 1 if there are no other copies of this book
         if (bookCopyList.isEmpty()) {
+            System.out.println(bookCopyList);
             copyNumberDto.setNumber(1);
         } else {
+            System.out.println(bookCopyList);
             int currentNumber = bookCopyList.get(0).getNumber();
             copyNumberDto.setNumber(currentNumber + 1);
         }
