@@ -8,7 +8,6 @@ import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.dto.BookDto;
 import wt.bookstore.backend.dto.ChangeBookDto;
-import wt.bookstore.backend.dto.CopyNumberDto;
 import wt.bookstore.backend.dto.SaveBookDto;
 import wt.bookstore.backend.mapping.BookDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
@@ -54,27 +53,24 @@ public class BookController {
         return bookRepository.findAll().stream().map(bookMapper::bookToDto);
     }
 
-    @GetMapping("book/getcopynumber/{id}")
-    public CopyNumberDto getCurrentCopyNumber(@PathVariable long id) {
+    @GetMapping("book/{id}/getcopynumber")
+    public int getCurrentCopyNumber(@PathVariable long id) {
         Optional<Book> optionalBook = bookRepository.findById(id);
 
         if (optionalBook.isEmpty()){
             // 0 Should be interpreted as an error: this book doesn't exist!
-            return null;
+            return 0;
         }
 
-        CopyNumberDto copyNumberDto = new CopyNumberDto();
         List<Copy> bookCopyList = copyRepository.findByBookOrderByNumberDesc(optionalBook.get());
         // We set the copy number to the highest currect copy number + 1, or
         // to 1 if there are no other copies of this book
         if (bookCopyList.isEmpty()) {
-            copyNumberDto.setNumber(1);
+            return 1;
         } else {
             int currentNumber = bookCopyList.get(0).getNumber();
-            copyNumberDto.setNumber(currentNumber + 1);
+            return (currentNumber + 1);
         }
-
-        return copyNumberDto;
     }
 
     @RequestMapping(value = "bookPage/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
