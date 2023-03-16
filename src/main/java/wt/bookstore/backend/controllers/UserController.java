@@ -109,6 +109,7 @@ public class UserController {
 
         userRepository.save(optionalUser.get());
     }
+
     
     /*
      * Uit gecomment omdat we put pas later gaan implementeren
@@ -127,7 +128,6 @@ public class UserController {
         userRepository.deleteById(id);
     }
 
-    //TODO: implement the endpoints below in a proper way
     @GetMapping("user/{id}/loans")
     public Stream<LoanDto> findLoans(@PathVariable long id){
     	/**
@@ -184,6 +184,22 @@ public class UserController {
         }
 
         return null;
+    }
+
+    @PutMapping("user/logout/")
+    public boolean deleteUserToken(
+            @RequestHeader("Authentication") String token
+    ) {
+        Optional<User> optionalUser = userRepository.findByToken(token);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            user.setToken(null);
+            userRepository.save(user);
+
+            return true;
+        }
+        return false;
     }
 
     public String generateRandomString(int targetStringLength) {
