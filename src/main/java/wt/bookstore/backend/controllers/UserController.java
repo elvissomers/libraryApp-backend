@@ -82,89 +82,113 @@ public class UserController {
      * @param saveUserDto ({@link wt.bookstore.backend.dto.SaveUserDto}) is generated from the json body in the POST request and contains the information needed to create a {@link wt.bookstore.backend.domains.User} object.
      */
     @PostMapping("user/create")
-    public void create(@RequestBody SaveUserDto saveUserDto) {
+    public boolean create(@RequestBody SaveUserDto saveUserDto,
+                       @RequestHeader("Authentication") String token
+
+    ) {
+        Optional<User> userOptional = this.userRepository.findByToken(token);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+        User accessUser = userOptional.get();
+        if (!accessUser.isAdmin()){
+            return false;
+        }
         User user = userMapper.dtoToUser(saveUserDto);
         userRepository.save(user);
+        return true;
     }
 
     /*
      * PUT endpoints
      */
     @PutMapping("user/{id}")
-    public void update(@PathVariable long id, @RequestBody ChangeUserDto changeUserDto){
-        Optional<User> optionalUser = userRepository.findById(id);
-        String newFirstName = changeUserDto.getFirstName();
-        String newLastName = changeUserDto.getLastName();
-        String newEmailAddress = changeUserDto.getEmailAddress();
-        String newPassword = changeUserDto.getPassword();
-        boolean newAdmin = changeUserDto.isAdmin();
+    public boolean update(@PathVariable long id, @RequestBody ChangeUserDto changeUserDto,
+                       @RequestHeader("Authentication") String token
 
-        // TODO - haal if statements ook weg uit andere put endpoints
-        // TODO - maakt dit korter door bovenstaande regels in onderstaande te plaatsen
-        optionalUser.get().setFirstName(newFirstName);
-        optionalUser.get().setLastName(newLastName);
-        optionalUser.get().setEmailAddress(newEmailAddress);
-        optionalUser.get().setPassword(newPassword);
-        optionalUser.get().setAdmin(newAdmin);
+    ) {
+        Optional<User> userOptional = this.userRepository.findByToken(token);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+        User user = userOptional.get();
+        if (!user.isAdmin()){
+            return false;
+        }
+        Optional<User> optionalUser = userRepository.findById(id);
+        optionalUser.get().setFirstName(changeUserDto.getFirstName());
+        optionalUser.get().setLastName(changeUserDto.getLastName());
+        optionalUser.get().setEmailAddress(changeUserDto.getEmailAddress());
+        optionalUser.get().setPassword(changeUserDto.getPassword());
+        optionalUser.get().setAdmin(changeUserDto.isAdmin());
 
         userRepository.save(optionalUser.get());
+        return true;
     }
-    
-    /*
-     * Uit gecomment omdat we put pas later gaan implementeren
-     */
-
-//    @RequestMapping(value = "user/{id}", method = RequestMethod.PUT)
-//    public void update(@PathVariable long id, @RequestBody SaveUserDto saveUserDto) {
-//        Optional<User> optional = userRepository.findById(id);
-//        optional.get().setName(saveUserDto.getName());
-//        optional.get().seteMailAddress(saveUserDto.geteMailAddress());
-//        userRepository.save(optional.get());
-//    }
 
     @DeleteMapping("user/{id}")
-    public void delete(@PathVariable long id) {
+    public boolean delete(@PathVariable long id,
+                       @RequestHeader("Authentication") String token
+
+    ) {
+        Optional<User> userOptional = this.userRepository.findByToken(token);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+        User user = userOptional.get();
+        if (!user.isAdmin()){
+            return false;
+        }
         userRepository.deleteById(id);
+        return true;
     }
 
-    //TODO: implement the endpoints below in a proper way
+    /**
+     * Used to find all loans of a user
+     */
     @GetMapping("user/{id}/loans")
-    public Stream<LoanDto> findLoans(@PathVariable long id){
-    	/**
-    	 * Used to find all loans of a user
-    	 */
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            return loanRepository.findByUser(user.get()).stream().map(loanMapper::loanToDto);
-        } else {
+    public Stream<LoanDto> findLoans(@PathVariable long id,
+                                     @RequestHeader("Authentication") String token
+
+    ) {
+        Optional<User> userOptional = this.userRepository.findByToken(token);
+        if (userOptional.isEmpty()) {
             return null;
         }
+
+        return loanRepository.findByUser(userOptional.get()).stream().map(loanMapper::loanToDto);
+
     }
 
+    /**
+     * Used to find "open" (not yet returned) loans of a user
+     */
     @GetMapping("user/{id}/loans/open")
-    public Stream<LoanDto> findOpenLoans(@PathVariable long id){
-        /**
-         * Used to find "open" (not yet returned) loans of a user
-         */
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            return loanRepository.findByUserAndEndDateNull(user.get()).stream().map(loanMapper::loanToDto);
-        } else {
+    public Stream<LoanDto> findOpenLoans(@PathVariable long id,
+                                         @RequestHeader("Authentication") String token
+
+    ) {
+        Optional<User> userOptional = this.userRepository.findByToken(token);
+        if (userOptional.isEmpty()) {
             return null;
         }
+        return loanRepository.findByUserAndEndDateNull(userOptional.get()).stream().map(loanMapper::loanToDto);
     }
 
+    /**
+     * Used to find all reservations of a user
+     */
     @GetMapping("user/{id}/reservations")
-    public Stream<ReservationDto> findReservations(@PathVariable long id){
-    	/**
-    	 * Used to find all reservations of a user
-    	 */
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
-            return reservationRepository.findByUser(user.get()).stream().map(reservationMapper::reservationToDto);
-        } else {
+    public Stream<ReservationDto> findReservations(@PathVariable long id,
+                                                   @RequestHeader("Authentication") String token
+
+    ) {
+        Optional<User> userOptional = this.userRepository.findByToken(token);
+        if (userOptional.isEmpty()) {
             return null;
         }
+        return reservationRepository.findByUser(userOptional.get()).stream().map(reservationMapper::reservationToDto);
+
     }
 
     @PostMapping("api/user/login")
