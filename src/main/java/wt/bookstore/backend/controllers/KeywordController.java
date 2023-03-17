@@ -4,14 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.Keyword;
-import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.KeywordDto;
 import wt.bookstore.backend.dto.SaveKeywordDto;
 import wt.bookstore.backend.mapping.KeywordDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.IKeywordRepository;
 import wt.bookstore.backend.domains.Book;
-import wt.bookstore.backend.repository.IUserRepository;
 
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -28,9 +26,6 @@ public class KeywordController {
 
     @Autowired
     private KeywordDtoMapper keywordMapper;
-
-    @Autowired
-    private IUserRepository userRepository;
 
     @GetMapping("keyword")
     public Stream<KeywordDto> findAll() {
@@ -50,18 +45,7 @@ public class KeywordController {
      * If not, it will create a new Keyword object.
      */
     @PostMapping("keyword/create")
-    public boolean create(@RequestBody SaveKeywordDto saveKeywordDto,
-                          @RequestHeader("Authentication") String token
-
-    ) {
-        Optional<User> userOptional = userRepository.findByToken(token);
-        if (userOptional.isEmpty()) {
-            return false;
-        }
-        User user = userOptional.get();
-        if (!user.isAdmin()){
-            return false;
-        }
+    public boolean create(@RequestBody SaveKeywordDto saveKeywordDto) {
 
     	long bookId = saveKeywordDto.getBookId();
         Optional<Book> optionalBook = bookRepository.findById(bookId);
@@ -87,6 +71,14 @@ public class KeywordController {
         }
     }
 
+
+//    @RequestMapping(value = "keyword/{id}", method = RequestMethod.PUT)
+//    public void update(@PathVariable long id, @RequestBody Keyword keyword) {
+//        Optional<Keyword> optional = keywordRepository.findById(id);
+////        optional.get().setBookId(keyword.getBookId());
+////        optional.get().setKeywordId(keyword.getKeywordId());
+//        keywordRepository.save(optional.get());
+//    }
 
     @DeleteMapping("keyword/{id}")
     public void delete(@PathVariable long id) {
