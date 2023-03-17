@@ -5,14 +5,12 @@ import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Copy;
-import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.ChangeCopyDto;
 import wt.bookstore.backend.dto.CopyDto;
 import wt.bookstore.backend.dto.SaveCopyDto;
 import wt.bookstore.backend.mapping.CopyDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
-import wt.bookstore.backend.repository.IUserRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -33,9 +31,6 @@ public class CopyController {
 
     @Autowired
     private CopyDtoMapper copyMapper;
-
-    @Autowired
-    private IUserRepository userRepository;
 
 
     /*
@@ -83,18 +78,7 @@ public class CopyController {
      * @param saveCopyDto ({@link wt.bookstore.backend.dto.SaveCopyDto}) is generated from the json body in the POST request and contains the information needed to create a {@link wt.bookstore.backend.domains.Copy} object.
      */
     @PostMapping("copy/create")
-    public boolean create(@RequestBody SaveCopyDto saveCopyDto,
-                          @RequestHeader("Authentication") String token
-
-    ) {
-        Optional<User> userOptional = userRepository.findByToken(token);
-        if (userOptional.isEmpty()) {
-            return false;
-        }
-        User user = userOptional.get();
-        if (!user.isAdmin()){
-            return false;
-        }
+    public boolean create(@RequestBody SaveCopyDto saveCopyDto) {
         List<Copy> copyList = copyMapper.dtoToCopy(saveCopyDto);
         if (!copyList.isEmpty()) {
             for (Copy copy : copyList){
@@ -112,25 +96,13 @@ public class CopyController {
      */
 
     @PutMapping("copy/{id}")
-    public boolean update(@PathVariable long id, @RequestBody ChangeCopyDto changeCopyDto,
-                       @RequestHeader("Authentication") String token
-
-    ) {
-        Optional<User> userOptional = userRepository.findByToken(token);
-        if (userOptional.isEmpty()) {
-            return false;
-        }
-        User user = userOptional.get();
-        if (!user.isAdmin()){
-            return false;
-        }
+    public void update(@PathVariable long id, @RequestBody ChangeCopyDto changeCopyDto){
 
         Optional<Copy> optionalCopy = copyRepository.findById(id);
         optionalCopy.get().setAvailable(changeCopyDto.isAvailable());
         optionalCopy.get().setNumber(changeCopyDto.getNumber());
 
         copyRepository.save(optionalCopy.get());
-        return true;
     }
 
 
