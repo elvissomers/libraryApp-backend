@@ -210,6 +210,22 @@ public class UserController {
         return null;
     }
 
+    @PutMapping("user/logout/")
+    public boolean deleteUserToken(
+            @RequestHeader("Authentication") String token
+    ) {
+        Optional<User> optionalUser = userRepository.findByToken(token);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            user.setToken(null);
+            userRepository.save(user);
+
+            return true;
+        }
+        return false;
+    }
+
     public String generateRandomString(int targetStringLength) {
 
         int leftLimit = 48; // letter 'a'

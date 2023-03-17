@@ -15,9 +15,9 @@ public class LoanDto {
 
 	private LocalDate endDate;
 
-//	private String userFirstName;
-//
-//	private String userLastName;
+	private String userFirstName;
+
+	private String userLastName;
 
 	private long bookId;
 	private String bookTitle;
@@ -27,8 +27,25 @@ public class LoanDto {
 	private int copyNumber;
 
 	//	Methods
+	
 	public long getId() {
 		return id;
+	}
+
+	public String getUserFirstName() {
+		return userFirstName;
+	}
+
+	public void setUserFirstName(String userFirstName) {
+		this.userFirstName = userFirstName;
+	}
+
+	public String getUserLastName() {
+		return userLastName;
+	}
+
+	public void setUserLastName(String userLastName) {
+		this.userLastName = userLastName;
 	}
 
 	public void setId(long id) {

@@ -65,8 +65,8 @@ public class LoanDtoMapper {
         loanDto.setId(loan.getId());
         loanDto.setStartDate(loan.getStartDate());
         loanDto.setEndDate(loan.getEndDate());
-//        loanDto.setUserFirstName(loan.getUser().getFirstName());
-//        loanDto.setUserLastName(loan.getUser().getLastName());
+       loanDto.setUserFirstName(loan.getUser().getFirstName());
+       loanDto.setUserLastName(loan.getUser().getLastName());
         loanDto.setBookTitle(loan.getCopy().getBook().getTitle());
         loanDto.setBookAuthor(loan.getCopy().getBook().getAuthor());
         loanDto.setBookIsbn(loan.getCopy().getBook().getIsbn());
