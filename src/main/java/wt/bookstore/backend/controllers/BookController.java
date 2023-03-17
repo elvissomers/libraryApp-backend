@@ -170,24 +170,4 @@ public class BookController {
         return null;
     }
 
-
-
-
-    //TODO: implementeer deze met DTO's
-//    @RequestMapping(value = "book/{id}/copies", method = RequestMethod.GET)
-//    public List<Copy> findCopies(@PathVariable long id){
-//    	/**
-//    	 * Used to find all copies of a specific book
-//    	 */
-//    	return copyRepository.findByBookId(id);
-//    }
-//
-//    @RequestMapping(value = "book/{id}/reservations", method = RequestMethod.GET)
-//    public List<Reservation> findReservations(@PathVariable long id){
-//    	/**
-//    	 * Used to find all reservations of a specific book
-//    	 */
-//    	return reservationRepository.findByBookId(id);
-//    }
-//
 }
