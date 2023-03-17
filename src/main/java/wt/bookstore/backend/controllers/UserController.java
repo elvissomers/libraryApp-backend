@@ -1,12 +1,17 @@
 package wt.bookstore.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.*;
+import wt.bookstore.backend.mapping.LoanDtoMapper;
+import wt.bookstore.backend.mapping.ReservationDtoMapper;
 import wt.bookstore.backend.mapping.UserDtoMapper;
 import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
@@ -37,6 +42,12 @@ public class UserController {
     @Autowired
     private UserDtoMapper userMapper;
 
+    @Autowired
+    private LoanDtoMapper loanMapper;
+
+    @Autowired
+    private ReservationDtoMapper reservationMapper;
+
 
     /*
      * GET endpoints from here
@@ -46,7 +57,7 @@ public class UserController {
      * Returns a Stream of {@link wt.bookstore.backend.dto.UserDto} for a GET request to {database_location}/user.
      * @return Stream of {@link wt.bookstore.backend.dto.UserDto}'s
      */
-    @GetMapping("user")
+    @GetMapping("user/get")
     public Stream<UserDto> findAll() {
         return userRepository.findAll().stream().map(userMapper::userToDto);
     }
@@ -56,7 +67,7 @@ public class UserController {
      * @param id (long) of the user you want to get.
      * @return Single {@link wt.bookstore.backend.dto.UserDto}
      */
-    @GetMapping("user/{id}")
+    @GetMapping("user/get/{id}")
     public Optional<UserDto> find(@PathVariable long id) {
         return Optional.of(userMapper.userToDto(userRepository.findById(id).get()));
     }
@@ -88,7 +99,8 @@ public class UserController {
         String newPassword = changeUserDto.getPassword();
         boolean newAdmin = changeUserDto.isAdmin();
 
-        // TODO
+        // TODO - haal if statements ook weg uit andere put endpoints
+        // TODO - maakt dit korter door bovenstaande regels in onderstaande te plaatsen
         optionalUser.get().setFirstName(newFirstName);
         optionalUser.get().setLastName(newLastName);
         optionalUser.get().setEmailAddress(newEmailAddress);
@@ -115,20 +127,44 @@ public class UserController {
         userRepository.deleteById(id);
     }
 
+    //TODO: implement the endpoints below in a proper way
     @GetMapping("user/{id}/loans")
-    public List<Loan> findLoans(@PathVariable long id){
+    public Stream<LoanDto> findLoans(@PathVariable long id){
     	/**
     	 * Used to find all loans of a user
     	 */
-    	return loanRepository.findByUserId(id);
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return loanRepository.findByUser(user.get()).stream().map(loanMapper::loanToDto);
+        } else {
+            return null;
+        }
+    }
+
+    @GetMapping("user/{id}/loans/open")
+    public Stream<LoanDto> findOpenLoans(@PathVariable long id){
+        /**
+         * Used to find "open" (not yet returned) loans of a user
+         */
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return loanRepository.findByUserAndEndDateNull(user.get()).stream().map(loanMapper::loanToDto);
+        } else {
+            return null;
+        }
     }
 
     @GetMapping("user/{id}/reservations")
-    public List<Reservation> findReservations(@PathVariable long id){
+    public Stream<ReservationDto> findReservations(@PathVariable long id){
     	/**
     	 * Used to find all reservations of a user
     	 */
-    	return reservationRepository.findByUserId(id);
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return reservationRepository.findByUser(user.get()).stream().map(reservationMapper::reservationToDto);
+        } else {
+            return null;
+        }
     }
 
     @PostMapping("api/user/login")
@@ -150,6 +186,22 @@ public class UserController {
         return null;
     }
 
+    @PutMapping("user/logout")
+    public boolean deleteUserToken(
+            @RequestHeader("Authentication") String token
+    ) {
+        Optional<User> optionalUser = userRepository.findByToken(token);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            user.setToken(null);
+            userRepository.save(user);
+
+            return true;
+        }
+        return false;
+    }
+
     public String generateRandomString(int targetStringLength) {
 
         int leftLimit = 48; // letter 'a'
@@ -166,6 +218,32 @@ public class UserController {
 
     public String RandomStringGenerator() {
         return "abcd";
+    }
+
+    @RequestMapping(value = "user/pageable/search/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<UserDto> sortNormalUsersPageable(@PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
+        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
+        if (directionOfSort.equals("asc")) {
+            return userRepository.findAll(pageableAsc).stream().map(userMapper::userToDto);
+        }
+        if (directionOfSort.equals("desc")) {
+            return userRepository.findAll(pageableDesc).stream().map(userMapper::userToDto);
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "user/pageable/search/{searchTerm}/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<UserDto> sortSearchUsersPageable(@PathVariable String searchTerm, @PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
+        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
+        if (directionOfSort.equals("asc")) {
+            return userRepository.findByFirstNameOrLastName(searchTerm, searchTerm, pageableAsc).stream().map(userMapper::userToDto);
+        }
+        if (directionOfSort.equals("desc")) {
+            return userRepository.findByFirstNameOrLastName(searchTerm, searchTerm, pageableDesc).stream().map(userMapper::userToDto);
+        }
+        return null;
     }
 
 }

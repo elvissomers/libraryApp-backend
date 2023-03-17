@@ -29,10 +29,12 @@ public class UserDtoMapper {
          */
         UserDto userDto = new UserDto();
 
+        userDto.setId(user.getId());
         userDto.setAdmin(user.isAdmin());
         userDto.setEmailAddress(user.getEmailAddress());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
+        userDto.setId(user.getId());
 
         return userDto;
     }

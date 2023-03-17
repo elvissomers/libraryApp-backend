@@ -16,6 +16,9 @@ public class Copy {
     @Column(nullable = false)
 	private boolean available;
 
+    @Column(nullable = false)
+    private int number;
+
     @ManyToOne(optional = false)
     private Book book;
 
@@ -52,5 +55,13 @@ public class Copy {
 
     public void setLoans(List<Loan> loans) {
         this.loans = loans;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 }

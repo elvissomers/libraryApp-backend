@@ -8,13 +8,14 @@ import java.time.LocalDate;
  */
 public class SaveLoanDto {
 
+	// TODO: make start date the current date - wordt gedaan in frontend
 	private LocalDate startDate;
-	
-	private LocalDate endDate;
 	
 	private long userId;
 
-	private long copyId;
+	private long bookId;
+
+	private int copyNumber;
 
 
 	public LocalDate getStartDate() {
@@ -25,14 +26,6 @@ public class SaveLoanDto {
 		this.startDate = startDate;
 	}
 
-	public LocalDate getEndDate() {
-		return endDate;
-	}
-
-	public void setEndDate(LocalDate endDate) {
-		this.endDate = endDate;
-	}
-
 	public long getUserId() {
 		return userId;
 	}
@@ -41,13 +34,19 @@ public class SaveLoanDto {
 		this.userId = userId;
 	}
 
-	public long getCopyId() {
-		return copyId;
+	public int getCopyNumber() {
+		return copyNumber;
 	}
 
-	public void setCopyId(long copyId) {
-		this.copyId = copyId;
+	public void setCopyNumber(int copyNumber) {
+		this.copyNumber = copyNumber;
 	}
 
+	public long getBookId() {
+		return bookId;
+	}
 
+	public void setBookId(long bookId) {
+		this.bookId = bookId;
+	}
 }

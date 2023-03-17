@@ -107,6 +107,10 @@ public class Book {
 		keywords.add(keyword);
 	}
 
+	public void addCopy(Copy copy){
+		copies.add(copy);
+	}
+
 	/**
 	 * Used to get a random copy from the list of copies of this book
 	 *
