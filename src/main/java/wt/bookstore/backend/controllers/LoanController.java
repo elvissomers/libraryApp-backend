@@ -88,18 +88,7 @@ public class LoanController {
 	 *  -- Should be used in combination with findByBook from CopyController
 	 */
 	@PostMapping("loan/create")
-	public boolean createNew(@RequestBody SaveLoanDto saveLoanDto,
-							 @RequestHeader("Authentication") String token
-
-	) {
-		Optional<User> userOptional = this.userRepository.findByToken(token);
-		if (userOptional.isEmpty()) {
-			return false;
-		}
-		User user = userOptional.get();
-		if (!user.isAdmin()){
-			return false;
-		}
+	public boolean createNew(@RequestBody SaveLoanDto saveLoanDto) {
 		Loan loan = loanMapper.dtoToLoan(saveLoanDto);
 		if (loan != null) {
 			Copy copy = loan.getCopy();
@@ -120,7 +109,6 @@ public class LoanController {
 	 * If no copies of the reserved book are available, it gives a 500 http error
 	 * @param saveReservationDto
 	 */
-	// Not used anymore? TODO: delete this
 	@PostMapping("loan/create/fromreservation")
 	public boolean createFromReservation(@RequestBody SaveReservationDto saveReservationDto){
 		Loan loan = new Loan();
@@ -165,18 +153,7 @@ public class LoanController {
 	 * @return true if change was succesful, false otherwise
 	 */
 	@PutMapping("loan/update/{id}")
-	public boolean update(@PathVariable long id, @RequestBody ChangeLoanDto changeLoanDto,
-						  @RequestHeader("Authentication") String token
-
-	) {
-		Optional<User> userOptional = this.userRepository.findByToken(token);
-		if (userOptional.isEmpty()) {
-			return false;
-		}
-		User user = userOptional.get();
-		if (!user.isAdmin()){
-			return false;
-		}
+	public boolean update(@PathVariable long id, @RequestBody ChangeLoanDto changeLoanDto){
 		Optional<Loan> optionalLoan = loanRepository.findById(id);
 
 		if (optionalLoan.isEmpty()){
@@ -206,20 +183,8 @@ public class LoanController {
 	 * DELETE endpoints from here
 	 */
 	@DeleteMapping("loan/delete/{id}")
-	public boolean delete(@PathVariable long id,
-					   @RequestHeader("Authentication") String token
-
-	) {
-		Optional<User> userOptional = this.userRepository.findByToken(token);
-		if (userOptional.isEmpty()) {
-			return false;
-		}
-		User user = userOptional.get();
-		if (!user.isAdmin()){
-			return false;
-		}
+	public void delete(@PathVariable long id) {
 		loanRepository.deleteById(id);
-		return true;
 	}
 
 
