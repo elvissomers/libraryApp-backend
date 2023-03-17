@@ -6,7 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import wt.bookstore.backend.domains.Book;
-import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.BookDto;
 import wt.bookstore.backend.dto.ChangeBookDto;
 import wt.bookstore.backend.dto.SaveBookDto;
@@ -14,7 +13,6 @@ import wt.bookstore.backend.mapping.BookDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
-import wt.bookstore.backend.repository.IUserRepository;
 
 
 import java.util.List;
@@ -37,9 +35,6 @@ public class BookController {
     
     @Autowired
     private IReservationRepository reservationRepository;
-
-    @Autowired
-    private IUserRepository userRepository;
 
     @Autowired
     private BookDtoMapper bookMapper;
@@ -80,67 +75,30 @@ public class BookController {
      * @param saveBookDto ({@link wt.bookstore.backend.dto.SaveBookDto}) is generated from the json body in the POST request and contains the information needed to create a {@link wt.bookstore.backend.domains.Book} object.
      */
     @PostMapping("book/create")
-    public boolean create(@RequestBody SaveBookDto saveBookDto,
-                       @RequestHeader("Authentication") String token
-
-    ) {
-        Optional<User> userOptional = userRepository.findByToken(token);
-        if (userOptional.isEmpty()) {
-            return false;
-        }
-        User user = userOptional.get();
-        if (!user.isAdmin()){
-            return false;
-        }
+    public void create(@RequestBody SaveBookDto saveBookDto) {
         Book book = bookMapper.dtoToBook(saveBookDto);
         bookRepository.save(book);
-        return true;
     }
 
     @PutMapping("book/update/{id}")
-    public boolean update(@PathVariable long id, @RequestBody ChangeBookDto changeBookDto,
-                       @RequestHeader("Authentication") String token
-
-    ) {
-        Optional<User> userOptional = userRepository.findByToken(token);
-        if (userOptional.isEmpty()) {
-            return false;
-        }
-        User user = userOptional.get();
-        if (!user.isAdmin()){
-            return false;
-        }
+    public void update(@PathVariable long id, @RequestBody ChangeBookDto changeBookDto) {
         Optional<Book> optionalBook = bookRepository.findById(id);
-        if (optionalBook.isEmpty()) {
-            return false;
-        }
+        if (optionalBook.isEmpty())
+            return;
 
         optionalBook.get().setIsbn(changeBookDto.getIsbn());
         optionalBook.get().setTitle(changeBookDto.getTitle());
         optionalBook.get().setAuthor(changeBookDto.getAuthor());
 
         bookRepository.save(optionalBook.get());
-        return true;
     }
 
     /*
      * DELETE endpoints from here
      */
     @DeleteMapping("book/delete/{id}")
-    public boolean delete(@PathVariable long id,
-                       @RequestHeader("Authentication") String token
-
-    ) {
-        Optional<User> userOptional = userRepository.findByToken(token);
-        if (userOptional.isEmpty()) {
-            return false;
-        }
-        User user = userOptional.get();
-        if (!user.isAdmin()){
-            return false;
-        }
+    public void delete(@PathVariable long id) {
         bookRepository.deleteById(id);
-        return true;
     }
 
 
