@@ -23,6 +23,10 @@ public class ReservationDto {
     
     private long bookId;
 
+    private String bookAuthor;
+
+    private long bookIsbn;
+
     public long getUserId() {
         return userId;
     }
@@ -77,5 +81,21 @@ public class ReservationDto {
 
     public void setUserLastName(String userLastName) {
         this.userLastName = userLastName;
+    }
+
+    public String getBookAuthor() {
+        return bookAuthor;
+    }
+
+    public void setBookAuthor(String bookAuthor) {
+        this.bookAuthor = bookAuthor;
+    }
+
+    public long getBookIsbn() {
+        return bookIsbn;
+    }
+
+    public void setBookIsbn(long bookIsbn) {
+        this.bookIsbn = bookIsbn;
     }
 }
