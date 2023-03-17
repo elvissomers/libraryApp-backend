@@ -81,13 +81,15 @@ public class ReservationController {
     public boolean create(
     		@RequestBody SaveReservationDto saveReservationDto,
     		@RequestHeader("Authentication") String token
+
     ) {
     	// User moeten opvragen
     	Optional<User> userOptional = this.userRepository.findByToken(token);
-    	if (userOptional.isEmpty())
-    		return false;
+    	if (userOptional.isEmpty()) {
+            return false;
+        }
 
-    	User loogedInUser = userOptional.get();
+    	User user = userOptional.get();
 
         Reservation reservation = reservationMapper.dtoToReservation(saveReservationDto);
         if (reservation != null) {
@@ -102,39 +104,31 @@ public class ReservationController {
      * PUT endpoints from here
      */
 
-    @PutMapping("reservation/update/{id}/date")
-    public void updateDate(@PathVariable long id, @RequestBody ChangeReservationDto changeReservationDto){
-        Optional<Reservation> optionalReservation = reservationRepository.findById(id);
-        optionalReservation.get().setDate(changeReservationDto.getDate());
-
-        reservationRepository.save(optionalReservation.get());
-    }
-
 
     @PutMapping("reservation/update/{id}")
-    public boolean update(@PathVariable long id, @RequestBody SaveReservationDto saveReservationDto) {
-        Optional<User> userOptional = userRepository.findById(saveReservationDto.getUserId());
-        Optional<Book> bookOptional = bookRepository.findById(saveReservationDto.getBookId());
-        /*
-         * Converts a post DTO to a loan object, if the post DTO misses a userId, loanId
-         * or reservationId it returns null, since it will not be a valid data entry
-         */
+    public boolean update(@PathVariable long id, @RequestBody SaveReservationDto saveReservationDto,
+                          @RequestHeader("Authentication") String token
 
+    ) {
+        // User moeten opvragen
+        Optional<User> userOptional = this.userRepository.findByToken(token);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+
+        User user = userOptional.get();
+        Optional<Book> bookOptional = bookRepository.findById(saveReservationDto.getBookId());
 
         /*
          * Checks whether the id given in the url is a valid loanId
          */
         Optional<Reservation> optionalReservation = reservationRepository.findById(id);
-        if (optionalReservation.isEmpty())
+        if (optionalReservation.isEmpty()) {
             return false;
-
-        /*
-         * Overwrites all the existing fields (except the ID) of the loan with the given loadId for the
-         * values given in the post DTO and saves it back in the database
-         */
+        }
         Reservation reservation = optionalReservation.get();
 
-        userOptional.ifPresent(reservation::setUser);
+        reservation.setUser(user);
         bookOptional.ifPresent(reservation::setBook);
         if (saveReservationDto.getDate() != null) {
             reservation.setDate(saveReservationDto.getDate());
@@ -145,7 +139,18 @@ public class ReservationController {
     }
 
     @RequestMapping(value = "reservation/delete/{id}", method = RequestMethod.DELETE)
-    public boolean delete(@PathVariable long id) {
+    public boolean delete(@PathVariable long id,
+                          @RequestHeader("Authentication") String token
+
+    ) {
+        Optional<User> userOptional = this.userRepository.findByToken(token);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+        User user = userOptional.get();
+        if (!user.isAdmin()){
+            return false;
+        }
         reservationRepository.deleteById(id);
         return true;
     }
