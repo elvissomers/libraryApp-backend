@@ -186,7 +186,7 @@ public class UserController {
         return null;
     }
 
-    @PutMapping("user/logout/")
+    @PutMapping("user/logout")
     public boolean deleteUserToken(
             @RequestHeader("Authentication") String token
     ) {
