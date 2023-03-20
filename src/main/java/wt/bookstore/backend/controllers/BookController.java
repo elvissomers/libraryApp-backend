@@ -170,7 +170,7 @@ public class BookController {
     }
 
     @GetMapping("book/reservations/{id}")
-    public Stream<ReservationDto> findReservations(@PathVariable long id){
+    public Stream<ReservationAvailabilityDto> findReservations(@PathVariable long id){
         /**
          * Used to find all reservations on a specific book
          */
@@ -179,6 +179,6 @@ public class BookController {
             return null;
         }
 
-        return reservationRepository.findByBook(optionalBook.get()).stream().map(reservationMapper::reservationToDto);
+        return reservationRepository.findByBook(optionalBook.get()).stream().map(reservationMapper::reservationToAvailabilityDto);
     }
 }
