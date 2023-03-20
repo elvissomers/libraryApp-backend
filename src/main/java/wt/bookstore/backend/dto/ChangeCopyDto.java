@@ -6,6 +6,8 @@ public class ChangeCopyDto {
 
     private int number;
 
+    private boolean archived;
+
     public boolean isAvailable() {
         return available;
     }
@@ -20,5 +22,13 @@ public class ChangeCopyDto {
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(Boolean archived) {
+        this.archived = archived;
     }
 }

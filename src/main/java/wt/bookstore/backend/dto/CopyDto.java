@@ -15,6 +15,8 @@ public class CopyDto {
 
     private int number;
 
+    private boolean archived;
+
     public long getId() {
         return id;
     }
@@ -46,4 +48,13 @@ public class CopyDto {
     public void setNumber(int number) {
         this.number = number;
     }
+
+    public boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
 }

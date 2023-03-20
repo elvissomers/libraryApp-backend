@@ -101,6 +101,7 @@ public class CopyController {
         Optional<Copy> optionalCopy = copyRepository.findById(id);
         optionalCopy.get().setAvailable(changeCopyDto.isAvailable());
         optionalCopy.get().setNumber(changeCopyDto.getNumber());
+        optionalCopy.get().setArchived(changeCopyDto.getArchived());
 
         copyRepository.save(optionalCopy.get());
     }

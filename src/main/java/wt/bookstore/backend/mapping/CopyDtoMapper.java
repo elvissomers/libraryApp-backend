@@ -43,6 +43,7 @@ public class CopyDtoMapper {
 
         int copyAmount = saveCopyDto.getAmount();
         int currentNumber = 0;
+        boolean archived = saveCopyDto.getArchived();
         // We set the copy number to the highest currect copy number + 1, or
         // to 1 if there are no other copies of this book
         if (bookCopyList.isEmpty()) {
@@ -59,8 +60,10 @@ public class CopyDtoMapper {
             copy.setBook(optionalBook.get());
             copy.setNumber(currentNumber);
             currentNumber = currentNumber + 1;
+            copy.setArchived(archived);
             copyList.add(copy);
         }
+
         return copyList;
 
     }
@@ -75,6 +78,7 @@ public class CopyDtoMapper {
         copyDto.setBookTitle(copy.getBook().getTitle());
         copyDto.setId(copy.getId());
         copyDto.setNumber(copy.getNumber());
+        copyDto.setArchived(copy.getArchived());
 
         return copyDto;
     }

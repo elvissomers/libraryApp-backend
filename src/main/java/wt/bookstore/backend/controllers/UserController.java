@@ -98,6 +98,7 @@ public class UserController {
         String newEmailAddress = changeUserDto.getEmailAddress();
         String newPassword = changeUserDto.getPassword();
         boolean newAdmin = changeUserDto.isAdmin();
+        boolean newArchived = changeUserDto.isArchived();
 
         // TODO - haal if statements ook weg uit andere put endpoints
         // TODO - maakt dit korter door bovenstaande regels in onderstaande te plaatsen
@@ -106,10 +107,10 @@ public class UserController {
         optionalUser.get().setEmailAddress(newEmailAddress);
         optionalUser.get().setPassword(newPassword);
         optionalUser.get().setAdmin(newAdmin);
+        optionalUser.get().setArchived(newArchived);
 
         userRepository.save(optionalUser.get());
     }
-
     
     /*
      * Uit gecomment omdat we put pas later gaan implementeren
@@ -128,6 +129,7 @@ public class UserController {
         userRepository.deleteById(id);
     }
 
+    //TODO: implement the endpoints below in a proper way
     @GetMapping("user/{id}/loans")
     public Stream<LoanDto> findLoans(@PathVariable long id){
     	/**
