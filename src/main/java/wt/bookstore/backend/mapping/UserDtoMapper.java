@@ -7,7 +7,6 @@ import wt.bookstore.backend.dto.UserDto;
 
 @Component
 public class UserDtoMapper {
-    // TODO: randomized default password
     private String defaultPassword = "1234";
 
     public User dtoToUser(SaveUserDto saveUserDto){
@@ -20,6 +19,7 @@ public class UserDtoMapper {
         user.setEmailAddress(saveUserDto.getEmailAddress());
         user.setPassword(defaultPassword);
         user.setAdmin(saveUserDto.isAdmin());
+        user.setArchived(saveUserDto.isArchived());
 
         return user;
     }
@@ -35,7 +35,7 @@ public class UserDtoMapper {
         userDto.setEmailAddress(user.getEmailAddress());
         userDto.setFirstName(user.getFirstName());
         userDto.setLastName(user.getLastName());
-        userDto.setPassword(user.getPassword());
+        userDto.setId(user.getId());
 
         return userDto;
     }

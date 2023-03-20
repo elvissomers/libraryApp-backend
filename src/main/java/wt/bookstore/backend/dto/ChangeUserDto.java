@@ -12,6 +12,8 @@ public class ChangeUserDto {
 
     private boolean admin;
 
+    private boolean archived;
+
     public boolean isAdmin() {
         return admin;
     }
@@ -50,5 +52,13 @@ public class ChangeUserDto {
 
     public void setEmailAddress(String emailAddress) {
         this.emailAddress = emailAddress;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 }

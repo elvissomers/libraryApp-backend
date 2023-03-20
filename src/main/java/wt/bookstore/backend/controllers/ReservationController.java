@@ -1,10 +1,14 @@
 package wt.bookstore.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.*;
 import wt.bookstore.backend.dto.ChangeReservationDto;
+import wt.bookstore.backend.dto.ReservationAvailabilityDto;
 import wt.bookstore.backend.dto.ReservationDto;
 import wt.bookstore.backend.dto.SaveReservationDto;
 import wt.bookstore.backend.mapping.ReservationDtoMapper;
@@ -48,7 +52,7 @@ public class ReservationController {
      * Returns a Stream of {@link wt.bookstore.backend.dto.ReservationDto} for a GET request to {database_location}/reservation.
      * @return Stream of {@link wt.bookstore.backend.dto.ReservationDto}'s
      */
-    @GetMapping("reservation")
+    @GetMapping("reservation/get")
     public Stream<ReservationDto> findAll() {
         return reservationRepository.findAll().stream().map(reservationMapper::reservationToDto);
     }
@@ -58,7 +62,7 @@ public class ReservationController {
      * @param id (long) of the reservation you want to get.
      * @return Single {@link wt.bookstore.backend.dto.ReservationDto}
      */
-    @GetMapping("reservation/{id}")
+    @GetMapping("reservation/get/{id}")
     public Optional<ReservationDto> find(@PathVariable long id) {
         Optional<Reservation> optionalReservation = reservationRepository.findById(id);
         return Optional.of(reservationMapper.reservationToDto(optionalReservation.get()));
@@ -74,7 +78,17 @@ public class ReservationController {
      * @param saveReservationDto ({@link wt.bookstore.backend.dto.SaveReservationDto}) is generated from the json body in the POST request and contains the information needed to create a {@link wt.bookstore.backend.domains.Reservation} object.
      */
     @PostMapping("reservation/create")
-    public boolean create(@RequestBody SaveReservationDto saveReservationDto) {
+    public boolean create(
+    		@RequestBody SaveReservationDto saveReservationDto,
+    		@RequestHeader("Authentication") String token
+    ) {
+    	// User moeten opvragen
+    	Optional<User> userOptional = this.userRepository.findByToken(token);
+    	if (userOptional.isEmpty())
+    		return false;
+
+    	User loogedInUser = userOptional.get();
+
         Reservation reservation = reservationMapper.dtoToReservation(saveReservationDto);
         if (reservation != null) {
             reservationRepository.save(reservation);
@@ -88,7 +102,7 @@ public class ReservationController {
      * PUT endpoints from here
      */
 
-    @PutMapping("reservation/{id}/date")
+    @PutMapping("reservation/update/{id}/date")
     public void updateDate(@PathVariable long id, @RequestBody ChangeReservationDto changeReservationDto){
         Optional<Reservation> optionalReservation = reservationRepository.findById(id);
         optionalReservation.get().setDate(changeReservationDto.getDate());
@@ -97,7 +111,7 @@ public class ReservationController {
     }
 
 
-    @PutMapping("reservation/{id}")
+    @PutMapping("reservation/update/{id}")
     public boolean update(@PathVariable long id, @RequestBody SaveReservationDto saveReservationDto) {
         Optional<User> userOptional = userRepository.findById(saveReservationDto.getUserId());
         Optional<Book> bookOptional = bookRepository.findById(saveReservationDto.getBookId());
@@ -130,10 +144,37 @@ public class ReservationController {
         return true;
     }
 
-    @RequestMapping(value = "reservation/{id}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "reservation/delete/{id}", method = RequestMethod.DELETE)
     public boolean delete(@PathVariable long id) {
         reservationRepository.deleteById(id);
         return true;
+    }
+
+
+    @RequestMapping(value = "reservation/pageable/search/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<ReservationAvailabilityDto> sortNormalBooksPageable(@PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
+        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
+        if (directionOfSort.equals("asc")) {
+            return reservationRepository.findAll(pageableAsc).stream().map(reservationMapper::reservationToAvailabilityDto);
+        }
+        if (directionOfSort.equals("desc")) {
+            return reservationRepository.findAll(pageableDesc).stream().map(reservationMapper::reservationToAvailabilityDto);
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "reservation/pageable/search/{searchTerm}/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
+    public Stream<ReservationAvailabilityDto> sortSearchBooksPageable(@PathVariable String searchTerm, @PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
+        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
+        if (directionOfSort.equals("asc")) {
+            return reservationRepository.findByUser_FirstNameOrUser_LastNameOrBook_TitleContaining(searchTerm, searchTerm, searchTerm, pageableAsc).stream().map(reservationMapper::reservationToAvailabilityDto);
+        }
+        if (directionOfSort.equals("desc")) {
+            return reservationRepository.findByUser_FirstNameOrUser_LastNameOrBook_TitleContaining(searchTerm, searchTerm, searchTerm, pageableDesc).stream().map(reservationMapper::reservationToAvailabilityDto);
+        }
+        return null;
     }
 
 

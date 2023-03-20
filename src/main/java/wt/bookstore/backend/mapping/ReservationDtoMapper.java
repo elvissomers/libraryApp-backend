@@ -3,8 +3,10 @@ package wt.bookstore.backend.mapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import wt.bookstore.backend.domains.Book;
+import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
+import wt.bookstore.backend.dto.ReservationAvailabilityDto;
 import wt.bookstore.backend.dto.ReservationDto;
 import wt.bookstore.backend.dto.SaveReservationDto;
 import wt.bookstore.backend.repository.IBookRepository;
@@ -49,6 +51,22 @@ public class ReservationDtoMapper {
          */
         ReservationDto reservationDto = new ReservationDto();
 
+        reservationDto.setUserFirstName(reservation.getUser().getFirstName());
+        reservationDto.setUserLastName(reservation.getUser().getLastName());
+        reservationDto.setId(reservation.getId());
+        reservationDto.setDate(reservation.getDate());
+        reservationDto.setUserId(reservation.getUser().getId());
+        reservationDto.setBookTitle(reservation.getBook().getTitle());
+        reservationDto.setBookId(reservation.getBook().getId());
+        reservationDto.setBookAuthor(reservation.getBook().getAuthor());
+        reservationDto.setBookIsbn(reservation.getBook().getIsbn());
+
+        return reservationDto;
+    }
+
+    public ReservationAvailabilityDto reservationToAvailabilityDto(Reservation reservation){
+        ReservationAvailabilityDto reservationDto = new ReservationAvailabilityDto();
+
         reservationDto.setBookTitle(reservation.getBook().getTitle());
         reservationDto.setUserFirstName(reservation.getUser().getFirstName());
         reservationDto.setUserLastName(reservation.getUser().getLastName());
@@ -56,6 +74,14 @@ public class ReservationDtoMapper {
         reservationDto.setId(reservation.getId());
         reservationDto.setUserId(reservation.getUser().getId());
         reservationDto.setBookId(reservation.getBook().getId());
+
+        for(Copy copy: reservation.getBook().getCopies()) {
+            if (copy.isAvailable()) {
+                reservationDto.setAvailable(true);
+                return reservationDto;
+            }
+            reservationDto.setAvailable(false);
+        }
 
         return reservationDto;
     }

@@ -7,7 +7,7 @@ import java.time.LocalDate;
  * fields in this class contain the information of a reservation object that is deemed relevant to the user and are determined
  * by the needs of the frontend.
  */
-public class ReservationDto {
+public class ReservationAvailabilityDto {
 
     private long id;
 
@@ -20,12 +20,10 @@ public class ReservationDto {
     private String bookTitle;
 
     private long userId;
-    
+
     private long bookId;
 
-    private String bookAuthor;
-
-    private long bookIsbn;
+    private boolean available;
 
     public long getUserId() {
         return userId;
@@ -42,7 +40,7 @@ public class ReservationDto {
     public void setBookId(long bookId) {
         this.bookId = bookId;
     }
-    
+
     public long getId() {
         return id;
     }
@@ -83,19 +81,11 @@ public class ReservationDto {
         this.userLastName = userLastName;
     }
 
-    public String getBookAuthor() {
-        return bookAuthor;
+    public boolean isAvailable() {
+        return available;
     }
 
-    public void setBookAuthor(String bookAuthor) {
-        this.bookAuthor = bookAuthor;
-    }
-
-    public long getBookIsbn() {
-        return bookIsbn;
-    }
-
-    public void setBookIsbn(long bookIsbn) {
-        this.bookIsbn = bookIsbn;
+    public void setAvailable(boolean available) {
+        this.available = available;
     }
 }

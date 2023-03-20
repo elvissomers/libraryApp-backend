@@ -8,6 +8,8 @@ public class ChangeBookDto {
 
     private String author;
 
+    private boolean archived;
+
     public long getIsbn() {
         return isbn;
     }
@@ -30,5 +32,13 @@ public class ChangeBookDto {
 
     public void setAuthor(String author) {
         this.author = author;
+    }
+
+    public boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(Boolean archived) {
+        this.archived = archived;
     }
 }

@@ -13,6 +13,10 @@ public class CopyDto {
 
     private String bookTitle;
 
+    private int number;
+
+    private boolean archived;
+
     public long getId() {
         return id;
     }
@@ -36,4 +40,21 @@ public class CopyDto {
     public void setBookTitle(String bookTitle) {
         this.bookTitle = bookTitle;
     }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
 }

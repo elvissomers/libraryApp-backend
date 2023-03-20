@@ -25,6 +25,9 @@ public class Book {
 	@Column(nullable = false, length = 100)
 	private String author;
 
+	@Column(nullable = true)
+	private boolean archived;
+
 	@ManyToMany()
 	@JoinTable(
 			name = "book_keywords",
@@ -35,16 +38,14 @@ public class Book {
 	@OneToMany(mappedBy = "book", orphanRemoval = true)
 	private List<Copy> copies = new ArrayList<>();
 
-	@OneToMany(mappedBy = "book", orphanRemoval = false)
-	private List<Copy> availableCopies = new ArrayList<>();
-
 	@OneToMany(mappedBy = "book", orphanRemoval = true)
 	private List<Reservation> reservations = new ArrayList<>();
 
-	public Book(long isbn, String title, String author) {
+	public Book(long isbn, String title, String author, boolean archived) {
 		this.isbn = isbn;
 		this.title = title;
 		this.author = author;
+		this.archived = archived;
 	}
 
 	public Book() {
@@ -82,6 +83,14 @@ public class Book {
 		this.author = author;
 	}
 
+	public boolean getArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
+	}
+
 	public List<Copy> getCopies() {
 		return copies;
 	}
@@ -110,15 +119,8 @@ public class Book {
 		keywords.add(keyword);
 	}
 
-	// TODO : een call hiernaar elke keer dat een copy (un)available wordt
-	// TODO - Is dit nodig?
-	public void setAvailableCopies(){
-		availableCopies = new ArrayList<>();
-		for (Copy copy : copies){
-			if (copy.isAvailable()){
-				availableCopies.add(copy);
-			}
-		}
+	public void addCopy(Copy copy){
+		copies.add(copy);
 	}
 
 	/**
@@ -127,11 +129,10 @@ public class Book {
 	 * @return Copy, a random copy from this books copies
 	 */
 	// TODO: Make a function that picks a random AVAILABLE copy
-	public Copy getRandomAvailableCopy(){
+	public Copy getRandomCopy(){
 		Random rand = new Random();
-		this.setAvailableCopies();
 
-		Copy randomCopy = availableCopies.get(rand.nextInt(copies.size()));
+		Copy randomCopy = copies.get(rand.nextInt(copies.size()));
 
 		return randomCopy;
 	}
