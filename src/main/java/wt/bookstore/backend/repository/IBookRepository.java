@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface IBookRepository extends JpaRepository<Book, Long> {
 
+    List<Book> findByArchivedFalse(Pageable pageable);
+
     List<Book> findByArchivedFalseAndTitleContainingOrAuthorContaining(String title, String Author, Pageable pageable);
 
     List<Book> findByTitleContainingOrAuthorContainingOrKeywords_NameContaining(String title, String Author, String Keyword);
