@@ -19,7 +19,7 @@ public class Copy {
     @Column(nullable = false)
     private int number;
 
-    @Column(nullable = true)
+    @Column(columnDefinition = "boolean default false")
     private boolean archived;
 
     @ManyToOne(optional = false)

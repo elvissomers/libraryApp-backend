@@ -25,7 +25,7 @@ public class Book {
 	@Column(nullable = false, length = 100)
 	private String author;
 
-	@Column(nullable = true)
+	@Column(columnDefinition = "boolean default false")
 	private boolean archived;
 
 	@ManyToMany()
