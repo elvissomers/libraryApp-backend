@@ -30,7 +30,7 @@ public class User {
 
 	private boolean admin;
 
-	@Column(nullable = true)
+	@Column(columnDefinition = "boolean default false")
     private boolean archived;
 	
 	public String getPassword() {
