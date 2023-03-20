@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Copy;
+import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.dto.CopyDto;
 import wt.bookstore.backend.dto.SaveCopyDto;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
+import wt.bookstore.backend.repository.ILoanRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +23,9 @@ public class CopyDtoMapper {
 
     @Autowired
     private ICopyRepository copyRepository;
+
+    @Autowired
+    private ILoanRepository loanRepository;
 
     /**
      * Method that transforms a DTO from a post request to an object that can be used for a database
@@ -75,6 +80,12 @@ public class CopyDtoMapper {
         copyDto.setBookTitle(copy.getBook().getTitle());
         copyDto.setId(copy.getId());
         copyDto.setNumber(copy.getNumber());
+
+        Optional<Loan> optionalLoan = loanRepository.findByCopyAndEndDateNull(copy);
+        if (optionalLoan.isPresent()){
+            copyDto.setHeldByUserFirstName(optionalLoan.get().getUser().getFirstName());
+            copyDto.setHeldSince(optionalLoan.get().getStartDate());
+        }
 
         return copyDto;
     }
