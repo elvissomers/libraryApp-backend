@@ -10,8 +10,18 @@ public class ChangeUserDto {
 
     private boolean admin;
 
+    private String password;
+
     private boolean archived;
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+    
     public boolean isAdmin() {
         return admin;
     }
