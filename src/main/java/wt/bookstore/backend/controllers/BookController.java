@@ -6,12 +6,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import wt.bookstore.backend.domains.Book;
-import wt.bookstore.backend.dto.BookDto;
-import wt.bookstore.backend.dto.ChangeBookDto;
-import wt.bookstore.backend.dto.SaveBookDto;
+import wt.bookstore.backend.domains.Reservation;
+import wt.bookstore.backend.dto.*;
 import wt.bookstore.backend.mapping.BookDtoMapper;
+import wt.bookstore.backend.mapping.CopyDtoMapper;
+import wt.bookstore.backend.mapping.LoanDtoMapper;
+import wt.bookstore.backend.mapping.ReservationDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
+import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
 
 
@@ -32,12 +35,24 @@ public class BookController {
     
     @Autowired
     private ICopyRepository copyRepository;
+
+    @Autowired
+    private ILoanRepository loanRepository;
     
     @Autowired
     private IReservationRepository reservationRepository;
 
     @Autowired
     private BookDtoMapper bookMapper;
+
+    @Autowired
+    private CopyDtoMapper copyMapper;
+
+    @Autowired
+    private LoanDtoMapper loanMapper;
+
+    @Autowired
+    private ReservationDtoMapper reservationMapper;
 
 
     /*
@@ -128,24 +143,42 @@ public class BookController {
         return null;
     }
 
+    @GetMapping("book/copies/{id}")
+    public Stream<CopyDto> findCopies(@PathVariable long id){
+    	/**
+    	 * Used to find all copies of a specific book
+    	 */
+    	Optional<Book> optionalBook = bookRepository.findById(id);
+        if (optionalBook.isEmpty()){
+            return null;
+        }
 
+        return copyRepository.findByBook(optionalBook.get()).stream().map(copyMapper::copyToDto);
+    }
 
+    @GetMapping("book/loans/{id}")
+    public Stream<LoanDto> findLoans(@PathVariable long id){
+        /**
+         * Used to find all "open" loans on a specific book
+         */
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        if (optionalBook.isEmpty()){
+            return null;
+        }
 
-    //TODO: implementeer deze met DTO's
-//    @RequestMapping(value = "book/{id}/copies", method = RequestMethod.GET)
-//    public List<Copy> findCopies(@PathVariable long id){
-//    	/**
-//    	 * Used to find all copies of a specific book
-//    	 */
-//    	return copyRepository.findByBookId(id);
-//    }
-//
-//    @RequestMapping(value = "book/{id}/reservations", method = RequestMethod.GET)
-//    public List<Reservation> findReservations(@PathVariable long id){
-//    	/**
-//    	 * Used to find all reservations of a specific book
-//    	 */
-//    	return reservationRepository.findByBookId(id);
-//    }
-//
+        return loanRepository.findByCopy_BookAndEndDateNull(optionalBook.get()).stream().map(loanMapper::loanToDto);
+    }
+
+    @GetMapping("book/reservations/{id}")
+    public Stream<ReservationDto> findReservations(@PathVariable long id){
+        /**
+         * Used to find all reservations on a specific book
+         */
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        if (optionalBook.isEmpty()){
+            return null;
+        }
+
+        return reservationRepository.findByBook(optionalBook.get()).stream().map(reservationMapper::reservationToDto);
+    }
 }
