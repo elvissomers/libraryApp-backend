@@ -56,17 +56,18 @@ public class CopyController {
         return Optional.of(copyMapper.copyToDto(copyRepository.findById(id).get()));
     }
 
-    @GetMapping("book/copies/{id}")
-    public Stream<CopyDto> findAvailableByBook(@PathVariable long id){
-        Optional<Book> optionalBook = bookRepository.findById(id);
-
-        if (optionalBook.isEmpty()){
-            // TODO: implement some other error message here
-            return null;
-        }
-
-        return copyRepository.findByAvailableTrueAndBook(optionalBook.get()).stream().map(copyMapper::copyToDto);
-    }
+    // Commented out this endpoint because it is not used in the frontend
+//    @GetMapping("book/copies/{id}")
+//    public Stream<CopyDto> findAvailableByBook(@PathVariable long id){
+//        Optional<Book> optionalBook = bookRepository.findById(id);
+//
+//        if (optionalBook.isEmpty()){
+//            // TODO: implement some other error message here
+//            return null;
+//        }
+//
+//        return copyRepository.findByAvailableTrueAndBook(optionalBook.get()).stream().map(copyMapper::copyToDto);
+//    }
 
 
     /*
