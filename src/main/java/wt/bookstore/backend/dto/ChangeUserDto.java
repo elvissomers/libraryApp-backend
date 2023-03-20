@@ -8,8 +8,6 @@ public class ChangeUserDto {
 
     private String emailAddress;
 
-    private String password;
-
     private boolean admin;
 
     private boolean archived;
@@ -20,14 +18,6 @@ public class ChangeUserDto {
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public String getFirstName() {

@@ -96,7 +96,6 @@ public class UserController {
         String newFirstName = changeUserDto.getFirstName();
         String newLastName = changeUserDto.getLastName();
         String newEmailAddress = changeUserDto.getEmailAddress();
-        String newPassword = changeUserDto.getPassword();
         boolean newAdmin = changeUserDto.isAdmin();
         boolean newArchived = changeUserDto.isArchived();
 
@@ -105,7 +104,6 @@ public class UserController {
         optionalUser.get().setFirstName(newFirstName);
         optionalUser.get().setLastName(newLastName);
         optionalUser.get().setEmailAddress(newEmailAddress);
-        optionalUser.get().setPassword(newPassword);
         optionalUser.get().setAdmin(newAdmin);
         optionalUser.get().setArchived(newArchived);
 
@@ -124,6 +122,14 @@ public class UserController {
 //        userRepository.save(optional.get());
 //    }
 
+    @PutMapping("user/password/{id}")
+    public void updatePassword(@PathVariable long id, @RequestBody String newPassword){
+        Optional<User> optionalUser = userRepository.findById(id);
+        optionalUser.get().setPassword(newPassword);
+
+        userRepository.save(optionalUser.get());
+    }
+    
     @DeleteMapping("user/{id}")
     public void delete(@PathVariable long id) {
         userRepository.deleteById(id);
