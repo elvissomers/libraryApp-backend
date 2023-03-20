@@ -132,10 +132,10 @@ public class BookController {
         Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).ascending());
         Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).descending());
         if (directionOfSort.equals("asc")) {
-            return bookRepository.findByTitleContainingOrAuthorContainingAndArchivedFalse(searchTerm, searchTerm, pageableAsc).stream().map(bookMapper::bookToDto);
+            return bookRepository.findByArchivedFalseAndTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableAsc).stream().map(bookMapper::bookToDto);
         }
         if (directionOfSort.equals("desc")) {
-            return bookRepository.findByTitleContainingOrAuthorContainingAndArchivedFalse(searchTerm, searchTerm, pageableDesc).stream().map(bookMapper::bookToDto);
+            return bookRepository.findByArchivedFalseAndTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableDesc).stream().map(bookMapper::bookToDto);
         }
         return null;
     }
