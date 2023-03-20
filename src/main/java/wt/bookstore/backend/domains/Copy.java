@@ -19,6 +19,9 @@ public class Copy {
     @Column(nullable = false)
     private int number;
 
+    @Column(nullable = true)
+    private boolean archived;
+
     @ManyToOne(optional = false)
     private Book book;
 
@@ -63,5 +66,13 @@ public class Copy {
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 }
