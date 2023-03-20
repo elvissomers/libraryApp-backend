@@ -198,7 +198,7 @@ public class UserController {
 
     @PostMapping("api/user/login")
     public LoginResponseDto Login(@RequestBody LoginRequestDto loginRequestDto){
-        Optional<User> userOptional = userRepository.findByEmailAddressAndPassword(
+        Optional<User> userOptional = userRepository.findByEmailAddressAndPasswordAndArchivedFalse(
                 loginRequestDto.getUsername(), loginRequestDto.getPassword()
         );
         if (userOptional.isPresent()) {
@@ -219,7 +219,7 @@ public class UserController {
     public boolean deleteUserToken(
             @RequestHeader("Authentication") String token
     ) {
-        Optional<User> optionalUser = userRepository.findByToken(token);
+        Optional<User> optionalUser = userRepository.findByTokenAndArchivedFalse(token);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
 
@@ -267,10 +267,10 @@ public class UserController {
         Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
         Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
         if (directionOfSort.equals("asc")) {
-            return userRepository.findByFirstNameOrLastName(searchTerm, searchTerm, pageableAsc).stream().map(userMapper::userToDto);
+            return userRepository.findByFirstNameOrLastNameAndArchivedFalse(searchTerm, searchTerm, pageableAsc).stream().map(userMapper::userToDto);
         }
         if (directionOfSort.equals("desc")) {
-            return userRepository.findByFirstNameOrLastName(searchTerm, searchTerm, pageableDesc).stream().map(userMapper::userToDto);
+            return userRepository.findByFirstNameOrLastNameAndArchivedFalse(searchTerm, searchTerm, pageableDesc).stream().map(userMapper::userToDto);
         }
         return null;
     }
