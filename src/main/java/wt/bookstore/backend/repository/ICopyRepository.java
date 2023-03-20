@@ -15,5 +15,5 @@ public interface ICopyRepository extends JpaRepository<Copy, Long>{
 
 	// Used to get the highest copy number, so we can assign a number to
 	// a new copy added to the database
-	List<Copy> findByBookOrderByNumberDescAndArchivedFalse(Book book);
+	List<Copy> findByBookAndArchivedFalseOrderByNumberDesc(Book book);
 }
