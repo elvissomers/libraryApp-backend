@@ -15,22 +15,4 @@ public class ArchiveController {
     @Autowired
     private IUserRepository userRepository;
     
-    @PutMapping("archive/user/{id}")
-    public boolean ArchiveDomain(@PathVariable long id){
-        Optional<User> optionalUser = userRepository.findById(id);
-
-        optionalUser.get().setFirstName("[Archived]");
-        optionalUser.get().setLastName("[Archived]");
-        optionalUser.get().setEmailAddress("[Archived]");
-        optionalUser.get().setAdmin(false);
-        optionalUser.get().setPassword("[Archived]");
-        optionalUser.get().setArchived(true);
-
-        if (userRepository.save(optionalUser.get()) != null){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
 }
