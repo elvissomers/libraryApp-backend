@@ -65,7 +65,7 @@ public class CopyController {
             return null;
         }
 
-        return copyRepository.findByAvailableTrueAndBook(optionalBook.get()).stream().map(copyMapper::copyToDto);
+        return copyRepository.findByAvailableTrueAndBookAndArchivedFalse(optionalBook.get()).stream().map(copyMapper::copyToDto);
     }
 
 
