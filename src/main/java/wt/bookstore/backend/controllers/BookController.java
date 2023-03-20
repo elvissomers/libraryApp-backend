@@ -94,6 +94,17 @@ public class BookController {
         bookRepository.save(optionalBook.get());
     }
 
+    @PutMapping("book/archive/{id}")
+    public boolean archive(@PathVariable long id) {
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        if (optionalBook.isEmpty())
+            return false;
+        optionalBook.get().setArchived(true);
+
+        bookRepository.save(optionalBook.get());
+        return true;
+    }
+
     /*
      * DELETE endpoints from here
      */
@@ -108,10 +119,10 @@ public class BookController {
         Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).ascending());
         Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).descending());
         if (directionOfSort.equals("asc")) {
-            return bookRepository.findAll(pageableAsc).stream().map(bookMapper::bookToDto);
+            return bookRepository.findByArchivedFalse(pageableAsc).stream().map(bookMapper::bookToDto);
         }
         if (directionOfSort.equals("desc")) {
-            return bookRepository.findAll(pageableDesc).stream().map(bookMapper::bookToDto);
+            return bookRepository.findByArchivedFalse(pageableDesc).stream().map(bookMapper::bookToDto);
             }
         return null;
         }
@@ -121,10 +132,10 @@ public class BookController {
         Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).ascending());
         Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).descending());
         if (directionOfSort.equals("asc")) {
-            return bookRepository.findByTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableAsc).stream().map(bookMapper::bookToDto);
+            return bookRepository.findByArchivedFalseAndTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableAsc).stream().map(bookMapper::bookToDto);
         }
         if (directionOfSort.equals("desc")) {
-            return bookRepository.findByTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableDesc).stream().map(bookMapper::bookToDto);
+            return bookRepository.findByArchivedFalseAndTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableDesc).stream().map(bookMapper::bookToDto);
         }
         return null;
     }

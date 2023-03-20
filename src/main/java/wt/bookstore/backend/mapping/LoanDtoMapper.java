@@ -33,7 +33,7 @@ public class LoanDtoMapper {
          */
         Optional<User> userOptional = userRepository.findById(saveLoanDto.getUserId());
         Optional<Book> bookOptional = bookRepository.findById(saveLoanDto.getBookId());
-        Optional<Copy> copyOptional = copyRepository.findByBookAndNumber(bookOptional.get(),
+        Optional<Copy> copyOptional = copyRepository.findByBookAndNumberAndArchivedFalse(bookOptional.get(),
                 saveLoanDto.getCopyNumber()
         );
 

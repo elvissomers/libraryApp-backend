@@ -16,6 +16,7 @@ public class Loan {
 
 	@Column(nullable = false)
 	private LocalDate startDate;
+
 	private LocalDate endDate;
 	
 	@ManyToOne(optional = false)

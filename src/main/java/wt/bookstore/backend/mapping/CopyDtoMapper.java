@@ -39,7 +39,7 @@ public class CopyDtoMapper {
         }
 
 
-        List<Copy> bookCopyList = copyRepository.findByBookOrderByNumberDesc(optionalBook.get());
+        List<Copy> bookCopyList = copyRepository.findByBookAndArchivedFalseOrderByNumberDesc(optionalBook.get());
 
         int copyAmount = saveCopyDto.getAmount();
         int currentNumber = 0;
