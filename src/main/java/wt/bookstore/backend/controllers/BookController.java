@@ -94,6 +94,17 @@ public class BookController {
         bookRepository.save(optionalBook.get());
     }
 
+    @PutMapping("book/archive/{id}")
+    public boolean archive(@PathVariable long id) {
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        if (optionalBook.isEmpty())
+            return false;
+        optionalBook.get().setArchived(true);
+
+        bookRepository.save(optionalBook.get());
+        return true;
+    }
+
     /*
      * DELETE endpoints from here
      */
