@@ -267,10 +267,10 @@ public class UserController {
         Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
         Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
         if (directionOfSort.equals("asc")) {
-            return userRepository.findByFirstNameOrLastNameAndArchivedFalse(searchTerm, searchTerm, pageableAsc).stream().map(userMapper::userToDto);
+            return userRepository.findByArchivedFalseAndFirstNameOrLastName(searchTerm, searchTerm, pageableAsc).stream().map(userMapper::userToDto);
         }
         if (directionOfSort.equals("desc")) {
-            return userRepository.findByFirstNameOrLastNameAndArchivedFalse(searchTerm, searchTerm, pageableDesc).stream().map(userMapper::userToDto);
+            return userRepository.findByArchivedFalseAndFirstNameOrLastName(searchTerm, searchTerm, pageableDesc).stream().map(userMapper::userToDto);
         }
         return null;
     }

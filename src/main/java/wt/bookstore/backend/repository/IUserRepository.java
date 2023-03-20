@@ -12,7 +12,7 @@ public interface IUserRepository extends JpaRepository<User, Long>{
 
     Optional<User> findByEmailAddressAndPasswordAndArchivedFalse(String emailAddress, String password);
 
-    List<User> findByFirstNameOrLastNameAndArchivedFalse(String firstName, String lastName, Pageable pageable);
+    List<User> findByArchivedFalseAndFirstNameOrLastName(String firstName, String lastName, Pageable pageable);
 
     Optional<User> findByTokenAndArchivedFalse(String token);
 
