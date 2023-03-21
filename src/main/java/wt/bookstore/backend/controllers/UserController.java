@@ -72,6 +72,11 @@ public class UserController {
         return Optional.of(userMapper.userToDto(userRepository.findById(id).get()));
     }
 
+    @GetMapping("user/getbytoken/{token}")
+    public Optional<UserDto> findByToken(@PathVariable String token) {
+        return Optional.of(userMapper.userToDto(userRepository.findByTokenAndArchivedFalse(token).get()));
+    }
+
 
     /*
      * POST endpoints from here
