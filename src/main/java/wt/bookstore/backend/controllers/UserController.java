@@ -72,8 +72,8 @@ public class UserController {
         return Optional.of(userMapper.userToDto(userRepository.findById(id).get()));
     }
 
-    @GetMapping("user/getbytoken/{token}")
-    public Optional<UserDto> findByToken(@PathVariable String token) {
+    @GetMapping("user/getbytoken")
+    public Optional<UserDto> findByToken(@RequestBody String token) {
         return Optional.of(userMapper.userToDto(userRepository.findByTokenAndArchivedFalse(token).get()));
     }
 
