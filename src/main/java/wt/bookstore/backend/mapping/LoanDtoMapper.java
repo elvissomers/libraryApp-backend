@@ -71,7 +71,7 @@ public class LoanDtoMapper {
         loanDto.setBookAuthor(loan.getCopy().getBook().getAuthor());
         loanDto.setBookIsbn(loan.getCopy().getBook().getIsbn());
         loanDto.setBookId(loan.getCopy().getBook().getId());
-//        loanDto.setId(loan.getId());
+        loanDto.setCopyNumber(loan.getCopy().getNumber());
         return loanDto;
     }
 

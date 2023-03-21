@@ -1,12 +1,15 @@
 package wt.bookstore.backend.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import wt.bookstore.backend.domains.Copy;
 import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.domains.User;
+import wt.bookstore.backend.domains.Book;
 
 public interface ILoanRepository extends JpaRepository<Loan, Long>{
 
@@ -17,7 +20,12 @@ public interface ILoanRepository extends JpaRepository<Loan, Long>{
     // Used to find all "open" loans (that are not yet returned) for a specific user
     List<Loan> findByUserAndEndDateNull(User user);
 
+    // Used to find all "open" loans (that are not yet returned) for a specific book
+    List<Loan> findByCopy_BookAndEndDateNull(Book book);
+
     // Used to find all "open" loans (that are not yet returned)
     List<Loan> findByEndDateNull();
+
+    Optional<Loan> findByCopyAndEndDateNull(Copy copy);
 
 }

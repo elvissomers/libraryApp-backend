@@ -56,7 +56,7 @@ public class CopyController {
         return Optional.of(copyMapper.copyToDto(copyRepository.findById(id).get()));
     }
 
-    @GetMapping("book/copies/{id}")
+    @GetMapping("book/copies/available/{id}")
     public Stream<CopyDto> findAvailableByBook(@PathVariable long id){
         Optional<Book> optionalBook = bookRepository.findById(id);
 
