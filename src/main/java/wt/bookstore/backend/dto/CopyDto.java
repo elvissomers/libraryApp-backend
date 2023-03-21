@@ -21,6 +21,9 @@ public class CopyDto {
 
     private LocalDate heldSince;
 
+    private boolean archived;
+
+
     public long getId() {
         return id;
     }
@@ -68,4 +71,13 @@ public class CopyDto {
     public void setHeldSince(LocalDate heldSince) {
         this.heldSince = heldSince;
     }
+
+    public boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
 }

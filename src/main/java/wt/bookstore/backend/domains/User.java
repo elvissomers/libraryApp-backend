@@ -16,16 +16,23 @@ public class User {
 
 	@Column(nullable = false, length = 64)
 	private String firstName;
+
 	@Column(nullable = false, length = 64)
 	private String lastName;
+
 	@Column(nullable = false, length = 128)
 	private String emailAddress;
+
 	@Column(nullable = false, length = 128)
 	private String password;
 
 	private String token;
+
 	private boolean admin;
 
+	@Column(columnDefinition = "boolean default false")
+    private boolean archived;
+	
 	public String getPassword() {
 		return password;
 	}
@@ -102,5 +109,13 @@ public class User {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public boolean isArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
 	}
 }

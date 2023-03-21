@@ -115,7 +115,7 @@ public class LoanController {
 
 		Optional<User> user = userRepository.findById(saveReservationDto.getUserId());
 		Optional<Book> book = bookRepository.findById(saveReservationDto.getBookId());
-		List<Copy> copyList = copyRepository.findByAvailableTrueAndBook(book.get());
+		List<Copy> copyList = copyRepository.findByAvailableTrueAndBookAndArchivedFalse(book.get());
 
 
 		if (user.isEmpty() || book.isEmpty()){
