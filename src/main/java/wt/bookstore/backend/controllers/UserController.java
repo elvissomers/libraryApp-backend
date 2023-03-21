@@ -162,7 +162,7 @@ public class UserController {
     }
 
     //TODO: implement the endpoints below in a proper way
-    @GetMapping("user/{id}/loans")
+    @GetMapping("user/loans/{id}")
     public Stream<LoanDto> findLoans(@PathVariable long id){
     	/**
     	 * Used to find all loans of a user
@@ -175,7 +175,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("user/{id}/loans/open")
+    @GetMapping("user/loans/open/{id}")
     public Stream<LoanDto> findOpenLoans(@PathVariable long id){
         /**
          * Used to find "open" (not yet returned) loans of a user
@@ -188,7 +188,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("user/{id}/reservations")
+    @GetMapping("user/reservations/{id}")
     public Stream<ReservationDto> findReservations(@PathVariable long id){
     	/**
     	 * Used to find all reservations of a user
