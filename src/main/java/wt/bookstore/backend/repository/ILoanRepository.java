@@ -20,6 +20,9 @@ public interface ILoanRepository extends JpaRepository<Loan, Long>{
     // Used to find all "open" loans (that are not yet returned) for a specific user
     List<Loan> findByUserAndEndDateNull(User user);
 
+    // Used to find the history of a user
+    List<Loan> findByUserAndEndDateNotNull(User user);
+
     // Used to find all "open" loans (that are not yet returned) for a specific book
     List<Loan> findByCopy_BookAndEndDateNull(Book book);
 
