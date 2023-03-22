@@ -5,20 +5,9 @@ public class LoginResponseDto {
     private String token;
     private boolean admin;
 
-    private long userId;
-
-    public LoginResponseDto(String token, boolean admin, long userId) {
+    public LoginResponseDto(String token, boolean admin) {
         this.token = token;
         this.admin = admin;
-        this.userId = userId;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
     }
 
     public String getToken() {

@@ -182,7 +182,7 @@ public class UserController {
             user.setToken(token);
             userRepository.save(user);
 
-            return new LoginResponseDto(token, user.isAdmin(), user.getId());
+            return new LoginResponseDto(token, user.isAdmin());
         }
 
         return null;
