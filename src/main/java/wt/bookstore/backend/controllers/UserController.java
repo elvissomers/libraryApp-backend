@@ -101,7 +101,6 @@ public class UserController {
         String newFirstName = changeUserDto.getFirstName();
         String newLastName = changeUserDto.getLastName();
         String newEmailAddress = changeUserDto.getEmailAddress();
-        String newPassword = changeUserDto.getPassword();
         boolean newAdmin = changeUserDto.isAdmin();
         boolean newArchived = changeUserDto.isArchived();
 
@@ -110,7 +109,6 @@ public class UserController {
         optionalUser.get().setFirstName(newFirstName);
         optionalUser.get().setLastName(newLastName);
         optionalUser.get().setEmailAddress(newEmailAddress);
-        optionalUser.get().setPassword(newPassword);
         optionalUser.get().setAdmin(newAdmin);
         optionalUser.get().setArchived(newArchived);
 
