@@ -10,10 +10,12 @@ import java.util.Optional;
 
 public interface IUserRepository extends JpaRepository<User, Long>{
 
-    Optional<User> findByEmailAddressAndPassword(String emailAddress, String password);
+    List<User> findByArchivedFalse(Pageable pageable);
 
-    List<User> findByFirstNameOrLastName(String firstName, String lastName, Pageable pageable);
+    Optional<User> findByEmailAddressAndPasswordAndArchivedFalse(String emailAddress, String password);
 
-    Optional<User> findByToken(String token);
+    List<User> findByArchivedFalseAndFirstNameOrLastName(String firstName, String lastName, Pageable pageable);
+
+    Optional<User> findByTokenAndArchivedFalse(String token);
 
 }

@@ -51,13 +51,15 @@ public class ReservationDtoMapper {
          */
         ReservationDto reservationDto = new ReservationDto();
 
-        reservationDto.setBookTitle(reservation.getBook().getTitle());
         reservationDto.setUserFirstName(reservation.getUser().getFirstName());
         reservationDto.setUserLastName(reservation.getUser().getLastName());
-        reservationDto.setDate(reservation.getDate());
         reservationDto.setId(reservation.getId());
+        reservationDto.setDate(reservation.getDate());
         reservationDto.setUserId(reservation.getUser().getId());
+        reservationDto.setBookTitle(reservation.getBook().getTitle());
         reservationDto.setBookId(reservation.getBook().getId());
+        reservationDto.setBookAuthor(reservation.getBook().getAuthor());
+        reservationDto.setBookIsbn(reservation.getBook().getIsbn());
 
         return reservationDto;
     }

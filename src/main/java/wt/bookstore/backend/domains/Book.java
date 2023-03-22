@@ -25,6 +25,9 @@ public class Book {
 	@Column(nullable = false, length = 100)
 	private String author;
 
+	@Column(columnDefinition = "boolean default false")
+	private boolean archived;
+
 	@ManyToMany()
 	@JoinTable(
 			name = "book_keywords",
@@ -38,10 +41,11 @@ public class Book {
 	@OneToMany(mappedBy = "book", orphanRemoval = true)
 	private List<Reservation> reservations = new ArrayList<>();
 
-	public Book(long isbn, String title, String author) {
+	public Book(long isbn, String title, String author, boolean archived) {
 		this.isbn = isbn;
 		this.title = title;
 		this.author = author;
+		this.archived = archived;
 	}
 
 	public Book() {
@@ -77,6 +81,14 @@ public class Book {
 
 	public void setAuthor(String author) {
 		this.author = author;
+	}
+
+	public boolean getArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
 	}
 
 	public List<Copy> getCopies() {

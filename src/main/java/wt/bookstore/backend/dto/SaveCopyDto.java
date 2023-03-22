@@ -10,6 +10,8 @@ public class SaveCopyDto {
 
     private int amount;
 
+    private boolean archived;
+
     public int getAmount() {
         return amount;
     }
@@ -24,5 +26,13 @@ public class SaveCopyDto {
 
     public void setBookId(long bookId) {
         this.bookId = bookId;
+    }
+
+    public boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(Boolean archived) {
+        this.archived = archived;
     }
 }

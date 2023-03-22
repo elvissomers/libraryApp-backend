@@ -98,6 +98,7 @@ public class UserController {
         String newEmailAddress = changeUserDto.getEmailAddress();
         String newPassword = changeUserDto.getPassword();
         boolean newAdmin = changeUserDto.isAdmin();
+        boolean newArchived = changeUserDto.isArchived();
 
         // TODO - haal if statements ook weg uit andere put endpoints
         // TODO - maakt dit korter door bovenstaande regels in onderstaande te plaatsen
@@ -106,8 +107,28 @@ public class UserController {
         optionalUser.get().setEmailAddress(newEmailAddress);
         optionalUser.get().setPassword(newPassword);
         optionalUser.get().setAdmin(newAdmin);
+        optionalUser.get().setArchived(newArchived);
 
         userRepository.save(optionalUser.get());
+    }
+
+    @PutMapping("/user/archive/{id}")
+    public boolean ArchiveDomain(@PathVariable long id){
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        optionalUser.get().setFirstName("[Archived]");
+        optionalUser.get().setLastName("[Archived]");
+        optionalUser.get().setEmailAddress("[Archived]");
+        optionalUser.get().setAdmin(false);
+        optionalUser.get().setPassword("[Archived]");
+        optionalUser.get().setArchived(true);
+
+        if (userRepository.save(optionalUser.get()) != null){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
     
     /*
@@ -122,6 +143,14 @@ public class UserController {
 //        userRepository.save(optional.get());
 //    }
 
+    @PutMapping("user/password/{id}")
+    public void updatePassword(@PathVariable long id, @RequestBody String newPassword){
+        Optional<User> optionalUser = userRepository.findById(id);
+        optionalUser.get().setPassword(newPassword);
+
+        userRepository.save(optionalUser.get());
+    }
+    
     @DeleteMapping("user/{id}")
     public void delete(@PathVariable long id) {
         userRepository.deleteById(id);
@@ -169,7 +198,7 @@ public class UserController {
 
     @PostMapping("api/user/login")
     public LoginResponseDto Login(@RequestBody LoginRequestDto loginRequestDto){
-        Optional<User> userOptional = userRepository.findByEmailAddressAndPassword(
+        Optional<User> userOptional = userRepository.findByEmailAddressAndPasswordAndArchivedFalse(
                 loginRequestDto.getUsername(), loginRequestDto.getPassword()
         );
         if (userOptional.isPresent()) {
@@ -184,6 +213,22 @@ public class UserController {
         }
 
         return null;
+    }
+
+    @PutMapping("user/logout")
+    public boolean deleteUserToken(
+            @RequestHeader("Authentication") String token
+    ) {
+        Optional<User> optionalUser = userRepository.findByTokenAndArchivedFalse(token);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+
+            user.setToken(null);
+            userRepository.save(user);
+
+            return true;
+        }
+        return false;
     }
 
     public String generateRandomString(int targetStringLength) {
@@ -209,10 +254,10 @@ public class UserController {
         Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
         Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
         if (directionOfSort.equals("asc")) {
-            return userRepository.findAll(pageableAsc).stream().map(userMapper::userToDto);
+            return userRepository.findByArchivedFalse(pageableAsc).stream().map(userMapper::userToDto);
         }
         if (directionOfSort.equals("desc")) {
-            return userRepository.findAll(pageableDesc).stream().map(userMapper::userToDto);
+            return userRepository.findByArchivedFalse(pageableDesc).stream().map(userMapper::userToDto);
         }
         return null;
     }
@@ -222,10 +267,10 @@ public class UserController {
         Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
         Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
         if (directionOfSort.equals("asc")) {
-            return userRepository.findByFirstNameOrLastName(searchTerm, searchTerm, pageableAsc).stream().map(userMapper::userToDto);
+            return userRepository.findByArchivedFalseAndFirstNameOrLastName(searchTerm, searchTerm, pageableAsc).stream().map(userMapper::userToDto);
         }
         if (directionOfSort.equals("desc")) {
-            return userRepository.findByFirstNameOrLastName(searchTerm, searchTerm, pageableDesc).stream().map(userMapper::userToDto);
+            return userRepository.findByArchivedFalseAndFirstNameOrLastName(searchTerm, searchTerm, pageableDesc).stream().map(userMapper::userToDto);
         }
         return null;
     }
