@@ -6,8 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import wt.bookstore.backend.domains.Loan;
-import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.*;
 import wt.bookstore.backend.mapping.LoanDtoMapper;
@@ -17,7 +15,6 @@ import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
 import wt.bookstore.backend.repository.IUserRepository;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -72,6 +69,11 @@ public class UserController {
         return Optional.of(userMapper.userToDto(userRepository.findById(id).get()));
     }
 
+    @GetMapping("user/getbytoken/{token}")
+    public Optional<UserDto> findByToken(@PathVariable String token) {
+        return Optional.of(userMapper.userToDto(userRepository.findByTokenAndArchivedFalse(token).get()));
+    }
+
 
     /*
      * POST endpoints from here
@@ -93,21 +95,28 @@ public class UserController {
     @PutMapping("user/{id}")
     public void update(@PathVariable long id, @RequestBody ChangeUserDto changeUserDto){
         Optional<User> optionalUser = userRepository.findById(id);
-        String newFirstName = changeUserDto.getFirstName();
-        String newLastName = changeUserDto.getLastName();
-        String newEmailAddress = changeUserDto.getEmailAddress();
-        String newPassword = changeUserDto.getPassword();
-        boolean newAdmin = changeUserDto.isAdmin();
-        boolean newArchived = changeUserDto.isArchived();
 
         // TODO - haal if statements ook weg uit andere put endpoints
-        // TODO - maakt dit korter door bovenstaande regels in onderstaande te plaatsen
-        optionalUser.get().setFirstName(newFirstName);
-        optionalUser.get().setLastName(newLastName);
-        optionalUser.get().setEmailAddress(newEmailAddress);
-        optionalUser.get().setPassword(newPassword);
-        optionalUser.get().setAdmin(newAdmin);
-        optionalUser.get().setArchived(newArchived);
+        optionalUser.get().setFirstName(changeUserDto.getFirstName());
+        optionalUser.get().setLastName(changeUserDto.getLastName());
+        optionalUser.get().setEmailAddress(changeUserDto.getEmailAddress());
+        optionalUser.get().setAdmin(changeUserDto.isAdmin());
+        optionalUser.get().setArchived(changeUserDto.isArchived());
+
+        userRepository.save(optionalUser.get());
+    }
+
+    @PutMapping("user/self/{id}")
+    public void updateSelf(@PathVariable long id, @RequestBody ChangeUserSelfDto changeUserDto){
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        // TODO - haal if statements ook weg uit andere put endpoints
+        optionalUser.get().setFirstName(changeUserDto.getFirstName());
+        optionalUser.get().setLastName(changeUserDto.getLastName());
+        optionalUser.get().setEmailAddress(changeUserDto.getEmailAddress());
+        optionalUser.get().setAdmin(changeUserDto.isAdmin());
+        optionalUser.get().setArchived(changeUserDto.isArchived());
+        optionalUser.get().setPassword(changeUserDto.getPassword());
 
         userRepository.save(optionalUser.get());
     }
@@ -157,20 +166,20 @@ public class UserController {
     }
 
     //TODO: implement the endpoints below in a proper way
-    @GetMapping("user/{id}/loans")
+    @GetMapping("user/loans/{id}")
     public Stream<LoanDto> findLoans(@PathVariable long id){
     	/**
     	 * Used to find all loans of a user
     	 */
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
-            return loanRepository.findByUser(user.get()).stream().map(loanMapper::loanToDto);
+            return loanRepository.findByUserAndEndDateNotNull(user.get()).stream().map(loanMapper::loanToDto);
         } else {
             return null;
         }
     }
 
-    @GetMapping("user/{id}/loans/open")
+    @GetMapping("user/loans/open/{id}")
     public Stream<LoanDto> findOpenLoans(@PathVariable long id){
         /**
          * Used to find "open" (not yet returned) loans of a user
@@ -183,7 +192,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("user/{id}/reservations")
+    @GetMapping("user/reservations/{id}")
     public Stream<ReservationDto> findReservations(@PathVariable long id){
     	/**
     	 * Used to find all reservations of a user
