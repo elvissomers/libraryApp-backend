@@ -56,7 +56,7 @@ public class CopyController {
         return Optional.of(copyMapper.copyToDto(copyRepository.findById(id).get()));
     }
 
-    @GetMapping("book/copies/available/{id}")
+    @GetMapping("book/copies/{id}")
     public Stream<CopyDto> findAvailableByBook(@PathVariable long id){
         Optional<Book> optionalBook = bookRepository.findById(id);
 
@@ -65,7 +65,7 @@ public class CopyController {
             return null;
         }
 
-        return copyRepository.findByAvailableTrueAndBookAndArchivedFalse(optionalBook.get()).stream().map(copyMapper::copyToDto);
+        return copyRepository.findByAvailableTrueAndBook(optionalBook.get()).stream().map(copyMapper::copyToDto);
     }
 
 
@@ -94,15 +94,6 @@ public class CopyController {
     /*
      * PUT endpoints from here
      */
-
-    @PutMapping("copy/archive/{id}")
-    public void archive(@PathVariable long id){
-
-        Optional<Copy> optionalCopy = copyRepository.findById(id);
-        optionalCopy.get().setArchived(true);
-
-        copyRepository.save(optionalCopy.get());
-    }
 
     @PutMapping("copy/{id}")
     public void update(@PathVariable long id, @RequestBody ChangeCopyDto changeCopyDto){

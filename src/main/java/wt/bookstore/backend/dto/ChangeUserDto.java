@@ -8,6 +8,7 @@ public class ChangeUserDto {
 
     private String emailAddress;
 
+<<<<<<< Updated upstream
     private boolean admin;
 
     private String password;
@@ -22,12 +23,28 @@ public class ChangeUserDto {
         this.password = password;
     }
     
+=======
+    private String password;
+
+    private boolean admin;
+
+    private boolean archived;
+
+>>>>>>> Stashed changes
     public boolean isAdmin() {
         return admin;
     }
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getFirstName() {

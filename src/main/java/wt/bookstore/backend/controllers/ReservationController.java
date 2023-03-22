@@ -83,7 +83,7 @@ public class ReservationController {
     		@RequestHeader("Authentication") String token
     ) {
     	// User moeten opvragen
-    	Optional<User> userOptional = this.userRepository.findByTokenAndArchivedFalse(token);
+    	Optional<User> userOptional = this.userRepository.findByToken(token);
     	if (userOptional.isEmpty())
     		return false;
 
