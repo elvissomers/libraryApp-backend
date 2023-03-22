@@ -7,12 +7,15 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
+import wt.bookstore.backend.domains.Book;
 
 public interface IReservationRepository extends JpaRepository<Reservation, Long>{
 
     List<Reservation> findByUser_FirstNameOrUser_LastName(String firstName, String lastName, Pageable pageable);
 
     List<Reservation> findByUser(User user);
+
+    List<Reservation> findByBook(Book book);
 
     List<Reservation> findByUser_FirstNameOrUser_LastNameOrBook_TitleContaining(String firstName, String lastName, String bookTitle, Pageable pageable);
 
