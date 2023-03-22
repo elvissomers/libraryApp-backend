@@ -6,8 +6,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
-import wt.bookstore.backend.domains.Loan;
-import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.*;
 import wt.bookstore.backend.mapping.LoanDtoMapper;
@@ -17,7 +15,6 @@ import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
 import wt.bookstore.backend.repository.IUserRepository;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Random;
 import java.util.stream.Stream;
@@ -98,19 +95,28 @@ public class UserController {
     @PutMapping("user/{id}")
     public void update(@PathVariable long id, @RequestBody ChangeUserDto changeUserDto){
         Optional<User> optionalUser = userRepository.findById(id);
-        String newFirstName = changeUserDto.getFirstName();
-        String newLastName = changeUserDto.getLastName();
-        String newEmailAddress = changeUserDto.getEmailAddress();
-        boolean newAdmin = changeUserDto.isAdmin();
-        boolean newArchived = changeUserDto.isArchived();
 
         // TODO - haal if statements ook weg uit andere put endpoints
-        // TODO - maakt dit korter door bovenstaande regels in onderstaande te plaatsen
-        optionalUser.get().setFirstName(newFirstName);
-        optionalUser.get().setLastName(newLastName);
-        optionalUser.get().setEmailAddress(newEmailAddress);
-        optionalUser.get().setAdmin(newAdmin);
-        optionalUser.get().setArchived(newArchived);
+        optionalUser.get().setFirstName(changeUserDto.getFirstName());
+        optionalUser.get().setLastName(changeUserDto.getLastName());
+        optionalUser.get().setEmailAddress(changeUserDto.getEmailAddress());
+        optionalUser.get().setAdmin(changeUserDto.isAdmin());
+        optionalUser.get().setArchived(changeUserDto.isArchived());
+
+        userRepository.save(optionalUser.get());
+    }
+
+    @PutMapping("user/self/{id}")
+    public void updateSelf(@PathVariable long id, @RequestBody ChangeUserSelfDto changeUserDto){
+        Optional<User> optionalUser = userRepository.findById(id);
+
+        // TODO - haal if statements ook weg uit andere put endpoints
+        optionalUser.get().setFirstName(changeUserDto.getFirstName());
+        optionalUser.get().setLastName(changeUserDto.getLastName());
+        optionalUser.get().setEmailAddress(changeUserDto.getEmailAddress());
+        optionalUser.get().setAdmin(changeUserDto.isAdmin());
+        optionalUser.get().setArchived(changeUserDto.isArchived());
+        optionalUser.get().setPassword(changeUserDto.getPassword());
 
         userRepository.save(optionalUser.get());
     }
