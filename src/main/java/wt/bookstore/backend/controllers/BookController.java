@@ -129,28 +129,40 @@ public class BookController {
     }
 
 
-    @RequestMapping(value = "book/pageable/search/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<BookDto> sortNormalBooksPageable(@PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+    @RequestMapping(value = "book/pageable/search/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}/{archived}", method = RequestMethod.GET)
+    public Stream<BookDto> sortNormalBooksPageable(@PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage, @PathVariable boolean archived) {
         Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).ascending());
         Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).descending());
-        if (directionOfSort.equals("asc")) {
+        if (directionOfSort.equals("asc") && !archived) {
             return bookRepository.findByArchivedFalse(pageableAsc).stream().map(bookMapper::bookToDto);
         }
-        if (directionOfSort.equals("desc")) {
-            return bookRepository.findByArchivedFalse(pageableDesc).stream().map(bookMapper::bookToDto);
-            }
-        return null;
+        if (directionOfSort.equals("asc")) {
+            return bookRepository.findAll(pageableAsc).stream().map(bookMapper::bookToDto);
         }
+        if (directionOfSort.equals("desc") && !archived) {
+            return bookRepository.findByArchivedFalse(pageableDesc).stream().map(bookMapper::bookToDto);
+        }
+        if (directionOfSort.equals("desc")) {
+            return bookRepository.findAll(pageableDesc).stream().map(bookMapper::bookToDto);
+        }
+        return null;
+    }
 
-    @RequestMapping(value = "book/pageable/search/{searchTerm}/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<BookDto> sortSearchBooksPageable(@PathVariable String searchTerm, @PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
+    @RequestMapping(value = "book/pageable/search/{searchTerm}/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}/{archived}", method = RequestMethod.GET)
+    public Stream<BookDto> sortSearchBooksPageable(@PathVariable String searchTerm, @PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage, @PathVariable boolean archived) {
         Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).ascending());
         Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).descending());
-        if (directionOfSort.equals("asc")) {
+        if (directionOfSort.equals("asc") && !archived) {
             return bookRepository.findByArchivedFalseAndTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableAsc).stream().map(bookMapper::bookToDto);
         }
-        if (directionOfSort.equals("desc")) {
+        if (directionOfSort.equals("asc")) {
+            return bookRepository.findByTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableAsc).stream().map(bookMapper::bookToDto);
+        }
+        if (directionOfSort.equals("desc") && !archived) {
             return bookRepository.findByArchivedFalseAndTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableDesc).stream().map(bookMapper::bookToDto);
+        }
+        if (directionOfSort.equals("desc")) {
+            return bookRepository.findByTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableAsc).stream().map(bookMapper::bookToDto);
         }
         return null;
     }
