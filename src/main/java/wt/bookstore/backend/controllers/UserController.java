@@ -169,7 +169,7 @@ public class UserController {
     	 */
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
-            return loanRepository.findByUser(user.get()).stream().map(loanMapper::loanToDto);
+            return loanRepository.findByUserAndEndDateNotNull(user.get()).stream().map(loanMapper::loanToDto);
         } else {
             return null;
         }
