@@ -114,7 +114,7 @@ public class BookController {
         Optional<Book> optionalBook = bookRepository.findById(id);
         if (optionalBook.isEmpty())
             return false;
-        optionalBook.get().setArchived(true);
+        optionalBook.get().setArchived(!optionalBook.get().getArchived());
 
         bookRepository.save(optionalBook.get());
         return true;
@@ -176,9 +176,21 @@ public class BookController {
         if (optionalBook.isEmpty()){
             return null;
         }
+        return copyRepository.findByBookAndArchivedFalse(optionalBook.get()).stream().map(copyMapper::copyToDto);
+    }
 
+    @GetMapping("book/copies/archived/{id}")
+    public Stream<CopyDto> findCopiesArchived(@PathVariable long id){
+        /**
+         * Used to find all copies of a specific book
+         */
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        if (optionalBook.isEmpty()){
+            return null;
+        }
         return copyRepository.findByBook(optionalBook.get()).stream().map(copyMapper::copyToDto);
     }
+
 
     @GetMapping("book/loans/{id}")
     public Stream<LoanDto> findLoans(@PathVariable long id){

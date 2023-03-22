@@ -89,6 +89,7 @@ public class CopyDtoMapper {
         if (optionalLoan.isPresent()){
             copyDto.setHeldByUserFirstName(optionalLoan.get().getUser().getFirstName());
             copyDto.setHeldSince(optionalLoan.get().getStartDate());
+            copyDto.setLoanId(optionalLoan.get().getId());
         }
 
         return copyDto;

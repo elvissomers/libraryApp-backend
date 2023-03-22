@@ -99,7 +99,7 @@ public class CopyController {
     public void archive(@PathVariable long id){
 
         Optional<Copy> optionalCopy = copyRepository.findById(id);
-        optionalCopy.get().setArchived(true);
+        optionalCopy.get().setArchived(!optionalCopy.get().getArchived());
 
         copyRepository.save(optionalCopy.get());
     }

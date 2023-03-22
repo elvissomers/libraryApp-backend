@@ -23,6 +23,8 @@ public class CopyDto {
 
     private boolean archived;
 
+    private long loanId;
+
 
     public long getId() {
         return id;
@@ -72,12 +74,19 @@ public class CopyDto {
         this.heldSince = heldSince;
     }
 
-    public boolean getArchived() {
-        return archived;
-    }
-
     public void setArchived(boolean archived) {
         this.archived = archived;
     }
 
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public long getLoanId() {
+        return loanId;
+    }
+
+    public void setLoanId(long loanId) {
+        this.loanId = loanId;
+    }
 }
