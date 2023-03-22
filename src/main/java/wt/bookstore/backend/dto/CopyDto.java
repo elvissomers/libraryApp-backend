@@ -78,7 +78,7 @@ public class CopyDto {
         this.archived = archived;
     }
 
-    public boolean isArchived() {
+    public boolean getArchived() {
         return archived;
     }
 
