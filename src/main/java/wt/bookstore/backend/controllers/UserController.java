@@ -14,6 +14,7 @@ import wt.bookstore.backend.mapping.UserDtoMapper;
 import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
 import wt.bookstore.backend.repository.IUserRepository;
+import wt.bookstore.backend.service.Encryptor;
 
 import java.util.Optional;
 import java.util.Random;
@@ -116,7 +117,8 @@ public class UserController {
         optionalUser.get().setEmailAddress(changeUserDto.getEmailAddress());
         optionalUser.get().setAdmin(changeUserDto.isAdmin());
         optionalUser.get().setArchived(changeUserDto.isArchived());
-        optionalUser.get().setPassword(changeUserDto.getPassword());
+        String encryptedPassword = Encryptor.encryptPassword(changeUserDto.getPassword());
+        optionalUser.get().setPassword(encryptedPassword);
 
         userRepository.save(optionalUser.get());
     }
@@ -155,7 +157,9 @@ public class UserController {
     @PutMapping("user/password/{id}")
     public void updatePassword(@PathVariable long id, @RequestBody String newPassword){
         Optional<User> optionalUser = userRepository.findById(id);
-        optionalUser.get().setPassword(newPassword);
+
+        String encryptedPassword = Encryptor.encryptPassword(newPassword);
+        optionalUser.get().setPassword(encryptedPassword);
 
         userRepository.save(optionalUser.get());
     }
@@ -207,11 +211,14 @@ public class UserController {
 
     @PostMapping("api/user/login")
     public LoginResponseDto Login(@RequestBody LoginRequestDto loginRequestDto){
-        Optional<User> userOptional = userRepository.findByEmailAddressAndPasswordAndArchivedFalse(
-                loginRequestDto.getUsername(), loginRequestDto.getPassword()
+        Optional<User> userOptional = userRepository.findByEmailAddressAndArchivedFalse(
+                loginRequestDto.getUsername()
         );
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
+        User user = userOptional.get();
+        Boolean correctPassword = Encryptor.verifyPassword(loginRequestDto.getPassword(), user.getPassword());
+
+        if (userOptional.isPresent() && correctPassword) {
+
             String token = generateRandomString(60);
 
             // Save token to user
