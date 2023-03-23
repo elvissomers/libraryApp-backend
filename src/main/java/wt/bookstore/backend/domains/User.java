@@ -32,7 +32,7 @@ public class User {
 
 	private boolean admin;
 
-	@Column(columnDefinition = "boolean default false")
+	@Column
     private boolean archived;
 	
 	public String getPassword() {

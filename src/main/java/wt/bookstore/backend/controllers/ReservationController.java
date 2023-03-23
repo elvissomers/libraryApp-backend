@@ -1,9 +1,11 @@
 package wt.bookstore.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Sort.Direction;
 import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.*;
@@ -166,16 +168,13 @@ public class ReservationController {
 
     @RequestMapping(value = "reservation/pageable/search/{searchTerm}/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
     public Stream<ReservationAvailabilityDto> sortSearchBooksPageable(@PathVariable String searchTerm, @PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
-        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
-        if (directionOfSort.equals("asc")) {
-            return reservationRepository.findByUser_FirstNameOrUser_LastNameOrBook_TitleContaining(searchTerm, searchTerm, searchTerm, pageableAsc).stream().map(reservationMapper::reservationToAvailabilityDto);
-        }
-        if (directionOfSort.equals("desc")) {
-            return reservationRepository.findByUser_FirstNameOrUser_LastNameOrBook_TitleContaining(searchTerm, searchTerm, searchTerm, pageableDesc).stream().map(reservationMapper::reservationToAvailabilityDto);
-        }
-        return null;
-    }
+        Pageable pageable = PageRequest.of(pageNumber, numberPerPage, Sort.by(Direction.fromString(directionOfSort), propertyToSortBy));
 
+        Page<Reservation> page = reservationRepository.search(searchTerm, searchTerm, searchTerm, pageable);
+        if (!page.hasContent())
+        	return null;
+        
+        return page.getContent().stream().map(reservationMapper::reservationToAvailabilityDto);
+    }
 
 }
