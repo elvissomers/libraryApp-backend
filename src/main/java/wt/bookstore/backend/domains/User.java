@@ -23,6 +23,7 @@ public class User {
 	private String lastName;
 
 	@EmailConstraint
+	@Column(unique = true)
 	private String emailAddress;
 
 	@Column(nullable = false, length = 128)
