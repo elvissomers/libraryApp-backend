@@ -88,7 +88,18 @@ public class LoanController {
 	 *  -- Should be used in combination with findByBook from CopyController
 	 */
 	@PostMapping("loan/create")
-	public boolean createNew(@RequestBody SaveLoanDto saveLoanDto) {
+	public boolean createNew(@RequestBody SaveLoanDto saveLoanDto,
+							 @RequestHeader("Authentication") String token
+	) {
+		Optional<User> userOptional = this.userRepository.findByTokenAndArchivedFalse(token);
+		if (userOptional.isEmpty()) {
+			return false;
+		}
+
+		User loggedInUser = userOptional.get();
+		if (!loggedInUser.isAdmin()){
+			return false;
+		}
 		Loan loan = loanMapper.dtoToLoan(saveLoanDto);
 		if (loan != null) {
 			Copy copy = loan.getCopy();
