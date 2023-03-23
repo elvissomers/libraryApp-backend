@@ -126,19 +126,7 @@ public class BookController {
     }
 
     @PutMapping("book/archive/{id}")
-    public boolean archive(@PathVariable long id,
-                           @RequestBody SaveReservationDto saveReservationDto,
-                           @RequestHeader("Authentication") String token
-    ) {
-        Optional<User> userOptional = this.userRepository.findByTokenAndArchivedFalse(token);
-        if (userOptional.isEmpty()) {
-            return false;
-        }
-
-        User loggedInUser = userOptional.get();
-        if (!loggedInUser.isAdmin()){
-            return false;
-        }
+    public boolean archive(@PathVariable long id) {
         Optional<Book> optionalBook = bookRepository.findById(id);
         if (optionalBook.isEmpty())
             return false;
