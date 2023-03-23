@@ -113,7 +113,7 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public boolean isArchived() {
+	public boolean getArchived() {
 		return archived;
 	}
 
