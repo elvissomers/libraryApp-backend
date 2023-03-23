@@ -127,7 +127,6 @@ public class BookController {
 
     @PutMapping("book/archive/{id}")
     public boolean archive(@PathVariable long id,
-                           @RequestBody SaveReservationDto saveReservationDto,
                            @RequestHeader("Authentication") String token
     ) {
         Optional<User> userOptional = this.userRepository.findByTokenAndArchivedFalse(token);
