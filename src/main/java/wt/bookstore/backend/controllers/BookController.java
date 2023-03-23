@@ -7,15 +7,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Reservation;
+import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.*;
 import wt.bookstore.backend.mapping.BookDtoMapper;
 import wt.bookstore.backend.mapping.CopyDtoMapper;
 import wt.bookstore.backend.mapping.LoanDtoMapper;
 import wt.bookstore.backend.mapping.ReservationDtoMapper;
-import wt.bookstore.backend.repository.IBookRepository;
-import wt.bookstore.backend.repository.ICopyRepository;
-import wt.bookstore.backend.repository.ILoanRepository;
-import wt.bookstore.backend.repository.IReservationRepository;
+import wt.bookstore.backend.repository.*;
 
 
 import java.util.List;
@@ -32,6 +30,9 @@ public class BookController {
 
     @Autowired
     private IBookRepository bookRepository;
+
+    @Autowired
+    private IUserRepository userRepository;
     
     @Autowired
     private ICopyRepository copyRepository;
@@ -96,10 +97,24 @@ public class BookController {
     }
 
     @PutMapping("book/update/{id}")
-    public void update(@PathVariable long id, @RequestBody ChangeBookDto changeBookDto) {
+    public boolean update(@PathVariable long id, @RequestBody ChangeBookDto changeBookDto,
+                       @RequestBody SaveReservationDto saveReservationDto,
+                       @RequestHeader("Authentication") String token
+    ) {
+        Optional<User> userOptional = this.userRepository.findByTokenAndArchivedFalse(token);
+        if (userOptional.isEmpty()) {
+            return false;
+        }
+
+        User loggedInUser = userOptional.get();
+        if (!loggedInUser.isAdmin()){
+            return false;
+        }
+
         Optional<Book> optionalBook = bookRepository.findById(id);
-        if (optionalBook.isEmpty())
-            return;
+        if (optionalBook.isEmpty()) {
+            return false;
+        }
 
         optionalBook.get().setIsbn(changeBookDto.getIsbn());
         optionalBook.get().setTitle(changeBookDto.getTitle());
@@ -107,6 +122,7 @@ public class BookController {
         optionalBook.get().setArchived(changeBookDto.getArchived());
 
         bookRepository.save(optionalBook.get());
+        return true;
     }
 
     @PutMapping("book/archive/{id}")
