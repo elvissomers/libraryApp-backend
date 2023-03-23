@@ -1,6 +1,6 @@
 package wt.bookstore.backend.dto.searchdtos;
 
-public class SearchReservationParametersDto {
+public class SearchParametersDto {
 
     private String searchTerm;
 

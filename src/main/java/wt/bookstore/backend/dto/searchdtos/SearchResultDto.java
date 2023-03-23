@@ -1,8 +1,8 @@
-package wt.bookstore.backend.dto;
+package wt.bookstore.backend.dto.searchdtos;
 
 import java.util.List;
 
-public class SearchReservationResultDto<O extends Object> {
+public class SearchResultDto<O extends Object> {
 
 	private int page;
 
@@ -12,11 +12,11 @@ public class SearchReservationResultDto<O extends Object> {
 	
 	private List<O> content;
 	
-	public SearchReservationResultDto() {
+	public SearchResultDto() {
 		
 	}
 	
-	public SearchReservationResultDto(int page, int totalPages, int elementCount, List<O> content) {
+	public SearchResultDto(int page, int totalPages, int elementCount, List<O> content) {
 		super();
 		this.page = page;
 		this.totalPages = totalPages;

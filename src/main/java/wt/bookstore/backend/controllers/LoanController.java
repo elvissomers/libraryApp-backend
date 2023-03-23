@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.*;
 import wt.bookstore.backend.dto.*;
+import wt.bookstore.backend.dto.searchdtos.SearchParametersDto;
+import wt.bookstore.backend.dto.searchdtos.SearchResultDto;
 import wt.bookstore.backend.mapping.LoanDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
@@ -233,6 +236,17 @@ public class LoanController {
 			return loanRepository.findByEndDateNullAndUser_FirstNameOrEndDateNullAndUser_LastNameOrEndDateNullAndCopy_Book_TitleContaining(searchTerm, searchTerm, searchTerm, pageableDesc).stream().map(loanMapper::loanToDto);
 		}
 		return null;
+	}
+
+	@RequestMapping(value = "loan/searchEndPoint", method = RequestMethod.POST)
+	public SearchResultDto<LoanDto> getLoansPageable(@RequestBody SearchParametersDto parametersDto) {
+		Pageable pageable = PageRequest.of(parametersDto.getPageNumber(), parametersDto.getNumberPerPage(), Sort.by(Sort.Direction.fromString(parametersDto.getDirectionOfSort()), parametersDto.getPropertyToSortBy()));
+
+		Page<Loan> page = loanRepository.searchLoan(parametersDto.getSearchTerm(), pageable);
+		if (!page.hasContent())
+			return null;
+
+		return new SearchResultDto<>(parametersDto.getNumberPerPage(), page.getTotalPages(), page.getNumberOfElements(), page.getContent().stream().map(loanMapper::loanToDto).toList());
 	}
 
 }

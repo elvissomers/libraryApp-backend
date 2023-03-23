@@ -24,6 +24,8 @@ import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.*;
+import wt.bookstore.backend.dto.searchdtos.SearchParametersDto;
+import wt.bookstore.backend.dto.searchdtos.SearchResultDto;
 import wt.bookstore.backend.mapping.ReservationDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ILoanRepository;
@@ -161,35 +163,11 @@ public class ReservationController {
     }
 
 
-    @RequestMapping(value = "reservation/pageable/search/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<ReservationAvailabilityDto> sortNormalBooksPageable(@PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
-        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
-        if (directionOfSort.equals("asc")) {
-            return reservationRepository.findAll(pageableAsc).stream().map(reservationMapper::reservationToAvailabilityDto);
-        }
-        if (directionOfSort.equals("desc")) {
-            return reservationRepository.findAll(pageableDesc).stream().map(reservationMapper::reservationToAvailabilityDto);
-        }
-        return null;
-    }
-
-    @RequestMapping(value = "reservation/pageable/search/{searchTerm}/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public SearchResultDto<ReservationAvailabilityDto> sortSearchBooksPageable(@PathVariable String searchTerm, @PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageable = PageRequest.of(pageNumber, numberPerPage, Sort.by(Direction.fromString(directionOfSort), propertyToSortBy));
-
-        Page<Reservation> page = reservationRepository.search(searchTerm, pageable);
-        if (!page.hasContent())
-        	return null;
-        
-        return new SearchResultDto<>(pageNumber, page.getTotalPages(), page.getNumberOfElements(), page.getContent().stream().map(reservationMapper::reservationToAvailabilityDto).toList());
-    }
-
     @RequestMapping(value = "reservation/searchEndPoint", method = RequestMethod.POST)
     public SearchResultDto<ReservationAvailabilityDto> getReservationsPageable(@RequestBody SearchParametersDto parametersDto) {
         Pageable pageable = PageRequest.of(parametersDto.getPageNumber(), parametersDto.getNumberPerPage(), Sort.by(Direction.fromString(parametersDto.getDirectionOfSort()), parametersDto.getPropertyToSortBy()));
 
-        Page<Reservation> page = reservationRepository.search(parametersDto.getSearchTerm(), pageable);
+        Page<Reservation> page = reservationRepository.searchReservation(parametersDto.getSearchTerm(), pageable);
         if (!page.hasContent())
             return null;
 
