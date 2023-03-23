@@ -23,11 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import wt.bookstore.backend.domains.Book;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.domains.User;
-import wt.bookstore.backend.dto.ChangeReservationDto;
-import wt.bookstore.backend.dto.ReservationAvailabilityDto;
-import wt.bookstore.backend.dto.ReservationDto;
-import wt.bookstore.backend.dto.SaveReservationDto;
-import wt.bookstore.backend.dto.SearchResultDto;
+import wt.bookstore.backend.dto.*;
 import wt.bookstore.backend.mapping.ReservationDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ILoanRepository;
@@ -187,6 +183,17 @@ public class ReservationController {
         	return null;
         
         return new SearchResultDto<>(pageNumber, page.getTotalPages(), page.getNumberOfElements(), page.getContent().stream().map(reservationMapper::reservationToAvailabilityDto).toList());
+    }
+
+    @RequestMapping(value = "reservation/searchEndPoint", method = RequestMethod.POST)
+    public SearchResultDto<ReservationAvailabilityDto> getReservationsPageable(@RequestBody SearchParametersDto parametersDto) {
+        Pageable pageable = PageRequest.of(parametersDto.getPageNumber(), parametersDto.getNumberPerPage(), Sort.by(Direction.fromString(parametersDto.getDirectionOfSort()), parametersDto.getPropertyToSortBy()));
+
+        Page<Reservation> page = reservationRepository.search(parametersDto.getSearchTerm(), pageable);
+        if (!page.hasContent())
+            return null;
+
+        return new SearchResultDto<>(parametersDto.getNumberPerPage(), page.getTotalPages(), page.getNumberOfElements(), page.getContent().stream().map(reservationMapper::reservationToAvailabilityDto).toList());
     }
 
 }
