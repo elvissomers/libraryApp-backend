@@ -95,6 +95,15 @@ public class CopyController {
      * PUT endpoints from here
      */
 
+    @PutMapping("copy/archive/{id}")
+    public void archive(@PathVariable long id){
+
+        Optional<Copy> optionalCopy = copyRepository.findById(id);
+        optionalCopy.get().setArchived(!optionalCopy.get().getArchived());
+
+        copyRepository.save(optionalCopy.get());
+    }
+
     @PutMapping("copy/{id}")
     public void update(@PathVariable long id, @RequestBody ChangeCopyDto changeCopyDto){
 

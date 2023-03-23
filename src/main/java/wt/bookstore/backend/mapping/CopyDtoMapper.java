@@ -80,6 +80,13 @@ public class CopyDtoMapper {
         copyDto.setNumber(copy.getNumber());
         copyDto.setArchived(copy.getArchived());
 
+        Optional<Loan> optionalLoan = loanRepository.findByCopyAndEndDateNull(copy);
+        if (optionalLoan.isPresent()){
+            copyDto.setHeldByUserFirstName(optionalLoan.get().getUser().getFirstName());
+            copyDto.setHeldSince(optionalLoan.get().getStartDate());
+            copyDto.setLoanId(optionalLoan.get().getId());
+        }
+
         return copyDto;
     }
 }

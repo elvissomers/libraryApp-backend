@@ -30,7 +30,7 @@ public class User {
 
 	private boolean admin;
 
-	@Column(columnDefinition = "boolean default false")
+	@Column
     private boolean archived;
 	
 	public String getPassword() {
@@ -111,7 +111,7 @@ public class User {
 		this.lastName = lastName;
 	}
 
-	public boolean isArchived() {
+	public boolean getArchived() {
 		return archived;
 	}
 

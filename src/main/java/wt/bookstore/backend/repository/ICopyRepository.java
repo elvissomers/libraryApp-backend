@@ -10,6 +10,10 @@ import wt.bookstore.backend.domains.Copy;
 
 public interface ICopyRepository extends JpaRepository<Copy, Long>{
 
+	List<Copy> findByBook(Book book);
+
+	List<Copy> findByBookAndArchivedFalse(Book book);
+  
 	List<Copy> findByAvailableTrueAndBook(Book book);
 	Optional<Copy> findByBookAndNumber(Book book, int number);
 
