@@ -12,6 +12,10 @@ public class SearchParametersDto {
 
     private int numberPerPage;
 
+    private boolean open;
+
+    private boolean archived;
+
     public String getSearchTerm() {
         return searchTerm;
     }
@@ -50,5 +54,21 @@ public class SearchParametersDto {
 
     public void setNumberPerPage(int numberPerPage) {
         this.numberPerPage = numberPerPage;
+    }
+
+    public boolean isOpen() {
+        return open;
+    }
+
+    public void setOpen(boolean open) {
+        this.open = open;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 }

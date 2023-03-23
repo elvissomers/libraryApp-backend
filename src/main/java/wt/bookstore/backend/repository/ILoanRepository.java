@@ -35,7 +35,7 @@ public interface ILoanRepository extends JpaRepository<Loan, Long>{
 
     Optional<Loan> findByCopyAndEndDateNull(Copy copy);
 
-    @Query("SELECT l FROM Loan l JOIN l.copy c JOIN c.book b WHERE b.title = :searchTerm")
-    Page<Loan> searchLoan(@Param("searchTerm") String searchTerm, Pageable pageable);
+    @Query("SELECT l FROM Loan l JOIN l.copy c JOIN c.book b WHERE (CASE WHEN ?2 = true THEN l.endDate IS NULL ELSE true END) and (b.title LIKE %?1% or l.user.firstName LIKE %?1% or l.user.lastName LIKE %?1%)")
+    Page<Loan> searchLoan(String searchTerm, boolean open, Pageable pageable);
 
 }
