@@ -15,6 +15,11 @@ public class BookDto {
 
     private String author;
 
+    private String description;
+
+    private boolean archived;
+    
+
     public long getIsbn() {
         return isbn;
     }
@@ -45,5 +50,21 @@ public class BookDto {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(Boolean archived) {
+        this.archived = archived;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -1,17 +1,24 @@
 package wt.bookstore.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import wt.bookstore.backend.domains.Book;
-import wt.bookstore.backend.dto.BookDto;
-import wt.bookstore.backend.dto.ChangeBookDto;
-import wt.bookstore.backend.dto.SaveBookDto;
+import wt.bookstore.backend.domains.Loan;
+import wt.bookstore.backend.domains.Reservation;
+import wt.bookstore.backend.dto.*;
+import wt.bookstore.backend.dto.searchdtos.SearchParametersDto;
+import wt.bookstore.backend.dto.searchdtos.SearchResultDto;
 import wt.bookstore.backend.mapping.BookDtoMapper;
+import wt.bookstore.backend.mapping.CopyDtoMapper;
+import wt.bookstore.backend.mapping.LoanDtoMapper;
+import wt.bookstore.backend.mapping.ReservationDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
+import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
 
 
@@ -32,12 +39,24 @@ public class BookController {
     
     @Autowired
     private ICopyRepository copyRepository;
+
+    @Autowired
+    private ILoanRepository loanRepository;
     
     @Autowired
     private IReservationRepository reservationRepository;
 
     @Autowired
     private BookDtoMapper bookMapper;
+
+    @Autowired
+    private CopyDtoMapper copyMapper;
+
+    @Autowired
+    private LoanDtoMapper loanMapper;
+
+    @Autowired
+    private ReservationDtoMapper reservationMapper;
 
 
     /*
@@ -83,69 +102,89 @@ public class BookController {
     @PutMapping("book/update/{id}")
     public void update(@PathVariable long id, @RequestBody ChangeBookDto changeBookDto) {
         Optional<Book> optionalBook = bookRepository.findById(id);
-        if (optionalBook.isEmpty())
+        if (optionalBook.isEmpty()) {
             return;
+        }
 
         optionalBook.get().setIsbn(changeBookDto.getIsbn());
         optionalBook.get().setTitle(changeBookDto.getTitle());
         optionalBook.get().setAuthor(changeBookDto.getAuthor());
+        optionalBook.get().setArchived(changeBookDto.getArchived());
+        optionalBook.get().setDescription(changeBookDto.getDescription());
 
         bookRepository.save(optionalBook.get());
     }
 
-    /*
-     * DELETE endpoints from here
-     */
-    @DeleteMapping("book/delete/{id}")
-    public void delete(@PathVariable long id) {
-        bookRepository.deleteById(id);
+    @PutMapping("book/archive/{id}")
+    public boolean archive(@PathVariable long id) {
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        if (optionalBook.isEmpty())
+            return false;
+        optionalBook.get().setArchived(!optionalBook.get().getArchived());
+
+        bookRepository.save(optionalBook.get());
+        return true;
+    }
+
+    @RequestMapping(value = "book/searchEndPoint", method = RequestMethod.POST)
+    public SearchResultDto<BookDto> getBooksPageable(@RequestBody SearchParametersDto parametersDto) {
+        Pageable pageable = PageRequest.of(parametersDto.getPageNumber(), parametersDto.getNumberPerPage(), Sort.by(Sort.Direction.fromString(parametersDto.getDirectionOfSort()), parametersDto.getPropertyToSortBy()));
+
+        Page<Book> page = bookRepository.searchBook(parametersDto.getSearchTerm(), parametersDto.isArchived(), pageable);
+        if (!page.hasContent())
+            return null;
+
+        return new SearchResultDto<>(parametersDto.getNumberPerPage(), page.getTotalPages(), page.getNumberOfElements(), page.getContent().stream().map(bookMapper::bookToDto).toList());
+    }
+
+    @GetMapping("book/copies/{id}")
+    public Stream<CopyDto> findCopies(@PathVariable long id){
+    	/**
+    	 * Used to find all copies of a specific book
+    	 */
+    	Optional<Book> optionalBook = bookRepository.findById(id);
+        if (optionalBook.isEmpty()){
+            return null;
+        }
+        return copyRepository.findByBookAndArchivedFalse(optionalBook.get()).stream().map(copyMapper::copyToDto);
+    }
+
+    @GetMapping("book/copies/archived/{id}")
+    public Stream<CopyDto> findCopiesArchived(@PathVariable long id){
+        /**
+         * Used to find all copies of a specific book
+         */
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        if (optionalBook.isEmpty()){
+            return null;
+        }
+        return copyRepository.findByBook(optionalBook.get()).stream().map(copyMapper::copyToDto);
     }
 
 
-    @RequestMapping(value = "book/pageable/search/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<BookDto> sortNormalBooksPageable(@PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).ascending());
-        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).descending());
-        if (directionOfSort.equals("asc")) {
-            return bookRepository.findAll(pageableAsc).stream().map(bookMapper::bookToDto);
-        }
-        if (directionOfSort.equals("desc")) {
-            return bookRepository.findAll(pageableDesc).stream().map(bookMapper::bookToDto);
-            }
-        return null;
+    @GetMapping("book/loans/{id}")
+    public Stream<LoanDto> findLoans(@PathVariable long id){
+        /**
+         * Used to find all "open" loans on a specific book
+         */
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        if (optionalBook.isEmpty()){
+            return null;
         }
 
-    @RequestMapping(value = "book/pageable/search/{searchTerm}/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<BookDto> sortSearchBooksPageable(@PathVariable String searchTerm, @PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).ascending());
-        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).descending());
-        if (directionOfSort.equals("asc")) {
-            return bookRepository.findByTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableAsc).stream().map(bookMapper::bookToDto);
-        }
-        if (directionOfSort.equals("desc")) {
-            return bookRepository.findByTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableDesc).stream().map(bookMapper::bookToDto);
-        }
-        return null;
+        return loanRepository.findByCopy_BookAndEndDateNull(optionalBook.get()).stream().map(loanMapper::loanToDto);
     }
 
+    @GetMapping("book/reservations/{id}")
+    public Stream<ReservationAvailabilityDto> findReservations(@PathVariable long id){
+        /**
+         * Used to find all reservations on a specific book
+         */
+        Optional<Book> optionalBook = bookRepository.findById(id);
+        if (optionalBook.isEmpty()){
+            return null;
+        }
 
-
-
-    //TODO: implementeer deze met DTO's
-//    @RequestMapping(value = "book/{id}/copies", method = RequestMethod.GET)
-//    public List<Copy> findCopies(@PathVariable long id){
-//    	/**
-//    	 * Used to find all copies of a specific book
-//    	 */
-//    	return copyRepository.findByBookId(id);
-//    }
-//
-//    @RequestMapping(value = "book/{id}/reservations", method = RequestMethod.GET)
-//    public List<Reservation> findReservations(@PathVariable long id){
-//    	/**
-//    	 * Used to find all reservations of a specific book
-//    	 */
-//    	return reservationRepository.findByBookId(id);
-//    }
-//
+        return reservationRepository.findByBook(optionalBook.get()).stream().map(reservationMapper::reservationToAvailabilityDto);
+    }
 }

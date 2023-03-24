@@ -8,6 +8,8 @@ import jakarta.persistence.*;
  * The entity used for the reservations database
  */
 @Entity
+@Table(uniqueConstraints={
+        @UniqueConstraint(columnNames={"user_id", "book_id"})})
 public class Reservation {
 
 	@Id

@@ -72,18 +72,4 @@ public class KeywordController {
     }
 
 
-//    @RequestMapping(value = "keyword/{id}", method = RequestMethod.PUT)
-//    public void update(@PathVariable long id, @RequestBody Keyword keyword) {
-//        Optional<Keyword> optional = keywordRepository.findById(id);
-////        optional.get().setBookId(keyword.getBookId());
-////        optional.get().setKeywordId(keyword.getKeywordId());
-//        keywordRepository.save(optional.get());
-//    }
-
-    @DeleteMapping("keyword/{id}")
-    public void delete(@PathVariable long id) {
-    	keywordRepository.deleteById(id);
-    }
-
-
 }

@@ -17,6 +17,8 @@ public class UserDto {
 
     private boolean admin;
 
+    private boolean archived;
+
     public long getId() {
         return id;
     }
@@ -55,5 +57,13 @@ public class UserDto {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 }

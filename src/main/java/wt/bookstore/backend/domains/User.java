@@ -3,6 +3,8 @@ package wt.bookstore.backend.domains;
 import java.util.List;
 
 import jakarta.persistence.*;
+import wt.bookstore.backend.validators.EmailConstraint;
+import wt.bookstore.backend.validators.NameConstraint;
 
 /**
  * The entity used for the users database
@@ -14,33 +16,25 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-	@Column(nullable = false, length = 64)
+	@NameConstraint
 	private String firstName;
-	@Column(nullable = false, length = 64)
+
+	@NameConstraint
 	private String lastName;
-	@Column(nullable = false, length = 128)
+
+	@EmailConstraint
+	@Column(unique = true)
 	private String emailAddress;
+
 	@Column(nullable = false, length = 128)
 	private String password;
 
 	private String token;
+
 	private boolean admin;
 
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
+	@Column
+    private boolean archived;
 
 	@OneToMany(mappedBy = "user", orphanRemoval = true)
 	private List<Loan> loans;
@@ -102,5 +96,29 @@ public class User {
 
 	public void setLastName(String lastName) {
 		this.lastName = lastName;
+	}
+
+	public boolean getArchived() {
+		return archived;
+	}
+
+	public void setArchived(boolean archived) {
+		this.archived = archived;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

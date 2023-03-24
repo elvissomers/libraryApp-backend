@@ -19,7 +19,11 @@ public class Copy {
     @Column(nullable = false)
     private int number;
 
+    @Column(columnDefinition = "boolean default false")
+    private boolean archived;
+
     @ManyToOne(optional = false)
+    @JoinColumn(name = "book_id")
     private Book book;
 
     @OneToMany(mappedBy = "copy", orphanRemoval = true)
@@ -63,5 +67,13 @@ public class Copy {
 
     public void setNumber(int number) {
         this.number = number;
+    }
+
+    public boolean getArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
     }
 }

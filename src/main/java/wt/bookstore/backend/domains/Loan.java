@@ -16,12 +16,14 @@ public class Loan {
 
 	@Column(nullable = false)
 	private LocalDate startDate;
+
 	private LocalDate endDate;
 	
 	@ManyToOne(optional = false)
 	private User user;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "copy_id")
 	private Copy copy;
 
 
