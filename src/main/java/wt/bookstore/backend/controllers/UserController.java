@@ -12,6 +12,7 @@ import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.*;
 import wt.bookstore.backend.dto.searchdtos.SearchParametersDto;
 import wt.bookstore.backend.dto.searchdtos.SearchResultDto;
+import wt.bookstore.backend.email.EmailService;
 import wt.bookstore.backend.mapping.LoanDtoMapper;
 import wt.bookstore.backend.mapping.ReservationDtoMapper;
 import wt.bookstore.backend.mapping.UserDtoMapper;
@@ -48,6 +49,9 @@ public class UserController {
 
     @Autowired
     private ReservationDtoMapper reservationMapper;
+
+    @Autowired
+    private EmailService emailService;
 
 
     /*
@@ -90,6 +94,13 @@ public class UserController {
     @PostMapping("user/create")
     public void create(@RequestBody SaveUserDto saveUserDto) {
         User user = userMapper.dtoToUser(saveUserDto);
+        String subject = "Welkom bij de bibliotheek!";
+        String message = "Hi " + saveUserDto.getFirstName() + ",\n\n"
+                + "Een van onze admins heeft je geregistreerd voor onze bibliotheek \n"
+                + "Als dit niet de bedoeling is hebben we daar nog niks voor bedacht \n\n"
+                + "Met vriendelijke groet, \n\n"
+                + "De Working Talent mensen";
+        emailService.sendSimpleMessage("WTLibrary@workingtalent.com", saveUserDto.getEmailAddress(), subject, message);
         userRepository.save(user);
     }
 
