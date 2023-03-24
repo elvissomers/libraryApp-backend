@@ -174,6 +174,19 @@ public class UserController {
 
         userRepository.save(optionalUser.get());
     }
+    
+    @GetMapping("user/self/{id}/{password}")
+    public boolean checkPassword(@PathVariable long id, @PathVariable String password){
+        Optional<User> optionalUser = userRepository.findById(id);
+        System.out.println(optionalUser.get().getPassword());
+        System.out.println(password);
+        if (optionalUser.get().getPassword().equals(password)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 
     @GetMapping("user/loans/{id}")
     public Stream<LoanDto> findLoans(@PathVariable long id){
