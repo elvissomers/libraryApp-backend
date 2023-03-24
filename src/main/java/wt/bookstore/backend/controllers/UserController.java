@@ -166,6 +166,41 @@ public class UserController {
 //        optional.get().seteMailAddress(saveUserDto.geteMailAddress());
 //        userRepository.save(optional.get());
 //    }
+    @PutMapping("user/change-password")
+    public boolean changePassword(@RequestBody ChangeUserPasswordDto changeUserPasswordDto){
+
+        Optional<User> userOptional = userRepository.findByEmailAddressAndPasswordAndArchivedFalse(
+                changeUserPasswordDto.getEmail(), changeUserPasswordDto.getOldPassword()
+        );
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            user.setPassword(changeUserPasswordDto.getNewPassword());
+            userRepository.save(user);
+
+            return true;
+        }
+        return false;
+    }
+
+    @PutMapping("user/reset-password")
+    public boolean changePassword(@RequestBody ResetUserPasswordDto resetUserPasswordDto){
+
+        Optional<User> userOptional = userRepository.findByEmailAddressAndArchivedFalse(
+                resetUserPasswordDto.getEmail()
+        );
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            user.setPassword(resetUserPasswordDto.getNewPassword());
+            userRepository.save(user);
+
+            return true;
+        }
+        return false;
+    }
 
     @PutMapping("user/password/{id}")
     public void updatePassword(@PathVariable long id, @RequestBody String newPassword){
