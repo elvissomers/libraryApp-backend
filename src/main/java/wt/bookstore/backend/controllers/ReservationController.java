@@ -96,10 +96,18 @@ public class ReservationController {
     ) {
     	// User moeten opvragen
     	Optional<User> userOptional = this.userRepository.findByTokenAndArchivedFalse(token);
-    	if (userOptional.isEmpty())
-    		return false;
+    	if (userOptional.isEmpty()) {
+            return false;
+        }
 
-    	User loogedInUser = userOptional.get();
+        // Check if reservation is already present
+        Optional<Book> bookOptional = bookRepository.findById(saveReservationDto.getBookId());
+        Optional<Reservation> reservationOptional = reservationRepository.findByUserAndBook(
+                userOptional.get(), bookOptional.get()
+        );
+        if (reservationOptional.isPresent()) {
+            return false;
+        }
 
         Reservation reservation = reservationMapper.dtoToReservation(saveReservationDto);
         if (reservation != null) {

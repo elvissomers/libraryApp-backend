@@ -1,6 +1,7 @@
 package wt.bookstore.backend.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -16,6 +17,8 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
     List<Reservation> findByUser_FirstNameOrUser_LastName(String firstName, String lastName, Pageable pageable);
 
     List<Reservation> findByUser(User user);
+
+    Optional<Reservation> findByUserAndBook(User user, Book book);
 
     List<Reservation> findByBook(Book book);
 

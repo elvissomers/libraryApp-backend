@@ -12,6 +12,8 @@ public class SaveBookDto {
 
     private String author;
 
+    private String description;
+
     private boolean archived; 
 
     public long getIsbn() {
@@ -44,5 +46,13 @@ public class SaveBookDto {
 
     public void setArchived(Boolean archived) {
         this.archived = archived;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -15,6 +15,8 @@ public class BookDto {
 
     private String author;
 
+    private String description;
+
     private boolean archived;
     
 
@@ -56,5 +58,13 @@ public class BookDto {
 
     public void setArchived(Boolean archived) {
         this.archived = archived;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

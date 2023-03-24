@@ -109,6 +109,7 @@ public class BookController {
         optionalBook.get().setTitle(changeBookDto.getTitle());
         optionalBook.get().setAuthor(changeBookDto.getAuthor());
         optionalBook.get().setArchived(changeBookDto.getArchived());
+        optionalBook.get().setDescription(changeBookDto.getDescription());
 
         bookRepository.save(optionalBook.get());
     }
