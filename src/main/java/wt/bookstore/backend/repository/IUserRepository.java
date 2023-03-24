@@ -21,7 +21,7 @@ public interface IUserRepository extends JpaRepository<User, Long>{
 
     Optional<User> findByTokenAndArchivedFalse(String token);
 
-    @Query("SELECT u FROM User u WHERE (u.firstName LIKE %?1% or u.lastName LIKE %?1%)")
+    @Query("SELECT u FROM User u WHERE u.archived = false and (u.firstName LIKE %?1% or u.lastName LIKE %?1%)")
     Page<User> searchUser(String searchTerm, Pageable pageable);
 
 
