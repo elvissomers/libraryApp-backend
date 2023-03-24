@@ -102,8 +102,9 @@ public class BookController {
     @PutMapping("book/update/{id}")
     public void update(@PathVariable long id, @RequestBody ChangeBookDto changeBookDto) {
         Optional<Book> optionalBook = bookRepository.findById(id);
-        if (optionalBook.isEmpty())
+        if (optionalBook.isEmpty()) {
             return;
+        }
 
         optionalBook.get().setIsbn(changeBookDto.getIsbn());
         optionalBook.get().setTitle(changeBookDto.getTitle());
