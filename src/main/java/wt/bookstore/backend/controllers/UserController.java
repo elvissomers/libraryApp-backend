@@ -140,9 +140,9 @@ public class UserController {
     public boolean ArchiveDomain(@PathVariable long id){
         Optional<User> optionalUser = userRepository.findById(id);
 
-        optionalUser.get().setFirstName("[Archived]");
-        optionalUser.get().setLastName("[Archived]");
-        optionalUser.get().setEmailAddress("[Archived]");
+        optionalUser.get().setFirstName("Archived");
+        optionalUser.get().setLastName("Archived");
+        optionalUser.get().setEmailAddress("archived@archived.com");
         optionalUser.get().setAdmin(false);
         optionalUser.get().setPassword("[Archived]");
         optionalUser.get().setArchived(true);
