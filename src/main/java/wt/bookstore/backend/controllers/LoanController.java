@@ -180,17 +180,6 @@ public class LoanController {
 	}
 
 
-
-
-	/*
-	 * DELETE endpoints from here
-	 */
-	@DeleteMapping("loan/delete/{id}")
-	public void delete(@PathVariable long id) {
-		loanRepository.deleteById(id);
-	}
-
-
 	// TODO : move "misc" functions to separate file ?
 	public Copy getRandomElement(List<Copy> list){
 		Random rand = new Random();

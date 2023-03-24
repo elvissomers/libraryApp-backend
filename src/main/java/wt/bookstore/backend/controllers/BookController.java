@@ -126,15 +126,6 @@ public class BookController {
         return true;
     }
 
-    /*
-     * DELETE endpoints from here
-     */
-    @DeleteMapping("book/delete/{id}")
-    public void delete(@PathVariable long id) {
-        bookRepository.deleteById(id);
-    }
-
-
     @RequestMapping(value = "book/searchEndPoint", method = RequestMethod.POST)
     public SearchResultDto<BookDto> getBooksPageable(@RequestBody SearchParametersDto parametersDto) {
         Pageable pageable = PageRequest.of(parametersDto.getPageNumber(), parametersDto.getNumberPerPage(), Sort.by(Sort.Direction.fromString(parametersDto.getDirectionOfSort()), parametersDto.getPropertyToSortBy()));

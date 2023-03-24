@@ -116,10 +116,6 @@ public class CopyController {
     }
 
 
-    @DeleteMapping("copy/{id}")
-    public void delete(@PathVariable long id) {
-        copyRepository.deleteById(id);
-    }
 
 
 }

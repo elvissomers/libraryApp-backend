@@ -79,11 +79,4 @@ public class KeywordController {
 ////        optional.get().setKeywordId(keyword.getKeywordId());
 //        keywordRepository.save(optional.get());
 //    }
-
-    @DeleteMapping("keyword/{id}")
-    public void delete(@PathVariable long id) {
-    	keywordRepository.deleteById(id);
-    }
-
-
 }

@@ -168,16 +168,11 @@ public class UserController {
 //    }
 
     @PutMapping("user/password/{id}")
-    public void updatePassword(@PathVariable long id, @RequestBody String newPassword){
+    public void updatePassword(@PathVariable long id, @RequestBody String newPassword) {
         Optional<User> optionalUser = userRepository.findById(id);
         optionalUser.get().setPassword(newPassword);
 
         userRepository.save(optionalUser.get());
-    }
-    
-    @DeleteMapping("user/{id}")
-    public void delete(@PathVariable long id) {
-        userRepository.deleteById(id);
     }
 
     //TODO: implement the endpoints below in a proper way
