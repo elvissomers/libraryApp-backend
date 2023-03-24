@@ -175,7 +175,6 @@ public class UserController {
         userRepository.save(optionalUser.get());
     }
 
-    //TODO: implement the endpoints below in a proper way
     @GetMapping("user/loans/{id}")
     public Stream<LoanDto> findLoans(@PathVariable long id){
     	/**
