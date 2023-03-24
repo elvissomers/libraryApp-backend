@@ -23,6 +23,7 @@ public class Copy {
     private boolean archived;
 
     @ManyToOne(optional = false)
+    @JoinColumn(name = "book_id")
     private Book book;
 
     @OneToMany(mappedBy = "copy", orphanRemoval = true)

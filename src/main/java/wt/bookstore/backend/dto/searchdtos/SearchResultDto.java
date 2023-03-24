@@ -1,4 +1,4 @@
-package wt.bookstore.backend.dto;
+package wt.bookstore.backend.dto.searchdtos;
 
 import java.util.List;
 
