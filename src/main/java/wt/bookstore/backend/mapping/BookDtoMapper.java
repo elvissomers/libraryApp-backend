@@ -2,8 +2,12 @@ package wt.bookstore.backend.mapping;
 
 import org.springframework.stereotype.Component;
 import wt.bookstore.backend.domains.Book;
+import wt.bookstore.backend.domains.Keyword;
 import wt.bookstore.backend.dto.BookDto;
 import wt.bookstore.backend.dto.SaveBookDto;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class BookDtoMapper {
@@ -39,6 +43,13 @@ public class BookDtoMapper {
         bookDto.setTitle(book.getTitle());
         bookDto.setArchived(book.getArchived());
         bookDto.setDescription(book.getDescription());
+
+        // Set keywords in dto
+        List<String> keywordNameList = new ArrayList<>();
+        for (Keyword keyword : book.getKeywords()){
+            keywordNameList.add(keyword.getName());
+        }
+        bookDto.setKeywords(keywordNameList);
 
         return bookDto;
     }
