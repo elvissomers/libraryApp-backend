@@ -7,6 +7,7 @@ import java.util.Random;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import wt.bookstore.backend.domains.*;
 import wt.bookstore.backend.dto.*;
+import wt.bookstore.backend.dto.searchdtos.SearchParametersDto;
+import wt.bookstore.backend.dto.searchdtos.SearchResultDto;
 import wt.bookstore.backend.mapping.LoanDtoMapper;
 import wt.bookstore.backend.repository.IBookRepository;
 import wt.bookstore.backend.repository.ICopyRepository;
@@ -197,42 +200,15 @@ public class LoanController {
 		return randomCopy;
 	}
 
-	@RequestMapping(value = "loan/pageable/search/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}/{open}", method = RequestMethod.GET)
-	public Stream<LoanDto> sortNormalLoansPageable(@PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage, @PathVariable boolean open) {
-		Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
-		Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
-		if (directionOfSort.equals("asc") && open) {
-			return loanRepository.findAll(pageableAsc).stream().map(loanMapper::loanToDto);
-		}
-		if (directionOfSort.equals("asc")) {
-			return loanRepository.findByEndDateNull(pageableAsc).stream().map(loanMapper::loanToDto);
-		}
-		if (directionOfSort.equals("desc") && open) {
-			return loanRepository.findAll(pageableDesc).stream().map(loanMapper::loanToDto);
-		}
-		if (directionOfSort.equals("desc")) {
-			return loanRepository.findByEndDateNull(pageableDesc).stream().map(loanMapper::loanToDto);
-		}
-		return null;
-	}
+	@RequestMapping(value = "loan/searchEndPoint", method = RequestMethod.POST)
+	public SearchResultDto<LoanDto> getLoansPageable(@RequestBody SearchParametersDto parametersDto) {
+		Pageable pageable = PageRequest.of(parametersDto.getPageNumber(), parametersDto.getNumberPerPage(), Sort.by(Sort.Direction.fromString(parametersDto.getDirectionOfSort()), parametersDto.getPropertyToSortBy()));
 
-	@RequestMapping(value = "loan/pageable/search/{searchTerm}/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}/{open}", method = RequestMethod.GET)
-	public Stream<LoanDto> sortSearchLoansPageable(@PathVariable String searchTerm, @PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage, @PathVariable boolean open) {
-		Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
-		Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
-		if (directionOfSort.equals("asc") && open) {
-			return loanRepository.findByUser_FirstNameOrUser_LastNameOrCopy_Book_TitleContaining(searchTerm, searchTerm, searchTerm, pageableAsc).stream().map(loanMapper::loanToDto);
-		}
-		if (directionOfSort.equals("asc")) {
-			return loanRepository.findByEndDateNullAndUser_FirstNameOrEndDateNullAndUser_LastNameOrEndDateNullAndCopy_Book_TitleContaining(searchTerm, searchTerm, searchTerm, pageableAsc).stream().map(loanMapper::loanToDto);
-		}
-		if (directionOfSort.equals("desc") && open) {
-			return loanRepository.findByUser_FirstNameOrUser_LastNameOrCopy_Book_TitleContaining(searchTerm, searchTerm, searchTerm, pageableDesc).stream().map(loanMapper::loanToDto);
-		}
-		if (directionOfSort.equals("desc")) {
-			return loanRepository.findByEndDateNullAndUser_FirstNameOrEndDateNullAndUser_LastNameOrEndDateNullAndCopy_Book_TitleContaining(searchTerm, searchTerm, searchTerm, pageableDesc).stream().map(loanMapper::loanToDto);
-		}
-		return null;
+		Page<Loan> page = loanRepository.searchLoan(parametersDto.getSearchTerm(), parametersDto.isOpen(), pageable);
+		if (!page.hasContent())
+			return null;
+
+		return new SearchResultDto<>(parametersDto.getNumberPerPage(), page.getTotalPages(), page.getNumberOfElements(), page.getContent().stream().map(loanMapper::loanToDto).toList());
 	}
 
 }

@@ -3,13 +3,13 @@ package wt.bookstore.backend.repository;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import wt.bookstore.backend.domains.Copy;
-import wt.bookstore.backend.domains.Loan;
-import wt.bookstore.backend.domains.User;
-import wt.bookstore.backend.domains.Book;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import wt.bookstore.backend.domains.*;
 
 public interface ILoanRepository extends JpaRepository<Loan, Long>{
 
@@ -34,5 +34,8 @@ public interface ILoanRepository extends JpaRepository<Loan, Long>{
     List<Loan> findByEndDateNullAndUser_FirstNameOrEndDateNullAndUser_LastNameOrEndDateNullAndCopy_Book_TitleContaining(String firstName, String lastName, String title, Pageable pageable);
 
     Optional<Loan> findByCopyAndEndDateNull(Copy copy);
+
+    @Query("SELECT l FROM Loan l JOIN l.copy c JOIN c.book b WHERE (CASE WHEN ?2 = true THEN l.endDate IS NULL ELSE true END) and (b.title LIKE %?1% or l.user.firstName LIKE %?1% or l.user.lastName LIKE %?1%)")
+    Page<Loan> searchLoan(String searchTerm, boolean open, Pageable pageable);
 
 }

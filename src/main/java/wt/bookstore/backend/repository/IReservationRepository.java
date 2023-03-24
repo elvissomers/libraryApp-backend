@@ -20,6 +20,6 @@ public interface IReservationRepository extends JpaRepository<Reservation, Long>
     List<Reservation> findByBook(Book book);
 
     @Query("select r from Reservation r, User u, Book b where r.book = b and r.user = u and u.archived = false and (u.firstName LIKE %?1% or u.lastName LIKE %?1% or b.title LIKE %?1%)")
-    Page<Reservation> search(String searchTerm, Pageable pageable);
+    Page<Reservation> searchReservation(String searchTerm, Pageable pageable);
 
 }
