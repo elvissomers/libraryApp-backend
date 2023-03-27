@@ -17,7 +17,8 @@ public interface IUserRepository extends JpaRepository<User, Long>{
 
     Optional<User> findByEmailAddressAndArchivedFalse(String emailAddress);
 
-    Optional<User> findByEmailAddressAndArchivedFalse(String emailAddress);
+    Optional<User> findByEmailAddressAndPasswordAndArchivedFalse(String emailAddress, String password);
+
 
     List<User> findByArchivedFalseAndFirstNameOrLastName(String firstName, String lastName, Pageable pageable);
 
