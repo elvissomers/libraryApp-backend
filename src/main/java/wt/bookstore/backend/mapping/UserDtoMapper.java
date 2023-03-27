@@ -4,6 +4,7 @@ import org.springframework.stereotype.Component;
 import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.SaveUserDto;
 import wt.bookstore.backend.dto.UserDto;
+import wt.bookstore.backend.service.Encryptor;
 
 @Component
 public class UserDtoMapper {
@@ -17,7 +18,7 @@ public class UserDtoMapper {
         user.setFirstName(saveUserDto.getFirstName());
         user.setLastName(saveUserDto.getLastName());
         user.setEmailAddress(saveUserDto.getEmailAddress());
-        user.setPassword(defaultPassword);
+        user.setPassword(Encryptor.encryptPassword(defaultPassword));
         user.setAdmin(saveUserDto.isAdmin());
         user.setArchived(saveUserDto.isArchived());
 
