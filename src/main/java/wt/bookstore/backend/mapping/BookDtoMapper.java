@@ -23,7 +23,7 @@ public class BookDtoMapper {
         book.setTitle(saveBookDto.getTitle());
         book.setArchived(saveBookDto.getArchived());
         book.setDescription(saveBookDto.getDescription());
-
+        book.setInLanguage(saveBookDto.getInLanguage());
         return book;
     }
 
@@ -39,6 +39,7 @@ public class BookDtoMapper {
         bookDto.setTitle(book.getTitle());
         bookDto.setArchived(book.getArchived());
         bookDto.setDescription(book.getDescription());
+        bookDto.setLanguage(book.getInLanguage());
 
         return bookDto;
     }

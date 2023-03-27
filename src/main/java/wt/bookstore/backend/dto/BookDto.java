@@ -18,6 +18,8 @@ public class BookDto {
     private String description;
 
     private boolean archived;
+
+    private String language;
     
 
     public long getIsbn() {
@@ -66,5 +68,21 @@ public class BookDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isArchived() {
+        return archived;
+    }
+
+    public void setArchived(boolean archived) {
+        this.archived = archived;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

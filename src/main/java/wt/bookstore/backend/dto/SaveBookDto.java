@@ -14,7 +14,9 @@ public class SaveBookDto {
 
     private String description;
 
-    private boolean archived; 
+    private boolean archived;
+
+    private String inLanguage;
 
     public long getIsbn() {
         return isbn;
@@ -54,5 +56,13 @@ public class SaveBookDto {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getInLanguage() {
+        return inLanguage;
+    }
+
+    public void setInLanguage(String inLanguage) {
+        this.inLanguage = inLanguage;
     }
 }
