@@ -28,6 +28,11 @@ public class Book {
 	@Column(columnDefinition = "boolean default false")
 	private boolean archived;
 
+	@Column(length = 5000)
+	private String description;
+
+	private String inLanguage;
+
 	@ManyToMany()
 	@JoinTable(
 			name = "book_keywords",
@@ -135,5 +140,22 @@ public class Book {
 		Copy randomCopy = copies.get(rand.nextInt(copies.size()));
 
 		return randomCopy;
+	}
+
+	public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+
+
+	public String getInLanguage() {
+		return inLanguage;
+	}
+
+	public void setInLanguage(String inLanguage) {
+		this.inLanguage = inLanguage;
 	}
 }

@@ -23,6 +23,7 @@ public class Loan {
 	private User user;
 
 	@ManyToOne(optional = false)
+	@JoinColumn(name = "copy_id")
 	private Copy copy;
 
 

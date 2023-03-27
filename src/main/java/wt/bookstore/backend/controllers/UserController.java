@@ -1,13 +1,18 @@
 package wt.bookstore.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.domains.User;
 import wt.bookstore.backend.dto.*;
+import wt.bookstore.backend.dto.searchdtos.SearchParametersDto;
+import wt.bookstore.backend.dto.searchdtos.SearchResultDto;
+import wt.bookstore.backend.email.EmailService;
 import wt.bookstore.backend.mapping.LoanDtoMapper;
 import wt.bookstore.backend.mapping.ReservationDtoMapper;
 import wt.bookstore.backend.mapping.UserDtoMapper;
@@ -45,6 +50,9 @@ public class UserController {
 
     @Autowired
     private ReservationDtoMapper reservationMapper;
+
+    @Autowired
+    private EmailService emailService;
 
 
     /*
@@ -87,6 +95,13 @@ public class UserController {
     @PostMapping("user/create")
     public void create(@RequestBody SaveUserDto saveUserDto) {
         User user = userMapper.dtoToUser(saveUserDto);
+        String subject = "Welkom bij de bibliotheek!";
+        String message = "Hi " + saveUserDto.getFirstName() + ",\n\n"
+                + "Een van onze admins heeft je geregistreerd voor onze bibliotheek \n"
+                + "Als dit niet de bedoeling is hebben we daar nog niks voor bedacht \n\n"
+                + "Met vriendelijke groet, \n\n"
+                + "De Working Talent mensen";
+        emailService.sendSimpleMessage("WTLibrary@workingtalent.com", saveUserDto.getEmailAddress(), subject, message);
         userRepository.save(user);
     }
 
@@ -127,9 +142,9 @@ public class UserController {
     public boolean ArchiveDomain(@PathVariable long id){
         Optional<User> optionalUser = userRepository.findById(id);
 
-        optionalUser.get().setFirstName("[Archived]");
-        optionalUser.get().setLastName("[Archived]");
-        optionalUser.get().setEmailAddress("[Archived]");
+        optionalUser.get().setFirstName("Archived");
+        optionalUser.get().setLastName("Archived");
+        optionalUser.get().setEmailAddress("archived@archived.com");
         optionalUser.get().setAdmin(false);
         optionalUser.get().setPassword("[Archived]");
         optionalUser.get().setArchived(true);
@@ -153,9 +168,44 @@ public class UserController {
 //        optional.get().seteMailAddress(saveUserDto.geteMailAddress());
 //        userRepository.save(optional.get());
 //    }
+    @PutMapping("user/change-password")
+    public boolean changePassword(@RequestBody ChangeUserPasswordDto changeUserPasswordDto){
+
+        Optional<User> userOptional = userRepository.findByEmailAddressAndPasswordAndArchivedFalse(
+                changeUserPasswordDto.getEmail(), changeUserPasswordDto.getOldPassword()
+        );
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            user.setPassword(changeUserPasswordDto.getNewPassword());
+            userRepository.save(user);
+
+            return true;
+        }
+        return false;
+    }
+
+    @PutMapping("user/reset-password")
+    public boolean changePassword(@RequestBody ResetUserPasswordDto resetUserPasswordDto){
+
+        Optional<User> userOptional = userRepository.findByEmailAddressAndArchivedFalse(
+                resetUserPasswordDto.getEmail()
+        );
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            user.setPassword(resetUserPasswordDto.getNewPassword());
+            userRepository.save(user);
+
+            return true;
+        }
+        return false;
+    }
 
     @PutMapping("user/password/{id}")
-    public void updatePassword(@PathVariable long id, @RequestBody String newPassword){
+    public void updatePassword(@PathVariable long id, @RequestBody String newPassword) {
         Optional<User> optionalUser = userRepository.findById(id);
 
         String encryptedPassword = Encryptor.encryptPassword(newPassword);
@@ -164,12 +214,19 @@ public class UserController {
         userRepository.save(optionalUser.get());
     }
     
-    @DeleteMapping("user/{id}")
-    public void delete(@PathVariable long id) {
-        userRepository.deleteById(id);
+    @GetMapping("user/self/{id}/{password}")
+    public boolean checkPassword(@PathVariable long id, @PathVariable String password){
+        Optional<User> optionalUser = userRepository.findById(id);
+        System.out.println(optionalUser.get().getPassword());
+        System.out.println(password);
+        if (optionalUser.get().getPassword().equals(password)){
+            return true;
+        }
+        else{
+            return false;
+        }
     }
 
-    //TODO: implement the endpoints below in a proper way
     @GetMapping("user/loans/{id}")
     public Stream<LoanDto> findLoans(@PathVariable long id){
     	/**
@@ -197,13 +254,13 @@ public class UserController {
     }
 
     @GetMapping("user/reservations/{id}")
-    public Stream<ReservationDto> findReservations(@PathVariable long id){
+    public Stream<ReservationAvailabilityDto> findReservations(@PathVariable long id){
     	/**
     	 * Used to find all reservations of a user
     	 */
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
-            return reservationRepository.findByUser(user.get()).stream().map(reservationMapper::reservationToDto);
+            return reservationRepository.findByUser(user.get()).stream().map(reservationMapper::reservationToAvailabilityDto);
         } else {
             return null;
         }
@@ -265,30 +322,15 @@ public class UserController {
         return "abcd";
     }
 
-    @RequestMapping(value = "user/pageable/search/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<UserDto> sortNormalUsersPageable(@PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
-        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
-        if (directionOfSort.equals("asc")) {
-            return userRepository.findByArchivedFalse(pageableAsc).stream().map(userMapper::userToDto);
-        }
-        if (directionOfSort.equals("desc")) {
-            return userRepository.findByArchivedFalse(pageableDesc).stream().map(userMapper::userToDto);
-        }
-        return null;
-    }
+    @RequestMapping(value = "user/searchEndPoint", method = RequestMethod.POST)
+    public SearchResultDto<UserDto> getUsersPageable(@RequestBody SearchParametersDto parametersDto) {
+        Pageable pageable = PageRequest.of(parametersDto.getPageNumber(), parametersDto.getNumberPerPage(), Sort.by(Sort.Direction.fromString(parametersDto.getDirectionOfSort()), parametersDto.getPropertyToSortBy()));
 
-    @RequestMapping(value = "user/pageable/search/{searchTerm}/{propertyToSortBy}/{directionOfSort}/{pageNumber}/{numberPerPage}", method = RequestMethod.GET)
-    public Stream<UserDto> sortSearchUsersPageable(@PathVariable String searchTerm, @PathVariable String propertyToSortBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage) {
-        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).ascending());
-        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSortBy).descending());
-        if (directionOfSort.equals("asc")) {
-            return userRepository.findByArchivedFalseAndFirstNameOrLastName(searchTerm, searchTerm, pageableAsc).stream().map(userMapper::userToDto);
-        }
-        if (directionOfSort.equals("desc")) {
-            return userRepository.findByArchivedFalseAndFirstNameOrLastName(searchTerm, searchTerm, pageableDesc).stream().map(userMapper::userToDto);
-        }
-        return null;
+        Page<User> page = userRepository.searchUser(parametersDto.getSearchTerm(), pageable);
+        if (!page.hasContent())
+            return null;
+
+        return new SearchResultDto<>(parametersDto.getNumberPerPage(), page.getTotalPages(), page.getNumberOfElements(), page.getContent().stream().map(userMapper::userToDto).toList());
     }
 
 }

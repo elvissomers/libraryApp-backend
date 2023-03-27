@@ -23,6 +23,7 @@ public class User {
 	private String lastName;
 
 	@EmailConstraint
+	@Column(unique = true)
 	private String emailAddress;
 
 	@Column(nullable = false, length = 128)
@@ -34,22 +35,6 @@ public class User {
 
 	@Column
     private boolean archived;
-	
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getToken() {
-		return token;
-	}
-
-	public void setToken(String token) {
-		this.token = token;
-	}
 
 	@OneToMany(mappedBy = "user", orphanRemoval = true)
 	private List<Loan> loans;
@@ -119,5 +104,21 @@ public class User {
 
 	public void setArchived(boolean archived) {
 		this.archived = archived;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
+	}
+
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 }

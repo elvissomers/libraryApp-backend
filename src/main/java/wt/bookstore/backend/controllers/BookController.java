@@ -1,13 +1,17 @@
 package wt.bookstore.backend.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 import wt.bookstore.backend.domains.Book;
+import wt.bookstore.backend.domains.Loan;
 import wt.bookstore.backend.domains.Reservation;
 import wt.bookstore.backend.dto.*;
+import wt.bookstore.backend.dto.searchdtos.SearchParametersDto;
+import wt.bookstore.backend.dto.searchdtos.SearchResultDto;
 import wt.bookstore.backend.mapping.BookDtoMapper;
 import wt.bookstore.backend.mapping.CopyDtoMapper;
 import wt.bookstore.backend.mapping.LoanDtoMapper;
@@ -98,13 +102,15 @@ public class BookController {
     @PutMapping("book/update/{id}")
     public void update(@PathVariable long id, @RequestBody ChangeBookDto changeBookDto) {
         Optional<Book> optionalBook = bookRepository.findById(id);
-        if (optionalBook.isEmpty())
+        if (optionalBook.isEmpty()) {
             return;
+        }
 
         optionalBook.get().setIsbn(changeBookDto.getIsbn());
         optionalBook.get().setTitle(changeBookDto.getTitle());
         optionalBook.get().setAuthor(changeBookDto.getAuthor());
         optionalBook.get().setArchived(changeBookDto.getArchived());
+        optionalBook.get().setDescription(changeBookDto.getDescription());
 
         bookRepository.save(optionalBook.get());
     }
@@ -120,51 +126,15 @@ public class BookController {
         return true;
     }
 
-    /*
-     * DELETE endpoints from here
-     */
-    @DeleteMapping("book/delete/{id}")
-    public void delete(@PathVariable long id) {
-        bookRepository.deleteById(id);
-    }
+    @RequestMapping(value = "book/searchEndPoint", method = RequestMethod.POST)
+    public SearchResultDto<BookDto> getBooksPageable(@RequestBody SearchParametersDto parametersDto) {
+        Pageable pageable = PageRequest.of(parametersDto.getPageNumber(), parametersDto.getNumberPerPage(), Sort.by(Sort.Direction.fromString(parametersDto.getDirectionOfSort()), parametersDto.getPropertyToSortBy()));
 
+        Page<Book> page = bookRepository.searchBook(parametersDto.getSearchTerm(), parametersDto.isArchived(), pageable);
+        if (!page.hasContent())
+            return null;
 
-    @RequestMapping(value = "book/pageable/search/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}/{archived}", method = RequestMethod.GET)
-    public Stream<BookDto> sortNormalBooksPageable(@PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage, @PathVariable boolean archived) {
-        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).ascending());
-        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).descending());
-        if (directionOfSort.equals("asc") && !archived) {
-            return bookRepository.findByArchivedFalse(pageableAsc).stream().map(bookMapper::bookToDto);
-        }
-        if (directionOfSort.equals("asc")) {
-            return bookRepository.findAll(pageableAsc).stream().map(bookMapper::bookToDto);
-        }
-        if (directionOfSort.equals("desc") && !archived) {
-            return bookRepository.findByArchivedFalse(pageableDesc).stream().map(bookMapper::bookToDto);
-        }
-        if (directionOfSort.equals("desc")) {
-            return bookRepository.findAll(pageableDesc).stream().map(bookMapper::bookToDto);
-        }
-        return null;
-    }
-
-    @RequestMapping(value = "book/pageable/search/{searchTerm}/{propertyToSearchBy}/{directionOfSort}/{pageNumber}/{numberPerPage}/{archived}", method = RequestMethod.GET)
-    public Stream<BookDto> sortSearchBooksPageable(@PathVariable String searchTerm, @PathVariable String propertyToSearchBy, @PathVariable String directionOfSort, @PathVariable int pageNumber, @PathVariable int numberPerPage, @PathVariable boolean archived) {
-        Pageable pageableAsc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).ascending());
-        Pageable pageableDesc = PageRequest.of(pageNumber, numberPerPage, Sort.by(propertyToSearchBy).descending());
-        if (directionOfSort.equals("asc") && !archived) {
-            return bookRepository.findByArchivedFalseAndTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableAsc).stream().map(bookMapper::bookToDto);
-        }
-        if (directionOfSort.equals("asc")) {
-            return bookRepository.findByTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableAsc).stream().map(bookMapper::bookToDto);
-        }
-        if (directionOfSort.equals("desc") && !archived) {
-            return bookRepository.findByArchivedFalseAndTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableDesc).stream().map(bookMapper::bookToDto);
-        }
-        if (directionOfSort.equals("desc")) {
-            return bookRepository.findByTitleContainingOrAuthorContaining(searchTerm, searchTerm, pageableAsc).stream().map(bookMapper::bookToDto);
-        }
-        return null;
+        return new SearchResultDto<>(parametersDto.getNumberPerPage(), page.getTotalPages(), page.getNumberOfElements(), page.getContent().stream().map(bookMapper::bookToDto).toList());
     }
 
     @GetMapping("book/copies/{id}")

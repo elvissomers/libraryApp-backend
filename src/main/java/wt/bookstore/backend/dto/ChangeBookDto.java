@@ -10,6 +10,8 @@ public class ChangeBookDto {
 
     private boolean archived;
 
+    private String description;
+
     public long getIsbn() {
         return isbn;
     }
@@ -40,5 +42,13 @@ public class ChangeBookDto {
 
     public void setArchived(Boolean archived) {
         this.archived = archived;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
