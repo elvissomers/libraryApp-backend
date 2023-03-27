@@ -19,7 +19,6 @@ public class UserDtoMapper {
         user.setEmailAddress(saveUserDto.getEmailAddress());
         user.setPassword(defaultPassword);
         user.setAdmin(saveUserDto.isAdmin());
-        user.setArchived(saveUserDto.isArchived());
 
         return user;
     }

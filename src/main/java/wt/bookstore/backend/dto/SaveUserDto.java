@@ -11,12 +11,6 @@ public class SaveUserDto {
     private String lastName;
 
     private String emailAddress;
-
-    private boolean archived;
-
-//    @Value("${password: 1234")
-//    private String password;
-
     private boolean admin;
 
     public String getEmailAddress() {
@@ -57,14 +51,6 @@ public class SaveUserDto {
 
     public void setAdmin(boolean admin) {
         this.admin = admin;
-    }
-
-    public boolean isArchived() {
-        return archived;
-    }
-
-    public void setArchived(boolean archived) {
-        this.archived = archived;
     }
 
 }
