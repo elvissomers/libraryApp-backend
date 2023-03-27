@@ -19,7 +19,10 @@ public interface IBookRepository extends JpaRepository<Book, Long> {
 
     List<Book> findByTitleContainingOrAuthorContainingOrKeywords_NameContaining(String title, String Author, String Keyword);
 
-    @Query("select b from Book b where (b.archived = false or (CASE WHEN ?2 = true THEN b.archived = true END)) and (b.title LIKE %?1% or b.author LIKE %?1%)")
+    @Query("SELECT DISTINCT b FROM Book b " +
+            "LEFT JOIN b.keywords k " +
+            "WHERE (b.archived = false OR (CASE WHEN ?2 = true THEN b.archived = true END)) " +
+            "AND (b.title LIKE %?1% OR b.author LIKE %?1% OR k.name LIKE %?1%)")
     Page<Book> searchBook(String searchTerm, boolean archived, Pageable pageable);
 
 }
