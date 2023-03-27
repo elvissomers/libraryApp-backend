@@ -250,13 +250,13 @@ public class UserController {
     }
 
     @GetMapping("user/reservations/{id}")
-    public Stream<ReservationDto> findReservations(@PathVariable long id){
+    public Stream<ReservationAvailabilityDto> findReservations(@PathVariable long id){
     	/**
     	 * Used to find all reservations of a user
     	 */
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
-            return reservationRepository.findByUser(user.get()).stream().map(reservationMapper::reservationToDto);
+            return reservationRepository.findByUser(user.get()).stream().map(reservationMapper::reservationToAvailabilityDto);
         } else {
             return null;
         }
