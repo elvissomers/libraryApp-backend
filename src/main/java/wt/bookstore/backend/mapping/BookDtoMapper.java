@@ -21,7 +21,6 @@ public class BookDtoMapper {
         book.setAuthor(saveBookDto.getAuthor());
         book.setIsbn(saveBookDto.getIsbn());
         book.setTitle(saveBookDto.getTitle());
-        book.setArchived(saveBookDto.getArchived());
         book.setDescription(saveBookDto.getDescription());
 
         return book;
