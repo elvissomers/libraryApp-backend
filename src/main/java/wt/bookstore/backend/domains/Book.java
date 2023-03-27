@@ -28,6 +28,7 @@ public class Book {
 	@Column(columnDefinition = "boolean default false")
 	private boolean archived;
 
+	@Column(length = 5000)
 	private String description;
 	@ManyToMany()
 	@JoinTable(
