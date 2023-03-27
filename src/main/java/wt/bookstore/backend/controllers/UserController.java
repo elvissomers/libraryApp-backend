@@ -97,10 +97,13 @@ public class UserController {
         String subject = "Welkom bij de bibliotheek!";
         String message = "Hi " + saveUserDto.getFirstName() + ",\n\n"
                 + "Een van onze admins heeft je geregistreerd voor onze bibliotheek \n"
-                + "Als dit niet de bedoeling is hebben we daar nog niks voor bedacht \n\n"
+                + "Als dit niet de bedoeling is hebben we daar nog niks voor bedacht \n"
+                + "Je huidige wachtwoord is: 1234 \n\n"
+                + "Klik op deze link om je wachtwoord te wijzigen: \n"
+                + "http://localhost:8081/#/change-password \n\n"
                 + "Met vriendelijke groet, \n\n"
                 + "De Working Talent mensen";
-        emailService.sendSimpleMessage("WTLibrary@workingtalent.com", saveUserDto.getEmailAddress(), subject, message);
+        emailService.sendSimpleMessage("noreply@workingtalent.com", saveUserDto.getEmailAddress(), subject, message);
         userRepository.save(user);
     }
 
