@@ -144,7 +144,7 @@ public class UserController {
 
         optionalUser.get().setFirstName("Archived");
         optionalUser.get().setLastName("Archived");
-        optionalUser.get().setEmailAddress("archived@archived.com");
+        optionalUser.get().setEmailAddress("archived"+generateRandomString(10) + "@archived.com");
         optionalUser.get().setAdmin(false);
         optionalUser.get().setPassword("[Archived]");
         optionalUser.get().setArchived(true);
