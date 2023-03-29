@@ -28,7 +28,11 @@ public class Book {
 	@Column(columnDefinition = "boolean default false")
 	private boolean archived;
 
+	@Column(length = 5000)
 	private String description;
+
+	private String inLanguage;
+
 	@ManyToMany()
 	@JoinTable(
 			name = "book_keywords",
@@ -144,5 +148,14 @@ public class Book {
 
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+
+	public String getInLanguage() {
+		return inLanguage;
+	}
+
+	public void setInLanguage(String inLanguage) {
+		this.inLanguage = inLanguage;
 	}
 }

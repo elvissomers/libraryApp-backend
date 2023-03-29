@@ -74,6 +74,8 @@ public class ReservationDtoMapper {
         reservationDto.setId(reservation.getId());
         reservationDto.setUserId(reservation.getUser().getId());
         reservationDto.setBookId(reservation.getBook().getId());
+        reservationDto.setBookAuthor(reservation.getBook().getAuthor());
+        reservationDto.setBookIsbn(reservation.getBook().getIsbn());
 
         for(Copy copy: reservation.getBook().getCopies()) {
             if (copy.isAvailable()) {

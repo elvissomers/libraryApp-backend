@@ -19,6 +19,7 @@ import wt.bookstore.backend.mapping.UserDtoMapper;
 import wt.bookstore.backend.repository.ILoanRepository;
 import wt.bookstore.backend.repository.IReservationRepository;
 import wt.bookstore.backend.repository.IUserRepository;
+import wt.bookstore.backend.service.Encryptor;
 
 import java.util.Optional;
 import java.util.Random;
@@ -97,10 +98,13 @@ public class UserController {
         String subject = "Welkom bij de bibliotheek!";
         String message = "Hi " + saveUserDto.getFirstName() + ",\n\n"
                 + "Een van onze admins heeft je geregistreerd voor onze bibliotheek \n"
-                + "Als dit niet de bedoeling is hebben we daar nog niks voor bedacht \n\n"
+                + "Als dit niet de bedoeling is hebben we daar nog niks voor bedacht \n"
+                + "Je huidige wachtwoord is: 1234 \n\n"
+                + "Klik op deze link om je wachtwoord te wijzigen: \n"
+                + "http://localhost:8081/#/change-password \n\n"
                 + "Met vriendelijke groet, \n\n"
                 + "De Working Talent mensen";
-        emailService.sendSimpleMessage("WTLibrary@workingtalent.com", saveUserDto.getEmailAddress(), subject, message);
+        emailService.sendSimpleMessage("noreply@workingtalent.com", saveUserDto.getEmailAddress(), subject, message);
         userRepository.save(user);
     }
 
@@ -131,7 +135,8 @@ public class UserController {
         optionalUser.get().setEmailAddress(changeUserDto.getEmailAddress());
         optionalUser.get().setAdmin(changeUserDto.isAdmin());
         optionalUser.get().setArchived(changeUserDto.isArchived());
-        optionalUser.get().setPassword(changeUserDto.getPassword());
+        String encryptedPassword = Encryptor.encryptPassword(changeUserDto.getPassword());
+        optionalUser.get().setPassword(encryptedPassword);
 
         userRepository.save(optionalUser.get());
     }
@@ -142,7 +147,7 @@ public class UserController {
 
         optionalUser.get().setFirstName("Archived");
         optionalUser.get().setLastName("Archived");
-        optionalUser.get().setEmailAddress("archived@archived.com");
+        optionalUser.get().setEmailAddress("archived"+generateRandomString(10) + "@archived.com");
         optionalUser.get().setAdmin(false);
         optionalUser.get().setPassword("[Archived]");
         optionalUser.get().setArchived(true);
@@ -166,11 +171,48 @@ public class UserController {
 //        optional.get().seteMailAddress(saveUserDto.geteMailAddress());
 //        userRepository.save(optional.get());
 //    }
+    @PutMapping("user/change-password")
+    public boolean changePassword(@RequestBody ChangeUserPasswordDto changeUserPasswordDto){
+
+        Optional<User> userOptional = userRepository.findByEmailAddressAndPasswordAndArchivedFalse(
+                changeUserPasswordDto.getEmail(), changeUserPasswordDto.getOldPassword()
+        );
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            user.setPassword(changeUserPasswordDto.getNewPassword());
+            userRepository.save(user);
+
+            return true;
+        }
+        return false;
+    }
+
+    @PutMapping("user/reset-password")
+    public boolean changePassword(@RequestBody ResetUserPasswordDto resetUserPasswordDto){
+
+        Optional<User> userOptional = userRepository.findByEmailAddressAndArchivedFalse(
+                resetUserPasswordDto.getEmail()
+        );
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            user.setPassword(resetUserPasswordDto.getNewPassword());
+            userRepository.save(user);
+
+            return true;
+        }
+        return false;
+    }
 
     @PutMapping("user/password/{id}")
     public void updatePassword(@PathVariable long id, @RequestBody String newPassword) {
         Optional<User> optionalUser = userRepository.findById(id);
-        optionalUser.get().setPassword(newPassword);
+
+        String encryptedPassword = Encryptor.encryptPassword(newPassword);
+        optionalUser.get().setPassword(encryptedPassword);
 
         userRepository.save(optionalUser.get());
     }
@@ -215,13 +257,13 @@ public class UserController {
     }
 
     @GetMapping("user/reservations/{id}")
-    public Stream<ReservationDto> findReservations(@PathVariable long id){
+    public Stream<ReservationAvailabilityDto> findReservations(@PathVariable long id){
     	/**
     	 * Used to find all reservations of a user
     	 */
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
-            return reservationRepository.findByUser(user.get()).stream().map(reservationMapper::reservationToDto);
+            return reservationRepository.findByUser(user.get()).stream().map(reservationMapper::reservationToAvailabilityDto);
         } else {
             return null;
         }
@@ -229,11 +271,14 @@ public class UserController {
 
     @PostMapping("api/user/login")
     public LoginResponseDto Login(@RequestBody LoginRequestDto loginRequestDto){
-        Optional<User> userOptional = userRepository.findByEmailAddressAndPasswordAndArchivedFalse(
-                loginRequestDto.getUsername(), loginRequestDto.getPassword()
+        Optional<User> userOptional = userRepository.findByEmailAddressAndArchivedFalse(
+                loginRequestDto.getUsername()
         );
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
+        User user = userOptional.get();
+        Boolean correctPassword = Encryptor.verifyPassword(loginRequestDto.getPassword(), user.getPassword());
+
+        if (userOptional.isPresent() && correctPassword) {
+
             String token = generateRandomString(60);
 
             // Save token to user

@@ -23,6 +23,10 @@ public class ReservationAvailabilityDto {
 
     private long bookId;
 
+    private String bookAuthor;
+
+    private long bookIsbn;
+
     private boolean available;
 
     public long getUserId() {
@@ -87,5 +91,21 @@ public class ReservationAvailabilityDto {
 
     public void setAvailable(boolean available) {
         this.available = available;
+    }
+
+    public String getBookAuthor() {
+        return bookAuthor;
+    }
+
+    public void setBookAuthor(String bookAuthor) {
+        this.bookAuthor = bookAuthor;
+    }
+
+    public long getBookIsbn() {
+        return bookIsbn;
+    }
+
+    public void setBookIsbn(long bookIsbn) {
+        this.bookIsbn = bookIsbn;
     }
 }
