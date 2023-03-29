@@ -220,9 +220,14 @@ public class UserController {
     @GetMapping("user/self/{id}/{password}")
     public boolean checkPassword(@PathVariable long id, @PathVariable String password){
         Optional<User> optionalUser = userRepository.findById(id);
-        System.out.println(optionalUser.get().getPassword());
-        System.out.println(password);
-        if (optionalUser.get().getPassword().equals(password)){
+
+        if (optionalUser.isEmpty()){
+            return false;
+        }
+
+        Boolean correctPassword = Encryptor.verifyPassword(password, optionalUser.get().getPassword());
+
+        if (correctPassword){
             return true;
         }
         else{
