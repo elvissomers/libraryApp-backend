@@ -174,14 +174,18 @@ public class UserController {
     @PutMapping("user/change-password")
     public boolean changePassword(@RequestBody ChangeUserPasswordDto changeUserPasswordDto){
 
-        Optional<User> userOptional = userRepository.findByEmailAddressAndPasswordAndArchivedFalse(
-                changeUserPasswordDto.getEmail(), changeUserPasswordDto.getOldPassword()
+        Optional<User> userOptional = userRepository.findByEmailAddressAndArchivedFalse(
+                changeUserPasswordDto.getEmail()
         );
 
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
+        User user = userOptional.get();
+        Boolean correctPassword = Encryptor.verifyPassword(changeUserPasswordDto.getOldPassword(), user.getPassword());
 
-            user.setPassword(changeUserPasswordDto.getNewPassword());
+
+        if (userOptional.isPresent() && correctPassword) {
+
+            String encryptedPassword = Encryptor.encryptPassword(changeUserPasswordDto.getNewPassword());
+            user.setPassword(encryptedPassword);
             userRepository.save(user);
 
             return true;
@@ -199,7 +203,8 @@ public class UserController {
         if (userOptional.isPresent()) {
             User user = userOptional.get();
 
-            user.setPassword(resetUserPasswordDto.getNewPassword());
+            String encryptedPassword = Encryptor.encryptPassword(resetUserPasswordDto.getNewPassword());
+            user.setPassword(encryptedPassword);
             userRepository.save(user);
 
             return true;
