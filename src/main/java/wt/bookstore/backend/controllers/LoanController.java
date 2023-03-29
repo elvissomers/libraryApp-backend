@@ -180,7 +180,6 @@ public class LoanController {
 	}
 
 
-	// TODO : move "misc" functions to separate file ?
 	public Copy getRandomElement(List<Copy> list){
 		Random rand = new Random();
 
